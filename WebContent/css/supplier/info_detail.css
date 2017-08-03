@@ -1,0 +1,13 @@
+body {
+    margin:0 15px;
+}
+form {
+    margin-top:20px;
+}
+label {
+	padding-top:6px;
+	padding-right:0;
+}
+.container {
+    width: 100% !important;
+}

@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+	<meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>用户管理-添加用户管理</title>
+    <link href="../../vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="../../dist/css/sb-admin-2.css" rel="stylesheet">
+    <link href="../../vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href="../../css/admin.css" rel="stylesheet" type="text/css">
+<body style="width: 95%">
+	<form class="form-horizontal" role="form" style="margin-top: 20px" id="defaultForm">
+	        <input hidden="" name="id" value="">
+	        <div class="form-group">
+	            <label class="col-xs-4 control-label text-right" for="oldpwd">原密码：</label>
+	            <div class="col-xs-6 ">
+	                <input class="form-control text-left" id="oldpwd" type="password" placeholder="原密码" name="oldpwd" value=""/>
+	            </div>
+	        </div>
+	        <div class="form-group">
+	            <label class="col-xs-4 control-label text-right" for="newpwd">新密码：</label>
+	            <div class="col-xs-6 ">
+	                <input class="form-control text-left" id="newpwd" type="password" placeholder="新密码" name="newpwd" value=""/>
+	            </div>
+	        </div>
+	        <div class="form-group">
+	            <label class="col-xs-4 control-label text-right" for="comformpwd">确认密码：</label>
+	            <div class="col-xs-6 ">
+	                <input class="form-control text-left" id="comformpwd" type="password" placeholder="确认密码" name="comformpwd" value=""/>
+	            </div>
+	        </div>	    
+	        <div class="form-group">
+		        <label class="col-xs-4 control-label" for="v"></label>
+		        <div class="col-xs-6 text-right">
+		            <button type="button" class="btn btn-10" id="cancel">取消</button>
+		            <button id="v" type="submit" class="btn btn-primary">保存</button>
+		        </div>
+		    </div>
+	</form>
+</body>
+	<script src="../../vendor/jquery/jquery.min.js"></script>
+	<script src="../../vendor/bootstrap/js/bootstrap.min.js"></script>
+	<script src="../../resource/bootstrapvalidator/js/bootstrapValidator.min.js"></script>
+	<script src="../../js/common/admin.js"></script>
+	<script type="text/javascript">
+	$(function () {
+    $('form').bootstrapValidator({　
+    	message: 'This value is not valid',
+    	feedbackIcons: {
+    	 	valid: 'glyphicon glyphicon-ok',
+    	 	invalid: 'glyphicon glyphicon-remove',
+    	 	validating: 'glyphicon glyphicon-refresh'
+    					},　　
+        fields: {
+        	oldpwd: {
+                message: '用户名验证失败',
+                validators: {
+                    notEmpty: {
+                        message: '原密码不能为空'
+                    }
+                }
+            },
+            newpwd:{
+                message: '验证失败',
+                validators: {
+                    notEmpty: {
+                        message: '密码不能为空'
+                    }
+                }
+            },
+            comformpwd: {
+                message: '验证失败',
+                validators: {
+                    notEmpty: {
+                        message: '部门不能为空'
+                    },
+                    identical:{
+                    	field:'newpwd',
+                    	message:'两次输入的密码不一致'
+                    }
+                }
+            },
+       
+        }
+    });
+		}).on('success.form.bv', function(e) {
+		    e.preventDefault();
+		    $.post("/system/user/save_change_pwd", $('#defaultForm').serialize(), function(result) {
+		        if (result) {
+		            parent.layer.msg("保存成功", {time: 2000}, function(){
+		                layer_close();
+		                parent.parent.refresh_iframe();
+		            });
+		
+		        } else {
+		            parent.layer.msg('保存失败,请确认原密码', {icon: 1});
+		        }
+		
+		    });
+		});
+	
+	//取消
+	$('#cancel').on("click", function() {
+		layer_close();
+	});
+</script>
+</html>

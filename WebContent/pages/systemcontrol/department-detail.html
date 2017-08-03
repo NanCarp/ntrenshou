@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>系统管理-部门管理-添加</title>
+
+
+    <link href="../../../vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="../../../css/admin.css" rel="stylesheet" type="text/css">
+
+	<style>
+		label{padding-right: 0;padding-top: 6px}
+	</style>
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+	
+</head>
+<body style="width: 90%">
+<form class="form-horizontal" role="form" style="margin-top: 20px" id="defaultForm">
+	<#if department??>
+    <input hidden="" name="id" value="${department.id}">
+    <div class="form-group">
+        <label class="col-xs-4 col-xs-offset-1 control-label text-right" for="department">部门名称的名称是关务部门：</label>
+        <div class="col-xs-6">
+            <input class="form-control" id="department" type="text" placeholder="部门名称" name="department" value="${department.department_name}"/>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-xs-4 col-xs-offset-1 control-label text-right" for="companyId">所属公司：</label>
+        <div class="col-xs-6">
+            <select class="form-control" id="companyId" name="companyId">
+                <option value="">请选择公司</option>
+                <#if companyList??>
+                    <#list companyList as company>
+                        <option value="${company.id}" <#if company.id == department.company_id>selected</#if>>${company.company_name}</option>
+                    </#list>
+                </#if>
+            </select>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-xs-4 col-xs-offset-1 control-label text-right" for="remark" style="padding-top: 0">备注：</label>
+        <div class="col-xs-6">
+            <textarea class="form-control" id="remark" name="remark">${department.remark!}</textarea>
+        </div>
+    </div>
+    <#else>
+    <div class="form-group">
+        <label class="col-xs-4 col-xs-offset-1 control-label text-right" for="department">部门名称：</label>
+        <div class="col-xs-6">
+            <input class="form-control" id="department" type="text" placeholder="部门名称" name="department"/>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-xs-4 col-xs-offset-1 control-label text-right" for="companyId">所属公司：</label>
+         <div class="col-xs-6">
+            <select class="form-control" id="companyId" name="companyId">
+  				<option value="">请选择公司</option>
+  				<#if companyList??>
+                <#list companyList as company>
+                <option value="${company.id}">${company.company_name}</option>
+                </#list>
+                </#if>
+			</select>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-xs-4 col-xs-offset-1 control-label text-right" for="remark" style="padding-top: 0">备注：</label>
+        <div class="col-xs-6">
+        	<textarea class="form-control" id="remark" name="remark"></textarea>
+        </div>
+    </div>
+    </#if>
+    <div class="form-group">
+        <label class="col-xs-5 control-label " for="v"> </label>
+        <div class="col-xs-6">
+            <button id="v" type="submit" class="btn btn-11">　保存　</button>
+        </div>
+    </div>
+</form>
+
+<script src="../../../vendor/jquery/jquery.min.js"></script>
+<script src="../../../vendor/bootstrap/js/bootstrap.min.js"></script>
+<script src="../../../resource/bootstrapvalidator/js/bootstrapValidator.min.js"></script>
+<script src="../../../js/common/admin.js"></script>
+<script>
+$(function () {
+    $('form').bootstrapValidator({　
+    	message: 'This value is not valid',
+    	feedbackIcons: {
+    	 	valid: 'glyphicon glyphicon-ok',
+    	 	invalid: 'glyphicon glyphicon-remove',
+    	 	validating: 'glyphicon glyphicon-refresh'
+    					},　　
+        fields: {
+        	department: {
+                message: '验证失败',
+                validators: {
+                    notEmpty: {
+                        message: '部门名称不能为空'
+                    },
+                    stringLength: {
+                        min: 0,
+                        max: 20,
+                        message: '最多20个字符'
+                    }
+                }
+            },
+            company: {
+                validators: {
+                    notEmpty: {
+                        message: '不能为空'
+                    },
+                }
+            },
+            remark: {
+                validators: {
+                    stringLength: {
+                        min: 0,
+                        max: 200,
+                        message: '最多200个字符'
+                    }
+                }
+            },
+        }
+    });
+})
+.on('success.form.bv', function(e) {
+    e.preventDefault();
+    $.post("/system/department/saveDepartment", $('#defaultForm').serialize(), function(result) {
+    	if (result.isSuccess) {
+            parent.layer.msg("保存成功", {time: 2000}, function(){
+                layer_close();
+                parent.parent.refresh_iframe();
+            });
+
+        } else {
+            parent.layer.msg(result.tips, {time: 2000});
+        }
+
+    });
+});
+
+//取消
+$('#cancel').on("click",function() {
+    layer_close();
+});
+</script>
+</body>
+</html>

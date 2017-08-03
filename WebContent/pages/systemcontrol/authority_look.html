@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>添加权限修改</title>
+	<link rel="stylesheet" type="text/css" href="../../resource/zTree/css/zTreeStyle/zTreeStyle.css" />
+	<link href="../../vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="../../vendor/metisMenu/metisMenu.min.css" rel="stylesheet">
+    <link href="../../dist/css/sb-admin-2.css" rel="stylesheet">
+    <link href="../../vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href="../../resource/bootstrapValidator/css/bootstrapValidator.min.css" rel="stylesheet" />
+	<link href="../../css/admin.css" rel="stylesheet" type="text/css">
+	 <link href="../../resource/layer/skin/default/layer.css" rel="stylesheet" type="text/css">
+</head>
+	<style>
+		label{padding-right: 0;padding-top: 6px}
+	</style>
+<body style="width: 96%">
+	<div>
+    	<div style="width: 100%;">
+    		<form class="form-horizontal" role="form" style="margin-top: 20px">
+			    <div class="form-group">
+			        <label class="col-xs-4 col-xs-offset-1 control-label text-right" for="v2" onclick="g()">角色：</label>
+			         <div class="col-xs-6">
+			             <input class="form-control" id="v2" type="text" value="超级管理员"  disabled="disabled"/>
+			        </div>
+			    </div>
+			    <div class="form-group">
+			        <label class="col-xs-4 col-xs-offset-1 control-label text-right" for="v1" style="padding-right: 0">部门名称：</label>
+			        <div class="col-xs-6">
+			        	<ul id="v1" class="ztree"></ul>
+			        </div>
+			    </div>
+			</form>
+    	</div>   		    	
+	</div>	
+</body>
+		<script src="../../vendor/jquery/jquery.min.js"></script>
+		<script src="../../vendor/bootstrap/js/bootstrap.min.js"></script>
+		<script src="../../vendor/metisMenu/metisMenu.min.js"></script>
+		<script src="../../dist/js/sb-admin-2.js"></script>
+		<script src="../../resource/layer/layer.js"></script>
+		<script src="../../resource/bootstrapValidator/js/bootstrapValidator.min.js"></script>
+		<script type="text/javascript" src="../../resource/zTree/js/jquery.ztree.core-3.5.js"></script>
+		<script type="text/javascript" src="../../resource/zTree/js/jquery.ztree.excheck-3.5.js"></script>
+		<script type="text/javascript">
+		$(function () {
+	        $('form').bootstrapValidator({
+	        	message: 'This value is not valid',
+	        	feedbackIcons: {
+	        	 	valid: 'glyphicon glyphicon-ok',
+	        	 	invalid: 'glyphicon glyphicon-remove',
+	        	 	validating: 'glyphicon glyphicon-refresh'
+	        					},　　　
+	            fields: {
+	            	role: {
+	                    message: '用户名验证失败',
+	                    validators: {
+	                        notEmpty: {
+	                            message: '角色不能为空'
+	                        },
+	                		regexp: {
+	                        	regexp: /^[a-zA-Z0-9_\u4e00-\u9fa5\\s·]+$/,
+	                        	message: '不能有特殊字符'
+	                		}
+	                    }
+	                },	         
+	            }
+	        });
+	    });
+		
+		function zTreeBeforeCheck(treeId, treeNode) {
+			layer.msg("请在编辑中修改");
+		    return false;
+		};		
+		var setting ={
+			enable:false,
+			check:{
+				enable:true,
+				chkStyle:"checkbox",
+				
+			},
+			data:{
+				simpleData:{
+					enable:true
+					,idKey:"id"
+					,pIdKey:"pId"
+				}
+			},
+			callback:{
+				beforeCheck: zTreeBeforeCheck
+			}
+		};
+		var zTreeNodes = [
+		                  {id:1,pId:0,name:"用户管理",checked:true,open:true},
+		                  {id:11,pId:1,name:"公司管理",checked:true,open:true},
+		                  {id:111,pId:11,name:"查询",open:true},
+		                  {id:111,pId:11,name:"添加"},
+		                  {id:111,pId:11,name:"编辑"},
+		                  {id:111,pId:11,name:"冻结/启用"},
+		                  {id:12,pId:1,name:"部门管理"},
+		                  {id:121,pId:12,name:"查询"},
+		                  {id:122,pId:12,name:"添加"},
+		                  {id:123,pId:12,name:"编辑"},
+		                  {id:124,pId:12,name:"冻结/启用"},
+		                  {id:13,pId:1,name:"角色管理"},
+		                  {id:131,pId:13,name:"添加"},
+		                  {id:132,pId:13,name:"编辑"},
+		                  {id:133,pId:13,name:"删除"},
+		                  {id:14,pId:1,name:"权限管理"},
+		                  {id:141,pId:14,name:"权限"},
+		                  {id:2,pId:0,name:"供应商管理",checked:true},
+		                  {id:21,pId:2,name:"公司管理",checked:true},
+		                  {id:211,pId:21,name:"查询"},
+		                  {id:211,pId:21,name:"添加"},
+		                  {id:211,pId:21,name:"编辑"},
+		                  {id:211,pId:21,name:"冻结/启用"},
+		                  {id:22,pId:2,name:"部门管理"},
+		                  {id:221,pId:22,name:"查询"},
+		                  {id:222,pId:22,name:"添加"},
+		                  {id:223,pId:22,name:"编辑"},
+		                  {id:224,pId:22,name:"冻结/启用"},
+		                  {id:23,pId:2,name:"角色管理"},
+		                  {id:231,pId:23,name:"添加"},
+		                  {id:232,pId:23,name:"编辑"},
+		                  {id:233,pId:23,name:"删除"},
+		                  {id:24,pId:2,name:"权限管理"},
+		                  {id:241,pId:24,name:"权限"},
+		                  {id:3,pId:0,name:"预报价管理",checked:true},
+		                  {id:31,pId:3,name:"公司管理",checked:true},
+		                  {id:311,pId:31,name:"查询"},
+		                  {id:311,pId:31,name:"添加"},
+		                  {id:311,pId:31,name:"编辑"},
+		                  {id:311,pId:31,name:"冻结/启用"},
+		                  {id:32,pId:3,name:"部门管理"},
+		                  {id:321,pId:32,name:"查询"},
+		                  {id:322,pId:32,name:"添加"},
+		                  {id:323,pId:32,name:"编辑"},
+		                  {id:324,pId:32,name:"冻结/启用"},
+		                  {id:33,pId:3,name:"角色管理"},
+		                  {id:331,pId:33,name:"添加"},
+		                  {id:332,pId:33,name:"编辑"},
+		                  {id:333,pId:33,name:"删除"},
+		                  {id:34,pId:3,name:"权限管理"},
+		                  {id:341,pId:34,name:"权限"},
+		                  ];              
+		$.fn.zTree.init($("#v1"), setting, zTreeNodes);
+	    
+		</script>
+</html>

@@ -1,0 +1,88 @@
+body {
+	background-color:#fff;
+	overflow-x:hidden;
+}
+th,td {
+	text-align:center;
+	white-space: nowrap;
+}
+select {
+	max-width:200px;
+}
+.panel-heading input{
+    float: left;
+    max-width:200px;
+    margin-right: 5px;
+}
+.container-fluid {
+	margin-left: 0;
+}
+.head_1 {/* 查询按钮 */
+	padding:0;
+	margin: 2px 0 2px 0;
+	max-width:59px;
+}
+.head_2 {/* 下拉菜单 输入框 */
+	padding: 0 ;
+	margin: 2px 5px 2px 0;
+	min-width: 100px;
+}
+/* 按钮 数字对应字数  S */
+.head_3 {
+	padding:0;
+	margin: 2px 0 2px 0px;
+	max-width:73px;
+}
+.head_4 {
+	padding:0;
+	margin: 2px 0 2px 0;
+	max-width:87px;
+}
+.head_5 {
+	padding:0;
+	margin: 2px 0 2px 0;
+	max-width:101px;
+}
+.head_6 {
+	padding:0;
+	margin: 2px 0 2px 0;
+	max-width:115px;
+}
+.head_7 {
+	padding:0;
+	margin: 2px 0 2px 0;
+	max-width:129px;
+}
+/* 按钮 数字对应字数 E */
+/* .panel-body {
+	overflow-x: auto;
+} */
+.panel-footer {
+	 width:100%;
+}
+.panel-footer span {
+	line-height:34px;
+}
+.pagination {
+	
+}
+.btn-file {  /*  上传按钮*/
+    position: relative;
+    overflow: hidden;
+	}
+
+.btn-file input[type=file] {
+    position: absolute;
+    top: 0;
+    right: 0;
+    min-width: 100%;
+    min-height: 100%;
+    font-size: 100px;
+    text-align: right;
+    filter: alpha(opacity = 0);
+    opacity: 0;
+    outline: none;
+    background: white;
+    cursor: inherit;
+    display: block;
+}

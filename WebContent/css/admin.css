@@ -1,0 +1,112 @@
+/********** 按钮颜色 S **********/
+.btn-1 {
+	color: #fff;
+    background-color: #2556ba;
+    border-color: #2556ba;
+}/* 查询  */
+.btn-1:hover, .btn-1:focus {
+	color: #fff;
+    background-color: #4a9500;
+    border-color: #4a9500;
+}
+.btn-2 {
+	color: #fff;
+    background-color: #57AE00;
+    border-color: #57AE00;
+}/* 新增  已启用  撤销*/
+.btn-2:hover, .btn-2:focus {
+	color: #fff;
+    background-color: #4a9500;
+    border-color: #4a9500;
+}
+.btn-3 {
+	color: #fff;
+    background-color: #6699FF;
+    border-color: #6699FF;
+}/* 审核 编辑 */
+.btn-3:hover, .btn-3:focus {
+	color: #fff;
+    background-color: #3979ff;
+    border-color: #3979ff;
+}
+.btn-4 {
+	color: #fff;
+    background-color: #FF6600;
+    border-color: #FF6600;
+}/* 恢复 已冻结 批量删除  删除*/
+.btn-4:hover, .btn-4:focus{
+	color: #fff;
+    background-color: #df5900;
+    border-color: #df5900;
+}
+.btn-5 {
+	color: #fff;
+    background-color: #FFB627;
+    border-color: #FFB627;
+}/* 导入 */
+.btn-5:hover, .btn-5:focus {
+	color: #fff;
+    background-color: #ec9900;
+    border-color: #ec9900;
+}
+.btn-6 {
+	color: #fff;
+    background-color: #BCBCBC;
+    border-color: #BCBCBC;
+}/* 禁用审核 禁用删除 禁用编辑*/
+.btn-6:hover, .btn-6:focus {
+	color: #fff;
+    background-color: #BCBCBC;
+    border-color: #BCBCBC;
+}
+.btn-7 {
+	color: #fff;
+    background-color: #CCCCCC;
+    border-color: #CCCCCC;
+}/* 禁用评分*/
+.btn-7:hover, .btn-7:focus {
+	color: #fff;
+    background-color: #CCCCCC;
+    border-color: #CCCCCC;
+}
+.btn-8 {
+	color: #fff;
+    background-color: #FFB627;
+    border-color: #FFB627;
+}/* 评分  */
+.btn-8:hover, .btn-8:focus {
+	color: #fff;
+    background-color: #df9200;
+    border-color: #df9200;
+}
+.btn-9 {
+	color: #fff;
+    background-color: #1FCFC8;
+    border-color: #1FCFC8;
+}/* 查看明细  */
+.btn-9:hover, .btn-9:focus {
+	color: #fff;
+    background-color: #1cb9b1;
+    border-color: #1cb9b1;
+}
+.btn-10 {
+	color: #333333;
+    background-color: #ECECEC;
+    border-color: #DDDDDD;
+}/* 取消  */
+.btn-10:hover, .btn-10:focus {
+	color: #333333;
+    background-color: #cecece;
+    border-color: #c1c1c1;
+}
+.btn-11 {
+	color: #fff;
+    background-color: #3367D6;
+    border-color: #3367D6;
+}/* 保存  */
+.btn-11:hover, .btn-11:focus {
+	color: #fff;
+    background-color: #2556ba;
+    border-color: #2556ba;
+}
+/********** 按钮颜色 E **********/

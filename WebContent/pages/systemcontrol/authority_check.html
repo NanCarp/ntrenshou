@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>添加权限修改</title>
+    <link href="../../../vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="../../../dist/css/sb-admin-2.css" rel="stylesheet">
+    <link href="../../../vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href="../../../css/admin.css" rel="stylesheet" type="text/css">
+	<link rel="stylesheet" type="text/css" href="../../../resource/zTree/css/zTreeStyle/zTreeStyle.css" />
+    <style>
+        label{padding-right: 0;padding-top: 6px}
+    </style>
+</head>
+<body style="width: 96%">
+	<div>
+    	<div style="width: 100%;">
+    		<form class="form-horizontal" role="form" style="margin-top: 20px" id="defaultForm">
+                <input hidden id="roleId" type="text" name="roleId" value="${role.id}"/>
+                <input hidden id="menusId" type="text" name="menusId" value="${role.menus_id}"/>
+                <input hidden id="buttonsId" type="text" name="buttonsId" value="${role.buttons_id}"/>
+                <div class="form-group">
+                    <label class="col-xs-4  control-label text-right" for="company" >公司：</label>
+                    <div class="col-xs-6">
+                        <input class="form-control text-left" id="company" type="text" placeholder="公司" name="companyId" value="${role.company_name}" readonly/>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-xs-4  control-label text-right" for="role" >角色：</label>
+                    <div class="col-xs-6">
+                        <input class="form-control text-left" id="role" type="text" placeholder="角色" name="roleId" value="${role.role_type}" readonly/>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-xs-4  control-label text-right" for="authority">权限：</label>
+                    <div class="col-xs-6">
+                        <ul id="authority" class="ztree"></ul>
+                    </div>
+                </div>
+			</form>
+    	</div>   		    	
+	</div>	
+
+	<script src="../../../vendor/jquery/jquery.min.js"></script>
+	<script src="../../../vendor/bootstrap/js/bootstrap.min.js"></script>
+	<script src="../../../resource/bootstrapvalidator/js/bootstrapValidator.min.js"></script>
+	<script src="../../../js/common/admin.js"></script>
+	<script type="text/javascript" src="../../../resource/zTree/js/jquery.ztree.core-3.5.js"></script>
+	<script type="text/javascript" src="../../../resource/zTree/js/jquery.ztree.excheck-3.5.js"></script>
+	<script type="text/javascript">
+
+    // 权限树
+	var setting ={
+		enable:false,
+		check:{
+			enable:false,
+		},
+		data:{
+			simpleData:{
+				enable:true
+				,idKey:"id"
+				,pIdKey:"pId"
+//				,rootPId:"99999"
+			}
+		}
+	};
+
+	// 所有权限
+	var zTreeNodes = ${menuListJson!};
+	// 角色权限
+    var authority = "${authority!}";
+//    console.log(authority);
+    var zNodes = [];
+    var menuArray = authority.split(',');
+    $(zTreeNodes).each(function(){
+        var str = {};
+        str["id"] = this.id;
+        str["name"] = this.name;
+        str["pId"] = this.pId;
+        str["isHidden"] = true;
+        for(var o in menuArray){
+            if(menuArray[o] == this.id){
+                str["isHidden"] = false;
+            }
+        }
+        // 根节点默认打开、显示
+        if(this.pId==99999){
+            str["open"] = true;
+            str["isHidden"] = false;
+        }
+        // 一级菜单默认打开
+        if(this.pId==0){
+            str["open"] = true;
+        }
+        if(str["isHidden"] === false) {
+            zNodes.push(str);
+        }
+//        console.log(str);
+
+    });
+	$.fn.zTree.init($("#authority"), setting, zNodes);
+
+
+    // 根据公司 id 获取角色列表
+    $('#companyId').change(function() {
+        // 公司 id
+        var companyId = $(this).val();
+        // 清空部门下拉菜单
+        $('#roleId').empty().append('<option value="">请选择角色</option>');
+        // 获取部门列表
+        if (!("" === companyId)) {
+            $.post('/system/authority/getRoleByCompanyId/'+ companyId, function (roleList) {
+                $(roleList).each(function () {
+                    $('#roleId').append('<option value="'+ this.id +'">'+ this.role_type +'</option>');
+                });
+            } );
+        }
+    });
+
+    //取消
+    $('#cancel').on("click",function() {
+        layer_close();
+    });
+	</script>
+</body>
+</html>

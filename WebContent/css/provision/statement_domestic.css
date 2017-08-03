@@ -1,0 +1,59 @@
+body {
+	background-color:#fff;
+	overflow-x:hidden;
+}
+th,td {
+	text-align:center;
+	white-space: nowrap;
+}
+select {
+	max-width:200px;
+}
+.panel-heading input{
+    float: left;
+    max-width:200px;
+    margin-right: 5px;
+}
+.container-fluid {
+	margin-left: 0;
+}
+.head_1 {
+	padding:0;
+	margin: 2px 0 2px 0;
+	max-width:59px;
+}/* 查询 */
+.head_2 {
+	padding: 0 ;
+	margin: 2px 5px 2px 0;
+}/* 下拉菜单 输入框 */
+.head_3 {
+	padding:0;
+	margin: 2px 0 2px 0px;
+	max-width:115px;
+}
+.head_4 {
+	padding:0;
+	margin: 2px 0 2px 0;
+	max-width:87px;
+}
+.head_5 {
+	padding:0;
+	margin: 2px 0 2px 0;
+	max-width:101px;
+}
+.head_6 {
+	padding:0;
+	margin: 2px 0 2px 0;
+	max-width:115px;
+}
+.head_7 {
+	padding:0;
+	margin: 2px 0 2px 0;
+	max-width:129px;
+}
+.panel-footer span {
+	line-height:34px;
+}
+.panel-body {
+	overflow-x: auto;
+}

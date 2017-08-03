@@ -1,0 +1,49 @@
+body {
+    font-family:"华文楷体";
+    font-size: 11pt;
+}
+table {
+    /*border: 2pt solid #000000;*/
+    border-collapse:collapse;
+}
+tr {
+    height: 30pt;
+}
+td {
+    width: 100pt;
+    border: 1pt solid #000000;
+    text-align: center;
+}
+.tb2 {
+    border: 2pt solid #000000;
+}
+.r1 td,
+.r2 td{
+    border: 0;
+    text-align: center;
+    font-size: 16pt;
+    font-weight: bold;
+}
+.r1 td {
+    font-family: 宋体;
+}
+.r2 td {
+    font-family: 黑体;
+}
+.r3 td,
+.r15 td,
+.r16 td {
+    text-align: left;
+    padding-left: 5pt;
+}
+.r15 td,
+.r16 td {
+    border: 0;
+}
+.r6 td {
+    border-top:2pt solid #000000;
+}
+#state {
+    vertical-align: bottom;
+    background-color: #F2DCDB;
+}

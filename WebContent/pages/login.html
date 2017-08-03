@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>登陆</title>
+
+    <!-- Bootstrap Core CSS -->
+    <link href="../vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- MetisMenu CSS -->
+    <link href="../vendor/metisMenu/metisMenu.min.css" rel="stylesheet">
+
+    <!-- Custom CSS -->
+    <link href="../dist/css/sb-admin-2.css" rel="stylesheet">
+    <link href="../css/login/login.css" rel="stylesheet">
+
+    <!-- Custom Fonts -->
+    <link href="../vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+	<link href="../resource/idcode/jquery.idcode.css">
+
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+
+    <![endif]-->
+
+</head>
+
+<body>
+    <div class="container">
+        <div class="row">
+                <div class="sd-title col-md-5 col-md-offset-8 col-sm-6 col-sm-offset-4 col-xs-12">
+                    南通仁寿仓库管理系统
+                </div>
+        </div>
+        <div class="row">
+            <div class="col-md-4 col-md-offset-8 col-sm-6 col-sm-offset-3 col-xs-12">
+                <div class="panel-body">
+                    <form role="form">
+                        <fieldset>
+                            <div class="form-group" id="msg">
+                                <div class="input-group">
+                                    <span class="input-group-addon"><i class="fa fa-user"></i></span>
+                                    <input id="accountnum" class="form-control" placeholder="请输入账号" name="accountnum" type="text" autofocus>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="input-group">
+                                    <span class="input-group-addon"><i class="fa fa-pencil"></i></span>
+                                    <input id="password" class="form-control" placeholder="请输入密码" name="password" type="password" value="">
+                                </div>
+                            </div>                           
+                            <div class="checkbox">
+                                <label>
+                                    <input name="rememberMe" type="checkbox" value="Remember Me" >记住帐号？
+                                </label>
+                            </div>
+                            <a id="v" onclick="checklogin()" class="btn btn-lg btn-primary btn-block"><i class="fa  fa-smile-o"></i> 登陆</a>
+                        </fieldset>
+                    </form>
+                </div>
+            </div>
+        </div> 
+	</div>
+	<div class="license"><p>Copyright 2017 南通仁寿食品仓库管理系统</p></div>
+    
+
+    <!-- jQuery -->
+    <script src="../vendor/jquery/jquery.min.js"></script>
+	
+    <!-- Bootstrap Core JavaScript -->
+    <script src="../vendor/bootstrap/js/bootstrap.min.js"></script>
+
+    <!-- Metis Menu Plugin JavaScript -->
+    <script src="../vendor/metisMenu/metisMenu.min.js"></script>
+
+    <!-- Custom Theme JavaScript -->
+    <script src="../dist/js/sb-admin-2.js"></script>
+
+    <!-- plugin -->
+    <script type="text/javascript" src="../../js/login/jquery.cookie.js"></script>
+    <script type="text/javascript" src="../js/login/jquery.mkinfinite.js"></script>
+	<script src="../../resource/idcode/jquery.idcode.js"></script>
+	<script src="../../resource/layer/layer.js"></script>
+    <script type="text/javascript">
+    //$.idcode.setCode();   //加载生成验证码方法
+        $(function(){
+        	innerHeight = window.innerHeight * 0.95;
+        	$('.container').css('height', innerHeight);
+        	var imagesRatio = 1.9;
+        	
+        	if (window.innerWidth <window.innerHeight) {
+        		imagesRatio = 0.39;
+        	}
+        	addBg (imagesRatio);
+        	
+        	if($.cookie("online") == "true"){
+        		$("#accountnum").val($.cookie("accountnum"));
+        		$("#password").val($.cookie("password"));
+        		$("input[name='rememberMe']").attr("checked",true);
+        	}else{
+        		$("input[name='rememberMe']").attr("checked",false);
+        	}
+        	
+        });  
+        // 加载背景图
+        function addBg (imagesRatio) {
+        	$('body').mkinfinite({
+                maxZoom:       1.5,
+                animationTime: 8000,
+                imagesRatio:   imagesRatio, 
+                isFixedBG:     true,
+                zoomIn:        true,
+            });
+        }
+       function checklogin(){
+    	   var username = $.trim($("#accountnum").val());
+    	   var password = $.trim($("#password").val());
+           var isInsider = $('#isInsider').prop('checked');// 是否是内部人员
+    	   //var IsBy = $.idcode.validateCode();
+    	  // if(IsBy){
+    		   if(username==null||$.trim(username)==''){
+    			   layer.tips('请输入帐号', '#accountnum', {tips: [2, '#E74C3C']});return false;
+    		   }
+    		   if(password==null || $.trim(password)==''){
+					layer.tips('请输入密码', '#password', {tips: [2, '#E74C3C']});return false;
+				}
+               var datajson = {"username": username, "password": password, "isInsider": isInsider};// 增加内部人员标识
+    		   $.post("/pages/adminLogin",datajson,function(data){
+    			   if(data.result){
+    				   var rem = $("input:checkbox[name='rememberMe']").is(':checked');
+    				   if(rem){
+    					   $.cookie('online','true',{expires: 7});
+    					   $.cookie("accountnum",$("#accountnum").val(),{expires: 7});
+    					   $.cookie("password",$("#password").val(),{expires: 7});
+    				   }else{
+    					   $.cookie('online',"false",{expire: -1 });
+    					   $.cookie("accountnum","",{expire: -1 });
+    					   $.cookie("password","",{expire: -1 });
+    				   }
+    				   location.replace("/pages/index");
+    			   }else{
+    				   layer.tips(data.msg, '#msg', {tips: [1, '#E74C3C']});return false;
+    			   }
+    		   })
+    	   //}else{
+    		//   layer.tips("验证码输入错误", '#Txtidcode', {tips: [3, '#E74C3C']});return false;
+    	   //}   
+       }
+       
+     //加入回车键确认事件
+		document.onkeydown = function(event){
+			var e = event || window.event || arguments.callee.caller.arguments[0];
+			if(e && e.keyCode==13){
+				checklogin();
+			}
+		};
+    </script>
+</body>
+
+</html>

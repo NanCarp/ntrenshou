@@ -1,0 +1,51 @@
+@media (orientation: portrait) {
+	body{
+		background: url(../../resource/images/login/seekr2.jpg) no-repeat center center fixed;
+	}
+}/* 竖屏 */
+@media (orientation: landscape) {
+	body{
+		background: url(../../resource/images/login/seekr.jpg) no-repeat center center fixed;
+	}	
+} /*横屏 */
+.container {
+	margin-bottom:0;
+}
+.sd-title {
+    text-align: center;
+    font-size: 35px;
+    color: #FFF;
+    padding-top: 50px;
+    font-family: 微软雅黑;
+    max-width:400px;
+}
+.panel-heading h3{
+	font-size: 24px;
+	color: #111;
+	text-align:center;
+}
+.panel-body {
+    background-color: rgba(255, 255, 255, 0.407843);
+    border-radius: 10px;
+    color: aliceblue;
+    padding:40px;
+    margin-top: 50px;
+    max-width:400px;
+}
+
+#v {
+    background-color: #6493FC;
+    border: 1px solid #c9c9c9;
+}
+
+
+.license {
+	text-align:center;
+	line-height:40px;
+	margin-bottom: 2%;
+}
+.license p {
+     color: #fff;
+     font-family: 微软雅黑;
+     margin-bottom:0;
+}

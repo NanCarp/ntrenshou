@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>入库明细（国内）</title>
+
+    <!-- Bootstrap Core CSS -->
+    <link href="../../../vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- MetisMenu CSS -->
+    <link href="../../../vendor/metisMenu/metisMenu.min.css" rel="stylesheet">
+
+    <!-- Custom CSS -->
+    <link href="../../../dist/css/sb-admin-2.css" rel="stylesheet">
+	<link href="../../../css/admin.css" rel="stylesheet">
+	<link href="../../../resource/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css" rel="stylesheet" />
+	<style type="text/css">
+		body { margin:0 45px 0 0;}
+		form { margin-top:20px;}
+		label { padding-top:6px;padding-right:0;}
+	</style>
+	
+    <!-- Custom Fonts -->
+    <link href="../../../vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+</head>
+
+<body>
+<form class="form-horizontal" role="form" style="margin-top:20px;" id="defaultForm">
+	<div class="container">
+		<#if stockInDomestic??>
+		<input type="hidden" name="id" value="${stockInDomestic.id}">
+		<div class="col-xs-6">
+            <div class="form-group">
+                <label class="col-xs-6 control-label text-right" for="in_date">日期：</label>
+                <div class="col-xs-6">
+                    <input class="form-control form_datetime" placeholder="日期" name="in_date" id="in_date" value="${stockInDomestic.in_date!}">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-xs-6 control-label text-right" for="storage_location">库位：</label>
+                <div class="col-xs-6">
+                    <input class="form-control" placeholder="库位" name="storage_location" id="storage_location" value="${stockInDomestic.storage_location!}">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-xs-6 control-label text-right" for="company_name">物流公司名称：</label>
+                <div class="col-xs-6">
+                    <!-- <input class="form-control" placeholder="物流公司名称" name="company_name" id="company_name" value="${stockInDomestic.company_name!}"> -->
+                    <select class="form-control" name="company_name" id="company_name">
+                        <option value="">物流公司</option>
+                        <#if companyList?? && companyList?size gt 0>
+                        <#list companyList as company>
+                        <option value="${stockInDomestic.company_name!}" <#if company.company_name == stockInDomestic.company_name >selected</#if> >${company.company_name}</option>
+                        </#list>
+                        </#if>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-xs-6 control-label text-right" for="material_no">物料号：</label>
+                <div class="col-xs-6">
+                    <input class="form-control" placeholder="物料号" name="material_no" id="material_no" value="${stockInDomestic.material_no!}">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-xs-6 control-label text-right" for="material">物料描述：</label>
+                <div class="col-xs-6">
+                    <input class="form-control" placeholder="物料描述" name="material" id="material" value="${stockInDomestic.material!}">
+                </div>
+            </div>
+        </div>
+        <div class="col-xs-6">
+            <div class="form-group">
+                <label class="col-xs-6 control-label text-right" for="batch_no">批次号：</label>
+                <div class="col-xs-6">
+                    <input class="form-control" placeholder="批次号" name="batch_no" id="batch_no" value="${stockInDomestic.batch_no!}" readonly>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-xs-6 control-label text-right" for="tray_no">托盘号：</label>
+                <div class="col-xs-6">
+                    <input class="form-control" placeholder="托盘号" name="tray_no" id="tray_no" value="${stockInDomestic.tray_no!}" readonly>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-xs-6 control-label text-right" for="in_quantity">数量（片）：</label>
+                <div class="col-xs-6">
+                    <input class="form-control" placeholder="数量（片）" name="in_quantity" id="in_quantity" value="${stockInDomestic.in_quantity!}">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-xs-6 control-label text-right" for="in_tray_quantity">托盘托数（托）：</label>
+                <div class="col-xs-6">
+                    <input class="form-control" placeholder="托盘托数（托）" name="in_tray_quantity" id="in_tray_quantity" value="${stockInDomestic.in_tray_quantity!}" readonly>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-xs-6 control-label text-right" for="module_power">组件功率（W）：</label>
+                <div class="col-xs-6">
+                    <input class="form-control" placeholder="组件功率（W）" name="module_power" id="module_power" value="${stockInDomestic.module_power!}">
+                </div>
+            </div>
+        </div>
+        <div class="col-xs-12">
+            <div class="form-group">
+                <label class="col-xs-3 control-label" for="v"></label>
+                <div class="col-xs-9">
+                    <!-- <button type="button" class="btn btn-10" id="cancel">取消</button> -->
+                    <button id="v" type="submit" class="btn btn-11">　保存　</button>
+                </div>
+            </div>
+        </div>
+	    <#else>
+        <div class="col-xs-6">
+            <div class="form-group">
+                <label class="col-xs-6 control-label text-right" for="in_date">日期：</label>
+                <div class="col-xs-6">
+                    <input class="form-control form_datetime" placeholder="日期" name="in_date" id="in_date" >
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-xs-6 control-label text-right" for="storage_location">库位：</label>
+                <div class="col-xs-6">
+                    <input class="form-control" placeholder="库位" name="storage_location" id="storage_location">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-xs-6 control-label text-right" for="company_name">物流公司名称：</label>
+                <div class="col-xs-6">
+                    <input class="form-control" placeholder="物流公司名称" name="company_name" id="company_name">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-xs-6 control-label text-right" for="material_no">物料号：</label>
+                <div class="col-xs-6">
+                    <input class="form-control" placeholder="物料号" name="material_no" id="material_no">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-xs-6 control-label text-right" for="material">物料描述：</label>
+                <div class="col-xs-6">
+                    <input class="form-control" placeholder="物料描述" name="material" id="material">
+                </div>
+            </div>
+	   	</div>
+	   	<div class="col-xs-6">
+	   		<div class="form-group">
+                <label class="col-xs-6 control-label text-right" for="batch_no">批次号：</label>
+                <div class="col-xs-6">
+                    <input class="form-control" placeholder="批次号" name="batch_no" id="batch_no">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-xs-6 control-label text-right" for="tray_no">托盘号：</label>
+                <div class="col-xs-6">
+                    <input class="form-control" placeholder="托盘号" name="tray_no" id="tray_no">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-xs-6 control-label text-right" for="in_quantity">数量（片）：</label>
+                <div class="col-xs-6">
+                    <input class="form-control" placeholder="数量（片）" name="in_quantity" id="in_quantity">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-xs-6 control-label text-right" for="in_tray_quantity">托盘托数（托）：</label>
+                <div class="col-xs-6">
+                    <input class="form-control" placeholder="托盘托数（托）" name="in_tray_quantity" id="in_tray_quantity">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-xs-6 control-label text-right" for="module_power">组件功率（W）：</label>
+                <div class="col-xs-6">
+                    <input class="form-control" placeholder="组件功率（W）" name="module_power" id="module_power">
+                </div>
+            </div>
+	   	</div>
+	   	<div class="col-xs-12">
+		    <div class="form-group">
+		        <label class="col-xs-3 control-label" for="v"></label>
+		        <div class="col-xs-9">
+		            <!-- <button type="button" class="btn btn-10" id="cancel">取消</button> -->
+		            <button id="v" type="submit" class="btn btn-11">　保存　</button>
+		       	</div>
+		    </div>
+	   	</div>
+	   	
+	    </#if>
+    </div>
+</form>
+<!-- jQuery -->
+<script src="../../../vendor/jquery/jquery.min.js"></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="../../../vendor/bootstrap/js/bootstrap.min.js"></script>
+
+<!-- Metis Menu Plugin JavaScript -->
+<script src="../../../vendor/metisMenu/metisMenu.min.js"></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="../../../dist/js/sb-admin-2.js"></script>
+<script src="../../../resource/bootstrapvalidator/js/bootstrapValidator.min.js"></script>
+<script src="../../../resource/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js"></script> 
+<script src="../../../resource/bootstrap-datetimepicker/js/moment-with-locales.min.js"></script>
+<script src="../../../resource/bootstrap-datetimepicker/js/locales/bootstrap-datetimepicker.zh-CN.js"></script>
+<script src="../../../js/common/admin.js"></script>
+<script type="text/javascript">
+//日期控件
+$(".form_datetime").datetimepicker({
+	format: "yyyy-mm-dd",
+	autoclose: true,
+	todayBtn: false,
+	todayHighlight: true,
+	showMeridian: true,
+	pickerPosition: "bottom-right",
+	language: 'zh-CN',//中文，需要引用zh-CN.js包
+	startView: 2,// // 日视图
+	minView: 2,
+});
+$(function(){
+	// 表单校验
+	$('form').bootstrapValidator({
+		message: 'This value is not valid',
+		feedbackIcons: {
+			valid: 'glyphicon glyphicon-ok',
+			invalid: 'glyphicon glyphicon-remove',
+			validating: 'glyphicon glyphicon-refresh'
+		},
+		fields: {
+			"in_date": {
+				validators: {
+					notEmpty: {
+						message: '不能为空!'
+					},
+				}
+			},
+			"storage_location": {
+                validators: {
+                    notEmpty: {
+                        message: '不能为空!'
+                    },
+                    regexp: {
+                        regexp: /^[a-zA-Z0-9_\u0391-\uFFE5 ]{1,}$/,
+                        message: '请输入正确的库位'
+                    },
+                    stringLength: {
+                        min: 0,
+                        max: 20,
+                        message: '最多20个字符'
+                    }
+                }
+            },
+            "company_name": {
+                validators: {
+                    notEmpty: {
+                        message: '不能为空!'
+                    },
+                    regexp: {
+                        regexp: /^[a-zA-Z0-9_\u0391-\uFFE5 ]{1,}$/,
+                        message: '请输入正确的公司名'
+                    },
+                    stringLength: {
+                        min: 0,
+                        max: 20,
+                        message: '最多20个字符'
+                    }
+                }
+            },
+            "material_no": {
+                validators: {
+                    notEmpty: {
+                        message: '不能为空!'
+                    },
+                    regexp: {
+                        regexp: /^[a-zA-Z0-9]{1,}$/,
+                        message: '请输入正确的物料号'
+                    },
+                    stringLength: {
+                        min: 0,
+                        max: 20,
+                        message: '最多20个字符'
+                    }
+                }
+            },
+            "material": {
+                validators: {
+                    notEmpty: {
+                        message: '不能为空!'
+                    },
+                    regexp: {
+                        regexp: /^[a-zA-Z0-9_\u0391-\uFFE5 ]{1,}$/,
+                        message: '请输入正确的托盘号'
+                    },
+                    stringLength: {
+                        min: 0,
+                        max: 20,
+                        message: '最多20个字符'
+                    }
+                }
+            },
+            "batch_no": {
+                validators: {
+                    notEmpty: {
+                        message: '不能为空!'
+                    },
+                    regexp: {
+                        regexp: /^[a-zA-Z0-9]{1,}$/,
+                        message: '请输入正确的批次号'
+                    },
+                    stringLength: {
+                        min: 0,
+                        max: 20,
+                        message: '最多20个字符'
+                    }
+                }
+            },
+            "tray_no": {
+                validators: {
+                    notEmpty: {
+                        message: '不能为空!'
+                    },
+                    regexp: {
+                        regexp: /^[a-zA-Z0-9]{1,}$/,
+                        message: '请输入正确的托盘号'
+                    },
+                    stringLength: {
+                        min: 0,
+                        max: 20,
+                        message: '最多20个字符'
+                    }
+                }
+            },
+            "in_quantity": {
+                validators: {
+                    notEmpty: {
+                        message: '不能为空!'
+                    },
+                    regexp: {
+                        regexp: /^[0-9]+$/,
+                        message: '请输入正确的数量'
+                    },
+                    stringLength: {
+                        min: 0,
+                        max: 20,
+                        message: '最多20个字符'
+                    }
+                }
+            },
+            "in_tray_quantity": {
+                validators: {
+                    notEmpty: {
+                        message: '不能为空!'
+                    },
+                    regexp: {
+                        regexp: /^[0-9]+$/,
+                        message: '请输入正确的数量'
+                    },
+                    stringLength: {
+                        min: 0,
+                        max: 20,
+                        message: '最多20个字符'
+                    }
+                }
+            },
+            "module_power": {
+                validators: {
+                    notEmpty: {
+                        message: '不能为空!'
+                    },
+                    regexp: {
+                        regexp: /^[0-9]+$/,
+                        message: '请输入正确的功率'
+                    },
+                    stringLength: {
+                        min: 0,
+                        max: 20,
+                        message: '最多20个字符'
+                    }
+                }
+            }
+		}
+	});
+})
+.on('success.form.bv', function(e) {
+	e.preventDefault();
+	$.post("/warehouse/stockInDomestic/save", $('#defaultForm').serialize(), function(result) {
+		if (result.isSuccess) {
+            parent.layer.msg(result.tips, {time: 2000}, function(){
+                layer_close();
+                parent.parent.refresh_iframe();
+            });
+
+        } else {
+            parent.layer.msg(result.tips, {time: 2000});
+        }
+		
+	});
+});
+
+//取消
+$('#cancel').on("click",function() {
+	layer_close();
+});
+
+</script>
+</body>
+
+</html>

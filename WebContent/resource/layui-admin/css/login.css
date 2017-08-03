@@ -1,0 +1,115 @@
+.beg-login-bg {
+	background: url(../images/seekr.jpg) no-repeat center center fixed;
+}
+.beg-login-box {
+	position: fixed;
+	width: 400px;
+	height: 300px;
+	right: 18%;
+	top: 25%;
+	background-color: rgba(255, 255, 255, 0.407843);
+	border-radius: 10px;
+	color: aliceblue;
+}
+
+.beg-login-box header {
+	height: 39px;
+	padding: 10px;
+	border-bottom: 1px solid aliceblue;
+}
+
+.beg-login-box header h1 {
+	text-align: center;
+	font-size: 25px;
+	line-height: 40px;
+}
+
+.beg-login-box .beg-login-main {
+	height: 185px;
+	padding: 48px 62px 0;
+}
+
+.beg-login-main .layui-form-item {
+	position: relative;
+}
+
+.beg-login-main .layui-form-item .beg-login-icon {
+	position: absolute;
+	color: #cccccc;
+	top: 10px;
+	left: 10px;
+}
+
+.beg-login-main .layui-form-item input {
+	padding-left: 34px;
+}
+
+.beg-login-box footer {
+	height: 35px;
+	padding: 10px 10px 0 10px;
+}
+
+.beg-login-box footer p {
+	line-height: 35px;
+	text-align: center;
+}
+
+.beg-pull-left {
+	float: left !important;
+}
+
+.beg-pull-right {
+	float: right !important;
+}
+
+.beg-clear {
+	clear: both;
+}
+
+.beg-login-remember {
+	line-height: 38px;
+	text-align: center;
+}
+
+.beg-login-remember .layui-form-switch {
+	margin-top: 0px;
+}
+
+.beg-login-code-box {
+	position: relative;
+	padding: 10px;
+}
+
+.beg-login-code-box input {
+	position: absolute;
+	width: 100px;
+}
+
+.beg-login-code-box img {
+	cursor: pointer;
+	position: absolute;
+	left: 115px;
+	height: 38px;
+}
+.license{
+	display: block;
+	font-size: 14px;
+	color: white;
+	position: fixed;
+	bottom: 1%;
+	left: 50%;
+	margin-left: -195px;
+	white-space: nowrap;
+	overflow: hidden;	
+}
+.qd_top{
+	display: block;
+	position: fixed;
+	font-size: 44px;
+	color: white;
+	letter-spacing: 4px;
+	top: 14%;
+	right: 15%;
+	white-space: nowrap;
+	overflow: hidden;
+}
