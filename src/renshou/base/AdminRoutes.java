@@ -1,7 +1,9 @@
 package renshou.base;
 import com.jfinal.config.Routes;
 
-import renshou.leasewarehouse.LeaseInController;
+import renshou.leasewarehouse.in.LeaseInController;
+import renshou.leasewarehouse.inventory.LeaseInventoryController;
+import renshou.leasewarehouse.out.LeaseOutController;
 import renshou.login.LoginController;
 import renshou.system.authority.AuthorityController;
 import renshou.system.button.ButtonController;
@@ -42,8 +44,11 @@ public class AdminRoutes extends Routes{
 		//系统管理-权限管理控制器
 		add("/system/authority",AuthorityController.class,"/systemcontrol");
 
-		//系统管理-权限管理控制器
+		//租赁仓库-入库
         add("/leasewarehouse/leaseIn",LeaseInController.class,"/leasewarehouse");
-
+        //租赁仓库-出库
+        add("/leasewarehouse/leaseOut",LeaseOutController.class,"/leasewarehouse");
+        //租赁仓库-库存
+        add("/leasewarehouse/leaseInventory",LeaseInventoryController.class,"/leasewarehouse");
 	}
 }

@@ -9,7 +9,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>租赁仓库管理-入库管理</title>
+    <title>租赁仓库管理-库存管理</title>
 
     <!-- Bootstrap Core CSS -->
     <link href="../../../vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
@@ -53,23 +53,17 @@
 						<div class="col-sm-1 col-xs-12 head_1">
 							<button class="btn btn-primary" onclick="doQuery()">查询</button>
 						</div>                    			
-						<div class="col-sm-2 col-xs-6 head_1">
+						<!-- <div class="col-sm-2 col-xs-6 head_1">
 		                    <button class="btn btn-success" onclick="_add()">新增</button>
-		                </div>
+		                </div> -->
                         <!-- <div class="col-sm-1 col-xs-12 head_1">
                             <button class="btn btn-3"  onclick="_edit1()">编辑</button>
                         </div> -->
-                        <div class="col-sm-2 col-xs-6 head_1" >
-		                     <button class="btn btn-4" onclick=" _batchDelete()">删除</button>
-		                </div>
 		                <div class="col-sm-1 col-xs-12 head_1">
-                            <button class="btn btn-3"  onclick="_check()">查看</button>
-                        </div>
-                        <div class="col-sm-2 col-xs-12 head_4">
-                            <button class="btn btn-3"  onclick="_check()">确认入库</button>
+                            <button class="btn btn-3"  onclick="_edit1()">查看</button>
                         </div>
 		                <div class="col-sm-1 col-xs-4 head_1">
-                             <button class="btn btn-9 " onclick="location.replace('/leasewarehouse/leaseIn')"><i class="fa fa-refresh"></i></button>
+                             <button class="btn btn-9 " onclick="location.replace('/leasewarehouse/leaseInventory')"><i class="fa fa-refresh"></i></button>
                         </div>                  
 					</div>				
 				</div>
@@ -140,7 +134,7 @@ var TableInit = function () {
     //初始化Table
     oTableInit.Init = function () {
         $('#tb_departments').bootstrapTable({
-            url: '/leasewarehouse/leaseIn/getJson',         //请求后台的URL（*）
+            url: '/leasewarehouse/leaseInventory/getJson',         //请求后台的URL（*）
             method: 'get',                      //请求方式（*）
            	toolbar: '#toolbar',                //工具按钮用哪个容器
             showExport: true,                     //是否显示导出
@@ -182,9 +176,6 @@ var TableInit = function () {
                 field: 'warehouse_in_no',
                 title: '入库单号'
             }, {
-                field: 'warehouse_in_date',
-                title: '入库日期'
-            }, {
                 field: 'customer',
                 title: '客户名称'
             }, {
@@ -193,21 +184,6 @@ var TableInit = function () {
             }, {
                 field: 'location',
                 title: '摆放位置'
-            }, {
-                field: 'warehouse_in_person',
-                title: '入库人'
-            }, {
-                field: 'state',
-                title: '入库状态',
-                formatter:function(value,row,index){
-                    return row.state == true ? "已入库 ": "未确认";
-                }
-            }, {
-                field:'opt',
-                title:'操作',
-                formatter:function(value,row,index){
-                          return['<button class="btn btn-xs btn-3"  onclick="_edit('+row.id+')">编辑</button>' ]
-                },
             }]
         });
     };
@@ -241,7 +217,7 @@ var ButtonInit = function () {
 
 // 编辑
 function _edit(id){
-	open_window('编辑入库明细','/leasewarehouse/leaseIn/getRecord/' + id, 760, 450);
+	open_window('编辑入库明细（国内）','/leasewarehouse/leaseInventory/getRecord/' + id, 760, 370);
 }
 function _edit1(){
     // 获取选中记录 id
@@ -255,23 +231,13 @@ function _edit1(){
         layer.msg('最多选择选择一条记录', {time: 2000});
     }
 }
-// 查看
-function _check(){
-    // 获取选中记录 id
-    var id = getIdSelections();
-    // 如果没有选择，提示勾选至少一条数据
-    if (id.length == 0) {
-        layer.msg('请选择一条记录', {time: 2000});
-    } else if (id.length == 1){
-    	open_window('查看','/leasewarehouse/leaseIn/check/' + id, 800, 370);
-    } else {
-        layer.msg('最多选择选择一条记录', {time: 2000});
-    }
-}
-
 // 新增
 function _add(){
-	open_window('新增入库明细','/leasewarehouse/leaseIn/getRecord', 760, 450);
+	open_window('新增入库明细（国内）','/leasewarehouse/leaseInventory/getRecord', 800, 350);
+}
+// 导入
+function _import() {
+    open_window('导入入库明细（国内）','/leasewarehouse/leaseInventory/importUI', 480, 200);
 }
 // 批量删除
 function _batchDelete(){
@@ -287,7 +253,7 @@ function _batchDelete(){
             title: ['信息', 'font-weight:600;color:#fff;background-color: #3367D6;'],
             btn: ['确认','取消'] //按钮
         }, function(){
-            $.post("/leasewarehouse/leaseIn/delete/" + ids,function(result) {
+            $.post("/leasewarehouse/leaseInventory/delete/" + ids,function(result) {
                 if (result.isSuccess) {
                     layer.msg(result.tips, {time: 2000}, function(){
                         parent.refresh_iframe();

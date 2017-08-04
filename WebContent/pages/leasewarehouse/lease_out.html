@@ -9,7 +9,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>租赁仓库管理-入库管理</title>
+    <title>租赁仓库管理-出库管理</title>
 
     <!-- Bootstrap Core CSS -->
     <link href="../../../vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
@@ -66,10 +66,10 @@
                             <button class="btn btn-3"  onclick="_check()">查看</button>
                         </div>
                         <div class="col-sm-2 col-xs-12 head_4">
-                            <button class="btn btn-3"  onclick="_check()">确认入库</button>
+                            <button class="btn btn-3"  onclick="_check()">确认出库</button>
                         </div>
 		                <div class="col-sm-1 col-xs-4 head_1">
-                             <button class="btn btn-9 " onclick="location.replace('/leasewarehouse/leaseIn')"><i class="fa fa-refresh"></i></button>
+                             <button class="btn btn-9 " onclick="location.replace('/leasewarehouse/leaseOut')"><i class="fa fa-refresh"></i></button>
                         </div>                  
 					</div>				
 				</div>
@@ -140,7 +140,7 @@ var TableInit = function () {
     //初始化Table
     oTableInit.Init = function () {
         $('#tb_departments').bootstrapTable({
-            url: '/leasewarehouse/leaseIn/getJson',         //请求后台的URL（*）
+            url: '/leasewarehouse/leaseOut/getJson',         //请求后台的URL（*）
             method: 'get',                      //请求方式（*）
            	toolbar: '#toolbar',                //工具按钮用哪个容器
             showExport: true,                     //是否显示导出
@@ -179,11 +179,14 @@ var TableInit = function () {
             		return index+1;
             	}
             }, {
+                field: 'warehouse_out_no',
+                title: '出库单号'
+            }, {
+                field: 'warehouse_out_date',
+                title: '出库日期'
+            }, {
                 field: 'warehouse_in_no',
                 title: '入库单号'
-            }, {
-                field: 'warehouse_in_date',
-                title: '入库日期'
             }, {
                 field: 'customer',
                 title: '客户名称'
@@ -194,11 +197,11 @@ var TableInit = function () {
                 field: 'location',
                 title: '摆放位置'
             }, {
-                field: 'warehouse_in_person',
-                title: '入库人'
+                field: 'warehouse_out_person',
+                title: '出库人'
             }, {
                 field: 'state',
-                title: '入库状态',
+                title: '出库状态',
                 formatter:function(value,row,index){
                     return row.state == true ? "已入库 ": "未确认";
                 }
@@ -241,7 +244,7 @@ var ButtonInit = function () {
 
 // 编辑
 function _edit(id){
-	open_window('编辑入库明细','/leasewarehouse/leaseIn/getRecord/' + id, 760, 450);
+	open_window('编辑出库明细','/leasewarehouse/leaseOut/getRecord/' + id, 760, 450);
 }
 function _edit1(){
     // 获取选中记录 id
@@ -255,7 +258,7 @@ function _edit1(){
         layer.msg('最多选择选择一条记录', {time: 2000});
     }
 }
-// 查看
+//查看
 function _check(){
     // 获取选中记录 id
     var id = getIdSelections();
@@ -263,15 +266,14 @@ function _check(){
     if (id.length == 0) {
         layer.msg('请选择一条记录', {time: 2000});
     } else if (id.length == 1){
-    	open_window('查看','/leasewarehouse/leaseIn/check/' + id, 800, 370);
+        open_window('查看','/leasewarehouse/leaseOut/check/' + id, 800, 370);
     } else {
         layer.msg('最多选择选择一条记录', {time: 2000});
     }
 }
-
 // 新增
 function _add(){
-	open_window('新增入库明细','/leasewarehouse/leaseIn/getRecord', 760, 450);
+	open_window('新增入库明细）','/leasewarehouse/leaseOut/getRecord', 760, 450);
 }
 // 批量删除
 function _batchDelete(){
@@ -287,7 +289,7 @@ function _batchDelete(){
             title: ['信息', 'font-weight:600;color:#fff;background-color: #3367D6;'],
             btn: ['确认','取消'] //按钮
         }, function(){
-            $.post("/leasewarehouse/leaseIn/delete/" + ids,function(result) {
+            $.post("/leasewarehouse/leaseOut/delete/" + ids,function(result) {
                 if (result.isSuccess) {
                     layer.msg(result.tips, {time: 2000}, function(){
                         parent.refresh_iframe();

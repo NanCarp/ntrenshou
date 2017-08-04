@@ -1,0 +1,38 @@
+body {
+    padding: 0 50pt 0 50pt;
+}
+table { 
+    width: 500pt;
+    border-collapse:collapse;
+}
+tr {
+    height: 20pt;
+}
+td {
+    width: 100pt;
+    border: 1pt solid #000000;
+    text-align: center;
+}
+.r1 {
+  width: 500pt;
+  height: 30pt;
+  text-align: center;
+  font-family: "Microsoft YaHei";
+  font-size: 20pt;
+}
+.r2 {
+  width: 500pt;
+  height: 22pt;
+  text-align: center;
+  font-family: "Microsoft YaHei";
+  font-size: 16pt;
+}
+.r3>.left, 
+.r3>.right,
+.r4 {
+  width: 50%;
+  height: 20pt;
+  text-align: left;
+  float: left;
+  line-height: 20pt;
+}
