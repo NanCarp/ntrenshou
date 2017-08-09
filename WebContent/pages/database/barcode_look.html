@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>条形码管理</title>
+
+    <!-- Bootstrap Core CSS -->
+    <link href="../../../vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- DataTables CSS -->
+  <!--   <link href="../../vendor/datatables-plugins/dataTables.bootstrap.css" rel="stylesheet"> -->
+	<link href="../../../resource/bootstrap-table/bootstrap-table.min.css" rel="stylesheet">
+    <!-- DataTables Responsive CSS -->
+    <link href="../../../vendor/datatables-responsive/dataTables.responsive.css" rel="stylesheet">
+
+    <!-- Custom CSS -->
+    <link href="../../../resource/bootstrapvalidator/css/bootstrapValidator.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../../resource/layui/css/layui.css" media="all" />
+    <link href="../../../dist/css/sb-admin-2.css" rel="stylesheet">
+    <link href="../../../css/common/common.css" rel="stylesheet">
+    <link href="../../../css/admin.css" rel="stylesheet">
+	<link href="../../vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css"> 
+	<link href="../../../resource/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css" rel="stylesheet" />
+	<link href="../../css/print/jqprint.css" rel="stylesheet">
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->	
+</head>
+<body>
+	<#if storages?? && storages?size gt 0>
+	<#list storages as storage>
+	<div class="contant">
+		<div class="title">${storage.trade_name!}</div>
+		<div class="center">
+			<table class="tablestyle">
+				<tr>
+					<td class="tabletr">产品编号:</td><td class="tabletext">${storage.product_num!}</td><td class="tabletr">规格:</td><td class="tabletext">${storage.specifications!}</td>
+				</tr>
+				<tr>
+					<td class="tabletr">计量单位:</td><td class="tabletext">${storage.measurement_unit!}</td><td></td><td></td>
+				</tr>	
+				<tr>
+					<td class="tabletr">备注:</td><td colspan="3" style="white-space: normal;font-size: 16px;text-align: left;">${storage.remark!}</td>
+				</tr>		
+			</table>
+		</div>
+		<div class="imgdiv">
+			<img class="${storage.product_num!}"/>
+		</div>
+	</div>
+	</#list>
+	</#if>
+	<div style="padding-bottom: 40px" class="form-group">
+        <label class="col-xs-8 control-label" for="v"></label>
+        <div style="padding-left: 36px" class="col-xs-3">
+            <button id="v" type="button" class="btn btn-primary" onclick="print()">　打印　</button>
+        </div>
+    </div>
+	
+<!-- jQuery -->
+<script src="../../../vendor/jquery/jquery.min.js"></script>
+<script src="../../../resource/jquery.base64/jquery.base64.js"></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="../../../vendor/bootstrap/js/bootstrap.min.js"></script>
+
+<!-- DataTables JavaScript -->
+<!-- <script src="../../vendor/datatables/js/jquery.dataTables.min.js"></script> -->
+
+<!-- <script src="../../vendor/datatables-plugins/dataTables.bootstrap.min.js"></script> -->
+
+
+<script src="../../../resource/bootstrap-table/bootstrap-table.js" type="text/javascript"></script>
+<script src="../../../resource/tableExport.jquery.plugin/tableExport.jquery.plugin/tableExport.js" type="text/javascript"></script> 
+<script src="../../../resource/bootstrap-table/extensions/export/bootstrap-table-export.js" type="text/javascript"></script>
+<script src="../../../resource/bootstrap-table/locale/bootstrap-table-zh-CN.js" type="text/javascript"></script>
+<script src="../../../resource/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js"></script> 
+<script src="../../../resource/bootstrap-datetimepicker/js/locales/bootstrap-datetimepicker.zh-CN.js"></script>
+<!-- Custom Theme JavaScript -->
+<script src="../../js/Barcode/JsBarcode.all.js"></script>
+<script src="../../../resource/layer/layer.js"></script>
+<script src="../../../resource/layui/layui.js"></script>
+<script src="../../../js/common/admin.js"></script>
+<script src="../../js/jqprint/jquery.jqprint-0.3.js"></script>
+<script src="../../js/jqprint/jquery-migrate-1.0.0.js"></script>
+<script>
+$(function(){
+	$('.contant').each(function(k,v){
+		var code=$(v).find("td").eq(1).html();
+		JsBarcode("."+code,code, {
+			  format: "CODE128",//选择要使用的条形码类型
+			  width:3,//设置条之间的宽度
+			  height:60,//高度
+			  displayValue:true,//是否在条形码下方显示文字
+			  //text:"456",//覆盖显示的文本
+			  fontOptions:"bold italic",//使文字加粗体或变斜体
+			  font:"fantasy",//设置文本的字体
+			  //textAlign:"left",//设置文本的水平对齐方式
+			  //textPosition:"top",//设置文本的垂直位置
+			  //textMargin:6,//设置条形码和文本之间的间距
+			  fontSize:20,//设置文本的大小
+			  //background:"#eee",//设置条形码的背景
+			  //lineColor:"#2196f3",//设置条和文本的颜色。
+			  margin:0//设置条形码周围的空白边距
+			});	
+	})
+})	
+
+function  print(){
+        $(".contant").jqprint();
+}
+
+</script>
+
+
+</body>
+
+</html>

@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>成品管理-新增/修改</title>
+
+    <!-- Bootstrap Core CSS -->
+    <link href="../../../vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- MetisMenu CSS -->
+    <link href="../../../vendor/metisMenu/metisMenu.min.css" rel="stylesheet">
+
+    <!-- Custom CSS -->
+	<link href="../../../css/admin.css" rel="stylesheet">
+	<link href="../../../resource/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css" rel="stylesheet" />
+	<style type="text/css">
+		body { margin:0 15px;}
+		form { margin-top:20px;}
+		label { padding-top:6px;padding-right:0;}
+		th,td{text-align: center;}
+	</style>
+	
+    <!-- Custom Fonts -->
+    <link href="../../../vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+</head>
+<body style="width: 90%">
+<form class="form-horizontal" role="form" style="margin-top: 20px" id="defaultForm">
+	<div class="panel-body">
+       <table width="100%" class="table table-striped table-bordered table-hover" id="dataTables-example">
+           <thead>
+              <tr>
+                <th>序号</th>
+                <th>产品编号</th>
+                <th>品名</th>
+                <th>打印数量</th>
+              </tr>
+              </thead>
+              <tbody>
+                  <#if userList?? && userList?size gt 0>
+                  <#list userList as user>
+                  <tr>
+                      <td>${user_index+1}</td>
+                      <td>${user.product_num!}</td>
+                      <td>${user.trade_name!}</td>
+                      <td><input type="text" class="form-control jiao" placeholder="打印数量" style="max-width: 100px;margin: 0 auto" name="${user.product_num}" id="${user.product_num}" value="1"></td>
+                  </tr>
+                  </#list>
+                  <#else>
+                  	<td colspan="4">数据异常请稍候再试</td>
+                  </#if>
+              </tbody>
+          </table>
+      </div>
+    <div class="form-group">
+        <label class="col-xs-8 control-label" for="v"></label>
+        <div style="padding-left: 36px" class="col-xs-3">
+            <button id="v" type="submit" class="btn btn-primary">　确认　</button>
+        </div>
+    </div>
+</form>
+<!-- jQuery -->
+<script src="../../../vendor/jquery/jquery.min.js"></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="../../../vendor/bootstrap/js/bootstrap.min.js"></script>
+<script src="../../../resource/layer/layer.js"></script>
+<script src="../../../resource/layui/layui.js"></script>
+<!-- Metis Menu Plugin JavaScript -->
+<script src="../../../vendor/metisMenu/metisMenu.min.js"></script>
+<!-- Custom Theme JavaScript -->
+<script src="../../../resource/bootstrapvalidator/js/bootstrapValidator.min.js"></script>
+<script src="../../../js/common/admin.js"></script>
+<script type="text/javascript">
+$(function(){
+	// 表单校验
+	$('form').bootstrapValidator({
+		message: 'This value is not valid',
+		feedbackIcons: {
+			valid: 'glyphicon glyphicon-ok',
+			invalid: 'glyphicon glyphicon-remove',
+			validating: 'glyphicon glyphicon-refresh'
+		},
+		fields: {
+		}
+	});
+})
+.on('success.form.bv', function(e) {
+	e.preventDefault();
+	layui.use('layer',function(){
+		var layer = layui.layer;
+		var flag = true;
+		$("tbody tr").each(function(k,v){
+			if($.trim($(v).find('input').val())!=''){
+				var reg = /^\d{1,2}$/;
+				var id = $(v).find('td').eq(1).html();
+				if(!reg.test($.trim($(v).find('input').val()))){
+					flag = false;
+					layer.tips('请输入正确的打印数量', '#'+id, {tips: [1, '#34495E']});return;
+				}					
+			}
+		})
+		if(flag){
+			$.post("/database/barcode/getPrintNum", $('#defaultForm').serialize(), function(){
+				layer_close();
+				parent.open_window('查看条形码','/database/barcode/showPrint', 600, 400);
+			});
+		}		
+	})
+});
+
+</script>
+</body>
+
+</html>

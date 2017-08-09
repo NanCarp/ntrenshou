@@ -9,7 +9,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>入库明细（国内）</title>
+    <title>出库明细</title>
 
     <!-- Bootstrap Core CSS -->
     <link href="../../../vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
@@ -26,9 +26,11 @@
         .container {
             width: 100% !important;
         }
-        tbody .form-control {
-            margin-left: 10%;
-            width: 80%;
+        tbody .form-group {
+            margin-bottom: 0px;
+        }
+        td .out_quantity {
+            width: 100px;
         }
     </style>
 	
@@ -45,146 +47,117 @@
 </head>
 
 <body>
+<div class="container">
 <form class="form-horizontal" role="form" style="margin-top:20px;" id="defaultForm">
-	<div class="container">
-		<#if Record??>
-		<input type="hidden" name="id" value="${record.id}">
+		<#if record??>
+		<input type="hidden" name="id" value="${record.id}" id="id">
+		<div class="form-group" hidden=""><input type="hidden" name="warehouse_in_id" value="${record.warehouse_in_id}" id="warehouse_in_id"></div>
 		<div class="col-xs-6">
-            <div class="form-group">
-                <label class="col-xs-6 control-label text-right" for="storage_location">入库单号：</label>
-                <div class="col-xs-6">
-                    <input class="form-control" placeholder="库位" name="storage_location" id="storage_location" value="${stockInDomestic.storage_location!}">
+            <div >
+                <label class="col-xs-4 control-label text-left" for="warehouse_in_no">入库单号：</label>
+                <div class="col-xs-8">
+                    <input class="form-control" placeholder="入库单号" name="warehouse_in_no" value="${record.warehouse_in_no!}" readonly>
                 </div>
             </div>
-            <div class="form-group">
-                <label class="col-xs-6 control-label text-right" for="in_date">入库日期：</label>
-                <div class="col-xs-6">
-                    <input class="form-control form_datetime" placeholder="日期" name="in_date" id="in_date" value="${stockInDomestic.in_date!}">
-                </div>
-            </div>
-            <div class="form-group">
-                <label class="col-xs-6 control-label text-right" for="storage_location">客户名称：</label>
-                <div class="col-xs-6">
-                    <input class="form-control" placeholder="库位" name="storage_location" id="storage_location" value="${stockInDomestic.storage_location!}">
-                </div>
-            </div>
-            <!-- <div class="form-group">
-                <label class="col-xs-6 control-label text-right" for="company_name">物流公司名称：</label>
-                <div class="col-xs-6">
-                    <input class="form-control" placeholder="物流公司名称" name="company_name" id="company_name" value="${stockInDomestic.company_name!}">
-                    <select class="form-control" name="company_name" id="company_name">
-                        <option value="">物流公司</option>
-                        <#if companyList?? && companyList?size gt 0>
-                        <#list companyList as company>
-                        <option value="${stockInDomestic.company_name!}" <#if company.company_name == stockInDomestic.company_name >selected</#if> >${company.company_name}</option>
-                        </#list>
-                        </#if>
-                    </select>
-                </div>
-            </div> -->
         </div>
         <div class="col-xs-6">
             <div class="form-group">
-                <label class="col-xs-6 control-label text-right" for="batch_no">对应仓库：</label>
-                <div class="col-xs-6">
-                    <input class="form-control" placeholder="对应仓库" name="batch_no" id="batch_no" value="${stockInDomestic.batch_no!}" readonly>
-                </div>
-            </div>
-            <div class="form-group">
-                <label class="col-xs-6 control-label text-right" for="tray_no">摆放位置：</label>
-                <div class="col-xs-6">
-                    <input class="form-control" placeholder="托盘号" name="tray_no" id="tray_no" value="${stockInDomestic.tray_no!}" readonly>
-                </div>
-            </div>
-            <div class="form-group">
-                <label class="col-xs-6 control-label text-right" for="in_quantity">入库状态：</label>
-                <div class="col-xs-6">
-                    <input class="form-control" placeholder="数量（片）" name="in_quantity" id="in_quantity" value="${stockInDomestic.in_quantity!}">
+                <label class="col-xs-4 control-label text-left" for="warehouse_out_no">出库单号：</label>
+                <div class="col-xs-8">
+                    <input class="form-control" placeholder="自动生成" name="warehouse_out_no" id="warehouse_out_no" value="${record.warehouse_out_no!}" readonly>
                 </div>
             </div>
         </div>
 	    <#else>
+	    <div class="col-xs-6">
+            <div class="form-group">
+                <label class="col-xs-4 control-label text-left" for="warehouse_in_id">入库单号：</label>
+                <div class="col-xs-8">
+                    <select class="form-control" name="warehouse_in_id" id="warehouse_in_id">
+                        <option value="">其选择入库单号</option>
+                        <#if warehouseInList ??>
+                        <#list warehouseInList as warehouseIn>
+                            <option value="${warehouseIn.id!}">${warehouseIn.warehouse_in_no!}</option>
+                        </#list>
+                        </#if>
+                    </select>
+                </div>
+            </div>
+        </div>
         <div class="col-xs-6">
             <div class="form-group">
-                <label class="col-xs-4 control-label text-left" for="storage_location">出库单号：</label>
+                <label class="col-xs-4 control-label text-left" for="warehouse_out_no">出库单号：</label>
                 <div class="col-xs-8">
-                    <input class="form-control" placeholder="自动生成" name="storage_location" id="storage_location" readonly>
+                    <input class="form-control" placeholder="自动生成" name="warehouse_out_no" id="warehouse_out_no" readonly>
                 </div>
+            </div>
+	   	</div>
+	   	</#if>
+	</form>
+	<form id="f1">
+            <div class="col-xs-12">
+            
+            <!-- <div class="panel panel-default">
+            <div class="panel-heading"> -->
+                <div class="container container-fluid">
+                    <div class="row">
+                        <!-- <div class="col-sm-2 col-xs-2 head_3">
+                            <button type="button" class="btn btn-success" onclick="_newRow()">新增行</button>
+                        </div> -->
+                        <div class="col-sm-2 col-xs-2 head_3">
+                            <button type="button" class="btn btn-4" onclick="_deleteRow()">删除行</button>
+                        </div>
+                        <!-- <div class="col-sm-2 col-xs-2 head_1">
+                            <button  type="button" class="btn btn-3" onclick="_editRow()">编辑</button>
+                        </div> -->
+                    </div>
+                </div>
+            <!-- </div> -->
+            <!-- <div class="panel-body"> -->
+                <table width="100%" class="table table-striped table-bordered table-hover">
+                    <thead>
+                        <tr>
+                            <th><input type="checkbox" id="checkAll"></th>
+                            <th>序号</th>
+                            <th>产品</th>
+                            <th>规格</th>
+                            <th>单位</th>
+                            <th>数量</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tbody">
+                        <#if productList?? && productList?size gt 0>
+                        <#list productList as product>
+                        <tr class="edit" _id="${product.product_id}" unit_price="${product.unit_price}">
+                            <td><input type="checkbox" name="sub"></td>
+                            <td name="count">${product_index+1}</td>
+                            <td>${product.name!}</td>
+                            <td>${product.specification!}</td>
+                            <td>${product.unit!}</td>
+                            <td class="out_quantity">
+                                <div class="form-group form-group-sm"><input class="form-control" type="text" name="out_quantity" value="${product.out_quantity!}"/></div>
+                            </td>
+                        </tr>
+                        </#list>
+                        </#if>
+                    </tbody>
+                </table>
+            <!-- </div> --> <!-- panel-body -->
+            <!-- </div> --> <!-- panel panel-default -->
             </div>
             
-	   	</div>
-	   	<div class="col-xs-6">
-	   		<div class="form-group">
-                <label class="col-xs-4 control-label text-left" for="in_date">出库日期：</label>
-                <div class="col-xs-8">
-                    <input class="form-control form_datetime" placeholder="出库日期" name="in_date" id="in_date" >
+            <div class="col-xs-12">
+                <div class="form-group">
+                    <label class="col-xs-10 control-label" for="v"></label>
+                    <div class="col-xs-2">
+                        <!-- <button type="button" class="btn btn-10" id="cancel">取消</button> -->
+                        <button id="v" type="button" class="btn btn-11 text-right">　 保存 　</button>
+                    </div>
                 </div>
             </div>
-	   	</div>
-	   	<div class="col-xs-12">
-        <!-- <div class="panel panel-default">
-        <div class="panel-heading"> -->
-            <div class="container container-fluid">
-                <div class="row">
-                    <div class="col-sm-2 col-xs-2 head_3">
-                        <button type="button" class="btn btn-success" onclick="_newRow()">新增行</button>
-                    </div>
-                    <div class="col-sm-2 col-xs-2 head_3">
-                        <button type="button" class="btn btn-4" onclick="_deleteRow()">删除行</button>
-                    </div>
-                    <div class="col-sm-2 col-xs-2 head_1">
-                        <button  type="button" class="btn btn-3" onclick="_editRow()">编辑</button>
-                    </div>
-                    <!-- <div class="col-sm-2 col-xs-2 head_1">
-                        <button class="btn btn-11" onclick="_saveRow()">保存</button>
-                    </div> -->
-                </div>
-            </div>
-        <!-- </div> -->
-        <!-- <div class="panel-body"> -->
-            <table width="100%" class="table table-striped table-bordered table-hover" id="dataTables-example">
-                <thead>
-                    <tr>
-                        <th><input type="checkbox" id="checkAll"></th>
-                        <th>序号</th>
-                        <th>产品</th>
-                        <th>规格</th>
-                        <th>单位</th>
-                        <th>出库数量</th>
-                    </tr>
-                </thead>
-                <tbody id="tbody">
-                    <#if productList?? && productList?size gt 0>
-                    <#list productList as product>
-                    <tr>
-                        <td><input type="checkbox" name="sub" _id="${product.id}"></td>
-                        <td>${product_index+1}</td>
-                        <td>${product.name!}</td>
-                        <td>${product.specification!}</td>
-                        <td>${product.unit!}</td>
-                        <td>${product.out_quantity!}</td>
-                    </tr>
-                    </#list>
-                    </#if>
-                </tbody>
-            </table>
-        <!-- </div> --> <!-- panel-body -->
-        <!-- </div> --> <!-- panel panel-default -->
-        </div>
-	   	
-	   	<div class="col-xs-12">
-		    <div class="form-group">
-		        <label class="col-xs-10 control-label" for="v"></label>
-		        <div class="col-xs-2">
-		            <!-- <button type="button" class="btn btn-10" id="cancel">取消</button> -->
-		            <button id="v" type="submit" class="btn btn-11">　 保存 　</button>
-		       	</div>
-		    </div>
-	   	</div>
-	   	
-	    </#if>
-    </div>
-</form>
+        </form>
+        
+    </div><!-- container -->
 <!-- jQuery -->
 <script src="../../../vendor/jquery/jquery.min.js"></script>
 
@@ -198,6 +171,7 @@
 <script src="../../../resource/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js"></script> 
 <script src="../../../resource/bootstrap-datetimepicker/js/moment-with-locales.min.js"></script>
 <script src="../../../resource/bootstrap-datetimepicker/js/locales/bootstrap-datetimepicker.zh-CN.js"></script>
+<script src="../../../js/common/admin.js"></script>
 <script type="text/javascript">
 //日期控件
 $(".form_datetime").datetimepicker({
@@ -208,174 +182,58 @@ $(".form_datetime").datetimepicker({
 	showMeridian: true,
 	pickerPosition: "bottom-right",
 	language: 'zh-CN',//中文，需要引用zh-CN.js包
-	startView: 2,// // 日视图
+	startView: 2,// 日视图
 	minView: 2,
 });
-$(function(){
-	// 表单校验
-	$('form').bootstrapValidator({
-		message: 'This value is not valid',
-		feedbackIcons: {
-			valid: 'glyphicon glyphicon-ok',
-			invalid: 'glyphicon glyphicon-remove',
-			validating: 'glyphicon glyphicon-refresh'
-		},
-		fields: {
-			"in_date": {
-				validators: {
-					notEmpty: {
-						message: '不能为空!'
-					},
-				}
-			},
-			"storage_location": {
-                validators: {
-                    notEmpty: {
+
+function bind(){
+    // 表单校验
+    $('#f1').bootstrapValidator({
+        //message: 'This value is not valid',
+        feedbackIcons: {
+            valid: 'glyphicon glyphicon-ok',
+            invalid: 'glyphicon glyphicon-remove',
+            validating: 'glyphicon glyphicon-refresh'
+        },
+        fields: {
+            name: {
+                "out_quantity": {
+                    notEmpty:{
                         message: '不能为空!'
                     },
                     regexp: {
-                        regexp: /^[a-zA-Z0-9_\u0391-\uFFE5 ]{1,}$/,
-                        message: '请输入正确的库位'
+                        regexp: /^[a-zA-Z0-9_\u0391-\uFFE5]+$/,
+                        message: '不能包含特殊字符'
                     },
                     stringLength: {
                         min: 0,
                         max: 20,
-                        message: '最多20个字符'
-                    }
-                }
-            },
-            "company_name": {
-                validators: {
-                    notEmpty: {
-                        message: '不能为空!'
-                    },
-                    regexp: {
-                        regexp: /^[a-zA-Z0-9_\u0391-\uFFE5 ]{1,}$/,
-                        message: '请输入正确的公司名'
-                    },
-                    stringLength: {
-                        min: 0,
-                        max: 20,
-                        message: '最多20个字符'
-                    }
-                }
-            },
-            "material_no": {
-                validators: {
-                    notEmpty: {
-                        message: '不能为空!'
-                    },
-                    regexp: {
-                        regexp: /^[a-zA-Z0-9]{1,}$/,
-                        message: '请输入正确的物料号'
-                    },
-                    stringLength: {
-                        min: 0,
-                        max: 20,
-                        message: '最多20个字符'
-                    }
-                }
-            },
-            "material": {
-                validators: {
-                    notEmpty: {
-                        message: '不能为空!'
-                    },
-                    regexp: {
-                        regexp: /^[a-zA-Z0-9_\u0391-\uFFE5 ]{1,}$/,
-                        message: '请输入正确的托盘号'
-                    },
-                    stringLength: {
-                        min: 0,
-                        max: 20,
-                        message: '最多20个字符'
-                    }
-                }
-            },
-            "batch_no": {
-                validators: {
-                    notEmpty: {
-                        message: '不能为空!'
-                    },
-                    regexp: {
-                        regexp: /^[a-zA-Z0-9]{1,}$/,
-                        message: '请输入正确的批次号'
-                    },
-                    stringLength: {
-                        min: 0,
-                        max: 20,
-                        message: '最多20个字符'
-                    }
-                }
-            },
-            "tray_no": {
-                validators: {
-                    notEmpty: {
-                        message: '不能为空!'
-                    },
-                    regexp: {
-                        regexp: /^[a-zA-Z0-9]{1,}$/,
-                        message: '请输入正确的托盘号'
-                    },
-                    stringLength: {
-                        min: 0,
-                        max: 20,
-                        message: '最多20个字符'
-                    }
-                }
-            },
-            "in_quantity": {
-                validators: {
-                    notEmpty: {
-                        message: '不能为空!'
-                    },
-                    regexp: {
-                        regexp: /^[0-9]+$/,
-                        message: '请输入正确的数量'
-                    },
-                    stringLength: {
-                        min: 0,
-                        max: 20,
-                        message: '最多20个字符'
-                    }
-                }
-            },
-            "in_tray_quantity": {
-                validators: {
-                    notEmpty: {
-                        message: '不能为空!'
-                    },
-                    regexp: {
-                        regexp: /^[0-9]+$/,
-                        message: '请输入正确的数量'
-                    },
-                    stringLength: {
-                        min: 0,
-                        max: 20,
-                        message: '最多20个字符'
-                    }
-                }
-            },
-            "module_power": {
-                validators: {
-                    notEmpty: {
-                        message: '不能为空!'
-                    },
-                    regexp: {
-                        regexp: /^[0-9]+$/,
-                        message: '请输入正确的功率'
-                    },
-                    stringLength: {
-                        min: 0,
-                        max: 20,
-                        message: '最多20个字符'
+                        message: '不能超过 20 个字符',
                     }
                 }
             }
-		}
-	});
-})
-.on('success.form.bv', function(e) {
+        }
+    });
+}
+//表单校验
+$('#defaultForm').bootstrapValidator({
+    message: 'This value is not valid',
+    feedbackIcons: {
+        valid: 'glyphicon glyphicon-ok',
+        invalid: 'glyphicon glyphicon-remove',
+        validating: 'glyphicon glyphicon-refresh'
+    },
+    fields: {
+        "warehouse_in_id": {
+            validators: {
+                notEmpty: {
+                    message: '不能为空!'
+                }
+            }
+        },
+    }
+});
+/* .on('success.form.bv', function(e) {
 	e.preventDefault();
 	$.post("/leasewarehouse/leaseOut/save", $('#defaultForm').serialize(), function(result) {
 		if (result.isSuccess) {
@@ -389,34 +247,27 @@ $(function(){
         }
 		
 	});
-});
+}); */
 
-//取消
+// 取消
 $('#cancel').on("click",function() {
 	layer_close();
 });
 
-//表操作
+// 表操作
 var count = $('#tbody tr').length; // 当前记录条数
 // 记录为零时，新增一行
 if (count === 0) {
-    _newRow();
+    _nullRow();
 }
-// 新增行
-function _newRow() {
+
+// 空行
+function _nullRow() {
     var $tbody = $('#tbody');
-    var row = '<tr class="edit">'+
-                  '<td><input type="checkbox" name="sub" _id=""></td>'+
-                  '<td name="count">'+ (count+1) +'</td>'+
-                  '<td><div class="form-group form-group-sm"><input class="form-control" type="text" name="contacts" value=""/></div></td>'+
-                  '<td><div class="form-group form-group-sm"><input class="form-control" type="text" name="phone" value=""/></div></td>'+
-                  '<td><div class="form-group form-group-sm"><input class="form-control" type="text" name="email" value=""/></div></td>'+
-                  '<td><div class="form-group form-group-sm"><input class="form-control" type="text" name="email" value=""/></div></td>'+
+    var row = '<tr>'+
+                  '<td colspan="6">暂无数据</td>'+
               '</tr>';  
     $tbody.append(row);
-    // 绑定校验
-    //bind();
-    //$('#f1').data("bootstrapValidator").resetForm();
     count++;
 }
 // 删除行
@@ -442,54 +293,13 @@ function _deleteRow() {
     count = i;
     // 记录为零时，新增一行
     if (count === 0) {
-        _newRow();
+    	_nullRow();
     }
     // 清除勾选
     $("#checkAll").prop("checked" , false);
 }
-// 编辑行
-function _editRow() {
-    // 获取选中记录数量
-    var amount = $(":checked[name='sub']").length;
-    // 如果没有选择，提示勾选至少一条数据
-    if (amount === 0) {
-        layer.msg('请至少选择一条记录', {time: 2000});
-        return;
-    }
-    // 内容改为 input
-    $(":checked[name='sub']").each(function(){
-        console.log(this);
-        var $tr = $(this).parent().parent();
-        var type = $tr.attr('class');
-        console.log(type);
-        if("edit" === type) {
-            return true; // 跳过编辑状态的记录
-        }
-        var $tdList = $tr.find("td");
-        var index = $tdList.eq(1).html();
-        var contact = $tdList.eq(2).html();
-        var phone = $tdList.eq(3).html();
-        var email = $tdList.eq(4).html();
-        console.log("contact: "+contact+" phone: "+phone+" email: "+email);
-        var row = 
-                '<td><input type="checkbox" name="sub" _id=""></td>'+
-                '<td name="count">'+ index +'</td>'+
-                '<td><div class="form-group"><input class="form-control " type="text" name="contacts" value=""/></div></td>'+
-                '<td><div class="form-group"><input class="form-control" type="text" name="phone" value=""/></div></td>'+
-                '<td><div class="form-group"><input class="form-control" type="text" name="phone" value=""/></div></td>'+
-                '<td><div class="form-group"><input class="form-control" type="text" name="email" value=""/></div></td>';
-        $tr.empty().append(row);
-        var $inputList = $tr.find("input");
-        $inputList.eq(1).val(contact);
-        $inputList.eq(2).val(phone);
-        $inputList.eq(3).val(email);
-        $tr.attr('class','edit'); // 编辑状态
-    });
-    // 清除勾选
-    $("input[name='sub']").prop("checked", false);
-    $("#checkAll").prop("checked" , false);
-}
-//全选、全不选
+
+// 全选、全不选
 $("#checkAll").click(function() {
     $("input[name='sub']").prop("checked", this.checked);
 });
@@ -497,6 +307,95 @@ $("input[name='sub']").click(function() {
     var $subs = $("input[name='sub']");
     $("#checkAll").prop("checked" , $subs.length == $subs.filter(":checked").length ? true :false);
 });
+
+$('#warehouse_in_id').on('change', function () {
+	var warehouse_in_id = $(this).val();
+	$.post("/leasewarehouse/leaseOut/getInventory/" + warehouse_in_id, function(data) {
+        if (data) {
+            _addData(data);
+        } 
+    });
+})
+
+// 展示产品列表
+function _addData(data) {
+	var $tbody = $('#tbody');
+    $tbody.empty();
+    count = 0;
+	$(data).each(function () {
+        console.log(this);
+        var row = '<tr class="edit" _id="'+ this.product_id +'" unit_price="'+ this.unit_price +'">'+
+	        '<td><input type="checkbox" name="sub"></td>'+
+	        '<td name="count">'+ (count+1) +'</td>'+
+	        '<td>'+ this.name +'</td>'+
+	        '<td>'+ this.specification +'</td>'+
+	        '<td>'+ this.unit +'</td>'+
+	        '<td class="out_quantity"><div class="form-group form-group-sm"><input class="form-control" type="text" name="out_quantity" value="'+ this.left_quantity +'"/></div></td>'+
+	        '</tr>';
+        $tbody.append(row);
+        count++;
+    });
+}
+
+// 提交
+$('#v').on('click', function () {
+    // 校验
+    if ($('#f1').data('bootstrapValidator')) {
+        console.log($('#f1').data('bootstrapValidator'));
+        $('#f1').data('bootstrapValidator', null);
+    }
+    bind();
+    $('#f1').data('bootstrapValidator').validate();
+    $('#defaultForm').data('bootstrapValidator').validate();
+    var flag = $('#f1').data('bootstrapValidator').isValid() && $('#defaultForm').data('bootstrapValidator').isValid();
+    if (flag) {
+        console.log('ok');
+    } else {
+        return;
+    }
+    
+    var id = $('#id').val();
+    var warehouse_in_id = $('#warehouse_in_id').val();
+    var productList = getProductList(); // 产品列表
+    var postData = {"id": id, "warehouse_in_id": warehouse_in_id,  "productList": productList};
+    console.log(postData);
+    
+    $.post("/leasewarehouse/leaseOut/save", postData, function(result) {
+        if (result.isSuccess) {
+            parent.layer.msg(result.tips, {time: 2000}, function(){
+                layer_close();
+                parent.parent.refresh_iframe();
+            });
+
+        } else {
+            parent.layer.msg(result.tips, {time: 2000});
+        }
+        
+    });
+});
+
+function getProductList() {
+	var productList = []; 
+    // 
+    $('#tbody tr').each(function() {
+        var $tr = $(this);
+        var type = $tr.attr("class");
+        if ("edit" !== type) {
+        	return true;
+        }
+        var product_id = $tr.attr("_id"); // 产品 id
+        var unit_price = $tr.attr("unit_price"); // 单价
+        var out_quantity = $tr.find('input').eq(1).val(); // 出库数量
+        // 对象
+        var product = {};
+        product.product_id = product_id;
+        product.unit_price = unit_price;
+        product.out_quantity = out_quantity;
+        productList.push(product);
+    });
+    
+    return JSON.stringify(productList);
+}
 
 </script>
 </body>

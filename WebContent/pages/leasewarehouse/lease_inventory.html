@@ -60,7 +60,7 @@
                             <button class="btn btn-3"  onclick="_edit1()">编辑</button>
                         </div> -->
 		                <div class="col-sm-1 col-xs-12 head_1">
-                            <button class="btn btn-3"  onclick="_edit1()">查看</button>
+                            <button class="btn btn-3"  onclick="_check()">查看</button>
                         </div>
 		                <div class="col-sm-1 col-xs-4 head_1">
                              <button class="btn btn-9 " onclick="location.replace('/leasewarehouse/leaseInventory')"><i class="fa fa-refresh"></i></button>
@@ -176,10 +176,13 @@ var TableInit = function () {
                 field: 'warehouse_in_no',
                 title: '入库单号'
             }, {
-                field: 'customer',
+                field: 'warehouse_in_no',
+                title: '入库日期'
+            }, {
+                field: 'company_name',
                 title: '客户名称'
             }, {
-                field: 'warehouse_id',
+                field: 'warehouse_name',
                 title: '对应仓库'
             }, {
                 field: 'location',
@@ -227,6 +230,18 @@ function _edit1(){
         layer.msg('请选择一条记录', {time: 2000});
     } else if (id.length == 1){
         _edit(id);
+    } else {
+        layer.msg('最多选择选择一条记录', {time: 2000});
+    }
+}
+function _check(){
+    // 获取选中记录 id
+    var id = getIdSelections();
+    // 如果没有选择，提示勾选至少一条数据
+    if (id.length == 0) {
+        layer.msg('请选择一条记录', {time: 2000});
+    } else if (id.length == 1){
+    	open_window('查看','/leasewarehouse/leaseInventory/check/' + id, 760, 370);
     } else {
         layer.msg('最多选择选择一条记录', {time: 2000});
     }

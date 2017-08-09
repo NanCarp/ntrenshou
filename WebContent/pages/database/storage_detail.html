@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>仓库管理-新增/修改</title>
+
+    <!-- Bootstrap Core CSS -->
+    <link href="../../../vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- MetisMenu CSS -->
+    <link href="../../../vendor/metisMenu/metisMenu.min.css" rel="stylesheet">
+
+    <!-- Custom CSS -->
+	<link href="../../../css/admin.css" rel="stylesheet">
+	<link href="../../../resource/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css" rel="stylesheet" />
+	<style type="text/css">
+		body { margin:0 15px;}
+		form { margin-top:20px;}
+		label { padding-top:6px;padding-right:0;}
+	</style>
+	
+    <!-- Custom Fonts -->
+    <link href="../../../vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+</head>
+<body style="width: 90%">
+<form class="form-horizontal" role="form" style="margin-top: 20px" id="defaultForm">
+	<#if im??>
+	<input name="id" value="${im.id}" name="id" hidden="">
+    <div class="form-group">
+        <label class="col-xs-4 control-label text-right" for="warehouse_name">仓库名称：</label>
+        <div class="col-xs-6">
+            <input class="form-control text-left" id="warehouse_name" type="text" placeholder="仓库名称" name="warehouse_name" value="${im.warehouse_name!}"/>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-xs-4 control-label text-right" for="position">方位：</label>
+        <div class="col-xs-6">
+            <input class="form-control text-left" id="position" type="text" placeholder="方位" name="position" value="${im.position!}"/>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-xs-4 control-label text-right" for="p_warehouse_name">对应仓库：</label>
+        <div class="col-xs-6">
+            <select style="padding-right: 2px" class="form-control" name="p_warehouse_name" id="p_warehouse_name" >
+                <option value="">--请选择对应仓库--</option>  
+                <#if corrwarsehouses?? && corrwarsehouses?size gt 0>      
+                <#list corrwarsehouses as corrwarsehouse>
+                	<option <#if im.pid=corrwarsehouse.id>selected</#if> value="${corrwarsehouse.id}">${corrwarsehouse.warehouse_name}</option>
+                </#list>
+                </#if>
+           </select>
+        </div>
+    </div>
+    <#else>
+    <div class="form-group">
+        <label class="col-xs-4 control-label text-right" for="warehouse_name">仓库名称：</label>
+        <div class="col-xs-6">
+            <input class="form-control text-left" id="warehouse_name" type="text" placeholder="仓库名称" name="warehouse_name" />
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-xs-4 control-label text-right" for="position">方位：</label>
+        <div class="col-xs-6">
+            <input class="form-control text-left" id="position" type="text" placeholder="方位" name="position"/>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-xs-4 control-label text-right" for="p_warehouse_name">对应仓库：</label>
+        <div class="col-xs-6">
+            <select style="padding-right: 2px" class="form-control" name="p_warehouse_name" id="p_warehouse_name">
+                <option value="">--请选择对应仓库--</option>  
+                <#if corrwarsehouses?? && corrwarsehouses?size gt 0>      
+                <#list corrwarsehouses as corrwarsehouse>
+                	<option value="${corrwarsehouse.id}">${corrwarsehouse.warehouse_name}</option>
+                </#list>
+                </#if>
+           </select>
+        </div>
+    </div>
+    </#if>
+    <div class="form-group">
+        <label class="col-xs-4 control-label" for="v"></label>
+        <div class="col-xs-6">
+            <button id="v" type="submit" class="btn btn-primary">　保存　</button>
+        </div>
+    </div>
+</form>
+<!-- jQuery -->
+<script src="../../../vendor/jquery/jquery.min.js"></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="../../../vendor/bootstrap/js/bootstrap.min.js"></script>
+
+<!-- Metis Menu Plugin JavaScript -->
+<script src="../../../vendor/metisMenu/metisMenu.min.js"></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="../../../resource/bootstrapvalidator/js/bootstrapValidator.min.js"></script>
+<script src="../../../js/common/admin.js"></script>
+<script type="text/javascript">
+$(function(){
+	// 表单校验
+	$('form').bootstrapValidator({
+		message: 'This value is not valid',
+		feedbackIcons: {
+			valid: 'glyphicon glyphicon-ok',
+			invalid: 'glyphicon glyphicon-remove',
+			validating: 'glyphicon glyphicon-refresh'
+		},
+		fields: {
+			warehouse_name: {
+				validators: {
+					notEmpty: {
+						message: '不能为空!'
+					},
+                    stringLength: {
+                        min: 0,
+                        max: 20,
+                        message: '最多20个字符'
+                    }
+				}
+			}
+			,position: {
+				validators: {
+					notEmpty: {
+						message: '不能为空!'
+					},
+	                stringLength: {
+	                    min: 0,
+	                    max: 20,
+	                    message: '最多20个字符'
+	                }
+				}
+			}
+			,p_warehouse_name: {
+				validators: {
+					notEmpty: {
+						message: '不能为空!'
+					}
+				}
+			}
+		}
+	});
+})
+.on('success.form.bv', function(e) {
+	e.preventDefault();
+	$.post("/database/storage/saveStorage", $('#defaultForm').serialize(), function(result) {
+		if (result) {
+            parent.layer.msg("保存成功", {time: 2000}, function(){
+                layer_close();
+                parent.parent.refresh_iframe();
+            });
+        } else {
+            parent.layer.msg("保存失败", {time: 2000});
+        }
+		
+	});
+});
+
+//取消
+$('#cancel').on("click",function() {
+	layer_close();
+});
+</script>
+</body>
+
+</html>

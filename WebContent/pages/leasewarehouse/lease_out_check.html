@@ -35,7 +35,7 @@
     <div class="r1">南通仁寿食品有限公司</div>
     <div class="r2">出库单</div>
     <div class="r3">
-        <div class="left">单号：${(record.warehouse_out_no)!}</div>
+        <div class="left">出库单号：${(record.warehouse_out_no)!}</div>
         <div class="right">出库时间：${(record.warehouse_out_date)!}</div>
     </div>
     <table>
@@ -51,33 +51,26 @@
             <#list productList as product>
             <tr>
                 <td>${product_index+1}</td>
-                <td>${product.name}</td>
-                <td>${product.specification}</td>
-                <td>${product.unit}</td>
-                <td>${product.quantity}</td>
+                <td>${product.name!}</td>
+                <td>${product.specification!}</td>
+                <td>${product.unit!}</td>
+                <td>${product.out_quantity!}</td>
             </tr>
             </#list>
             <#else>
             <!-- <td colspan="5">暂无联系人</td> -->
             <tr>
                 <td>1</td>
-                <td>肠衣A</td>
-                <td>A</td>
-                <td>kg</td>
-                <td>50</td>
-            </tr>
-            <tr>
-                <td>2</td>
-                <td>肠衣B</td>
-                <td>B</td>
-                <td>kg</td>
-                <td>50</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
             </tr>
             </#if>
         </tbody>
     </table>
     <!-- /.table-responsive -->
-    <div class="r4">出库人：${record.warehouse_in_person!}</div>
+    <div class="r4">出库人：${(record.warehouse_out_person)!}</div>
     <div class="r4"></div>
 </div>
 <input type="button" onclick="print()" value="打印"/>

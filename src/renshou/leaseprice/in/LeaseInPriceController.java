@@ -1,13 +1,17 @@
 package renshou.leaseprice.in;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.alibaba.fastjson.JSONObject;
 import com.jfinal.core.Controller;
 import com.jfinal.plugin.activerecord.Db;
 import com.jfinal.plugin.activerecord.Page;
 import com.jfinal.plugin.activerecord.Record;
+
+import renshou.leasewarehouse.in.LeaseInService;
 
 
 
@@ -44,7 +48,9 @@ public class LeaseInPriceController extends Controller {
         
         Map<String, Object> map = new HashMap<String,Object>();
         
-        map.put("rows", page.getList());
+        // 修改入库单仓库名称 TODO
+        List<Record> list = LeaseInService.modifyWarehouseName(page.getList());
+        map.put("rows", list);
         map.put("total", page.getTotalRow());
         //System.out.println(page.getList());
         
@@ -61,26 +67,34 @@ public class LeaseInPriceController extends Controller {
             Record record = Db.findById("t_lease_warehouse_in", id);
             setAttr("record", record);
             // 入库单产品详情
-            String warehouse_in_no = record.getStr("warehouse_in_no");
-            List<Record> productList = LeaseInPriceService.getProductList(warehouse_in_no);
+            List<Record> productList = LeaseInPriceService.getProductList(id);
             setAttr("productList", productList);
         }
         
-        render("lease_in_detail.html");
+        render("lease_in_price_detail.html");
     }
     
     // 查看
     public void check() {
         // id
         Integer id = getParaToInt();
-        // 入库单
-        Record record = Db.findById("t_lease_warehouse_in", id);
-        setAttr("record", record);
         // 入库单产品详情
-        String warehouse_in_no = record.getStr("warehouse_in_no");
-        List<Record> productList = LeaseInPriceService.getProductList(warehouse_in_no);
+        List<Record> productList = LeaseInPriceService.getProductList(id);
         setAttr("productList", productList);
           
-        render("lease_in_check.html");
+        render("lease_in_price_check.html");
     }
+    
+    public void save() {
+        // 入库单 id
+        Long warehouse_in_id = getParaToLong("warehouse_in_id");
+        // 产品列表
+        String productList = getPara("productList");
+        
+        // 返回消息
+        Map<String, Object> message = LeaseInPriceService.save(warehouse_in_id, productList);
+        
+        renderJson(message);
+    }
+
 }

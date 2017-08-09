@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>成品管理-新增/修改</title>
+
+    <!-- Bootstrap Core CSS -->
+    <link href="../../../vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- MetisMenu CSS -->
+    <link href="../../../vendor/metisMenu/metisMenu.min.css" rel="stylesheet">
+
+    <!-- Custom CSS -->
+	<link href="../../../css/admin.css" rel="stylesheet">
+	<link href="../../../resource/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css" rel="stylesheet" />
+	<style type="text/css">
+		body { margin:0 15px;}
+		form { margin-top:20px;}
+		label { padding-top:6px;padding-right:0;}
+	</style>
+	
+    <!-- Custom Fonts -->
+    <link href="../../../vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+</head>
+<body style="width: 90%">
+<form class="form-horizontal" role="form" style="margin-top: 20px" id="defaultForm">
+	<#if im??>
+	<input name="position" id="position" hidden="" value="${im.position!}">
+    <div class="form-group">
+        <label class="col-xs-4 control-label text-right" for="name">姓名：</label>
+        <div class="col-xs-6">
+            <input class="form-control text-left" id="name" type="text" placeholder="姓名" name="name" value="${im.name!}"/>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-xs-4 control-label text-right" for="call_num">电话：</label>
+        <div class="col-xs-6">
+            <input class="form-control text-left" id="call_num" type="text" placeholder="电话" name="call_num" value="${im.call_num!}"/>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-xs-4 control-label text-right" for="QQ">QQ：</label>
+        <div class="col-xs-6">
+            <input class="form-control text-left" id="QQ" type="text" placeholder="规格" name="QQ" value="${im.QQ!}"/>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-xs-4 control-label text-right" for="wechat">微信：</label>
+        <div class="col-xs-6">
+            <input class="form-control text-left" id="wechat" type="text" placeholder="微信" name="wechat" value="${im.wechat!}"/>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-xs-4 control-label text-right" for="e_mail" >e_mail：</label>
+        <div class="col-xs-6">
+        	<input class="form-control text-left" style="padding-right: 2px" id="e_mail" type="text" placeholder="e_mail" name="e_mail" value="${im.e_mail!}"/>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-xs-4 control-label text-right" for="remark" style="padding-top: 0">备注：</label>
+        <div class="col-xs-6">
+        	<input class="form-control text-left" id="remark" type="text" placeholder="备注" name="remark" value="${im.remark!}" />
+        </div>
+    </div>
+    <#else>
+    <div class="form-group">
+        <label class="col-xs-4 control-label text-right" for="name">姓名：</label>
+        <div class="col-xs-6">
+            <input class="form-control text-left" id="name" type="text" placeholder="姓名" name="name" />
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-xs-4 control-label text-right" for="call_num">电话：</label>
+        <div class="col-xs-6">
+            <input class="form-control text-left" id="call_num" type="text" placeholder="电话" name="call_num"/>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-xs-4 control-label text-right" for="QQ">QQ：</label>
+        <div class="col-xs-6">
+            <input class="form-control text-left" id="QQ" type="text" placeholder="QQ" name="QQ"/>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-xs-4 control-label text-right" for="wechat">微信：</label>
+        <div class="col-xs-6">
+            <input class="form-control text-left" id="wechat" type="text" placeholder="微信" name="wechat"/>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-xs-4 control-label text-right" for="e_mail">e_mail：</label>
+        <div class="col-xs-6">
+        	<input class="form-control text-left" id="e_mail" type="text" placeholder="e_mail" name="e_mail" style="padding-right: 2px"/>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-xs-4 control-label text-right" for="remark" style="padding-top: 0">备注：</label>
+        <div class="col-xs-6">
+        	<input class="form-control text-left" id="remark" type="text" placeholder="备注" name="remark"/>
+        </div>
+    </div>
+    </#if>
+    <div class="form-group">
+        <label class="col-xs-4 control-label" for="v"></label>
+        <div class="col-xs-6">
+            <button id="v" type="submit" class="btn btn-primary">　保存　</button>
+        </div>
+    </div>
+</form>
+<!-- jQuery -->
+<script src="../../../vendor/jquery/jquery.min.js"></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="../../../vendor/bootstrap/js/bootstrap.min.js"></script>
+
+<!-- Metis Menu Plugin JavaScript -->
+<script src="../../../vendor/metisMenu/metisMenu.min.js"></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="../../../resource/bootstrapvalidator/js/bootstrapValidator.min.js"></script>
+<script src="../../../js/common/admin.js"></script>
+<script type="text/javascript">
+$(function(){
+	// 表单校验
+	$('form').bootstrapValidator({
+		message: 'This value is not valid',
+		feedbackIcons: {
+			valid: 'glyphicon glyphicon-ok',
+			invalid: 'glyphicon glyphicon-remove',
+			validating: 'glyphicon glyphicon-refresh'
+		},
+		fields: {
+			name: {
+				validators: {
+					notEmpty: {
+						message: '不能为空!'
+					},
+                    stringLength: {
+                        min: 0,
+                        max: 20,
+                        message: '最多20个字符'
+                    }
+				}
+			}
+			,call_num: {
+				validators: {
+					notEmpty: {
+						message: '不能为空!'
+					},
+	                stringLength: {
+	                    min: 0,
+	                    max: 20,
+	                    message: '最多20个字符'
+	                },
+	                regexp:{
+						regexp:/(\d{11})|^((\d{7,8})|(\d{4}|\d{3})-(\d{7,8})|(\d{4}|\d{3})-(\d{7,8})-(\d{4}|\d{3}|\d{2}|\d{1})|(\d{7,8})-(\d{4}|\d{3}|\d{2}|\d{1}))$/,
+						message:'请勿输入特殊字符'
+					}
+				}
+			}
+			,QQ: {
+				validators: {
+                    stringLength: {
+                        min: 0,
+                        max: 20,
+                        message: '最多20个字符'
+                    }
+				}
+			}
+			,wechat: {
+				validators: {
+                    stringLength: {
+                        min: 0,
+                        max: 20,
+                        message: '最多20个字符'
+                    }
+				}
+			}
+			,e_mail: {				
+				validators: {
+					stringLength: {
+	                    min: 0,
+	                    max: 40,
+	                    message: '最多40个字符'
+	                }
+					,regexp:{
+						regexp:/^[a-z0-9]+([._\\-]*[a-z0-9])*@([a-z0-9]+[-a-z0-9]*[a-z0-9]+.){1,63}[a-z0-9]+$/,
+						message:'请输入正确的邮箱格式'
+					}
+				}
+			}
+			,remark: {
+				validators: {
+					stringLength: {
+	                    min: 0,
+	                    max: 200,
+	                    message: '最多200个字符'
+	                }
+				}
+			}
+		}
+	});
+})
+.on('success.form.bv', function(e) {
+	e.preventDefault();
+	var name = $("#name").val();
+	var call_num = $("#call_num").val();
+	var QQ = $("#QQ").val();
+	var wechat = $("#wechat").val();
+	var e_mail = $("#e_mail").val();
+	var remark = $("#remark").val();
+	var position = $("#position").val();
+	var data = {"name":name,"call_num":call_num,"QQ":QQ,"wechat":wechat,"e_mail":e_mail,"remark":remark,"position":position};
+	parent.window.addcontant(data);
+	parent.window.sort();
+	layer_close();
+});
+ 
+</script>
+</body>
+
+</html>

@@ -45,7 +45,7 @@
 				<div class="container container-fluid" >				
 					<div class="row">                        	    		                                            		
 						<div class="col-sm-2 col-xs-3 head_2">
-                            <input type="search" class="form-control" placeholder="入库单号" name="warehouse_in_no" id="warehouse_in_no" value="${warehouse_in_no!}">
+                            <input type="search" class="form-control" placeholder="出库单号" name="warehouse_in_no" id="warehouse_out_no" value="${warehouse_out_no!}">
                         </div>
                         <div class="col-sm-2 col-xs-3 head_2">
                             <input type="search" class="form-control" placeholder="客户名称" name="company_name" id="company_name" value="${company_name!}">
@@ -66,7 +66,7 @@
                             <button class="btn btn-3"  onclick="_check()">查看</button>
                         </div>
                         <div class="col-sm-2 col-xs-12 head_4">
-                            <button class="btn btn-3"  onclick="_check()">确认出库</button>
+                            <button class="btn btn-3"  onclick="_confirm()">确认出库</button>
                         </div>
 		                <div class="col-sm-1 col-xs-4 head_1">
                              <button class="btn btn-9 " onclick="location.replace('/leasewarehouse/leaseOut')"><i class="fa fa-refresh"></i></button>
@@ -188,10 +188,10 @@ var TableInit = function () {
                 field: 'warehouse_in_no',
                 title: '入库单号'
             }, {
-                field: 'customer',
+                field: 'company_name',
                 title: '客户名称'
             }, {
-                field: 'warehouse_id',
+                field: 'warehouse_name',
                 title: '对应仓库'
             }, {
                 field: 'location',
@@ -203,13 +203,13 @@ var TableInit = function () {
                 field: 'state',
                 title: '出库状态',
                 formatter:function(value,row,index){
-                    return row.state == true ? "已入库 ": "未确认";
+                    return row.is_out == true ? "已出库 ": "未确认";
                 }
             }, {
                 field:'opt',
                 title:'操作',
                 formatter:function(value,row,index){
-                          return['<button class="btn btn-xs btn-3"  onclick="_edit('+row.id+')">编辑</button>' ]
+                          return['<button class="btn btn-xs btn-3"  onclick="_edit('+row.id +','+row.is_out+')">编辑</button>' ]
                 },
             }]
         });
@@ -224,7 +224,7 @@ var TableInit = function () {
             search: params.search,
            	in_date: $("#in_date").val(),
            	company_name: $("#company_name").val(),
-           	warehouse_in_no: $("#warehouse_in_no").val(),
+           	warehouse_out_no: $("#warehouse_out_no").val(),
         };
         return temp;
     };
@@ -243,9 +243,16 @@ var ButtonInit = function () {
 };
 
 // 编辑
-function _edit(id){
-	open_window('编辑出库明细','/leasewarehouse/leaseOut/getRecord/' + id, 760, 450);
+function _edit(id, isOut){
+    //console.log(typeof isOut);
+    //console.log(isOut);
+    if (isOut == true) {
+        layer.msg('已出库，无法修改！', {time: 2000});
+    } else {
+        open_window('编辑出明细','/leasewarehouse/leaseOut/getRecord/' + id, 760, 450);
+    }
 }
+
 function _edit1(){
     // 获取选中记录 id
     var id = getIdSelections();
@@ -273,10 +280,14 @@ function _check(){
 }
 // 新增
 function _add(){
-	open_window('新增入库明细）','/leasewarehouse/leaseOut/getRecord', 760, 450);
+	open_window('新增出库明细','/leasewarehouse/leaseOut/getRecord', 760, 450);
 }
 // 批量删除
 function _batchDelete(){
+	if (canOperate() == false) {
+        layer.msg('已出库，无法删除！', {time: 2000});
+        return;
+    };
 	// 获取选中记录 id
 	var ids = getIdSelections();	
 	// 如果没有选择，提示勾选至少一条数据
@@ -304,6 +315,41 @@ function _batchDelete(){
         });
     }
 }
+// 确认出库
+function _confirm(){
+    // 是否可以操作
+    if (canOperate() == false) {
+        layer.msg('已出库！', {time: 2000});
+        return;
+    }; 
+    // 获取选中记录 id
+    var id = getIdSelections();
+    // 如果没有选择，提示勾选至少一条数据
+    if (id.length == 0) {
+        layer.msg('请选择一条记录', {time: 2000});
+    } else if (id.length == 1){
+        // 询问框
+        layer.confirm('确认出库吗？确认出库后将不可恢复！', {
+            title: ['信息', 'font-weight:600;color:#fff;background-color: #3367D6;'],
+            btn: ['确认','取消'] //按钮
+        }, function(){
+            $.post("/leasewarehouse/leaseOut/confirm/" + id,function(result) {
+                if (result.isSuccess) {
+                    layer.msg(result.tips, {time: 2000}, function(){
+                        parent.refresh_iframe();
+                    });
+                }else{
+                    layer.msg(result.tips, {time: 2000}, function(){
+                    });
+                }
+            });
+        }, function(){
+
+        });
+    } else {
+        layer.msg('最多选择选择一条记录', {time: 2000});
+    }
+}
 
 //全选按钮
 function stateFormatter(value, row, index) {
@@ -321,6 +367,18 @@ function getIdSelections() {
     return $.map($("#tb_departments").bootstrapTable('getSelections'), function(row) {
         return row.id;
     });
+}
+//已入库不得删除或编辑
+function canOperate() {
+    var result = true;  
+    $.map($("#tb_departments").bootstrapTable('getSelections'), function(row) {
+        if(row.is_out == true) {
+            //console.log("yichuku");
+            result = false;
+            return false;
+        }
+    });
+    return result;
 }
 //日期控件
 $(".form_datetime").datetimepicker({

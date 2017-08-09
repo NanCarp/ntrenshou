@@ -9,8 +9,6 @@ import com.jfinal.plugin.activerecord.Db;
 import com.jfinal.plugin.activerecord.Page;
 import com.jfinal.plugin.activerecord.Record;
 
-
-
 /**
  * @ClassName: LeaseInController.java
  * @Description:
@@ -44,9 +42,12 @@ public class LeaseInController extends Controller {
         
         Map<String, Object> map = new HashMap<String,Object>();
         
-        map.put("rows", page.getList());
         map.put("total", page.getTotalRow());
-        //System.out.println(page.getList());
+        
+        // 修改入库单仓库名称
+        List<Record> list = LeaseInService.modifyWarehouseName(page.getList());
+        
+        map.put("rows", list);
         
         renderJson(map);
     }
@@ -61,10 +62,15 @@ public class LeaseInController extends Controller {
             Record record = Db.findById("t_lease_warehouse_in", id);
             setAttr("record", record);
             // 入库单产品详情
-            String warehouse_in_no = record.getStr("warehouse_in_no");
-            List<Record> productList = LeaseInService.getProductList(warehouse_in_no);
+            List<Record> productList = LeaseInService.getProductList(id);
             setAttr("productList", productList);
         }
+        // 客户列表
+        List<Record> companyList = LeaseInService.getCompanyList();
+        setAttr("companyList", companyList);
+        // 仓库列表 
+        List<Record> warehouseList = LeaseInService.getWarehouseList();
+        setAttr("warehouseList", warehouseList);
         
         render("lease_in_detail.html");
     }
@@ -77,10 +83,61 @@ public class LeaseInController extends Controller {
         Record record = Db.findById("t_lease_warehouse_in", id);
         setAttr("record", record);
         // 入库单产品详情
-        String warehouse_in_no = record.getStr("warehouse_in_no");
-        List<Record> productList = LeaseInService.getProductList(warehouse_in_no);
+        //String warehouse_in_no = record.getStr("warehouse_in_no");
+        List<Record> productList = LeaseInService.getProductList(id);
         setAttr("productList", productList);
           
         render("lease_in_check.html");
+    }
+    
+    /** 
+    * @Title: save 
+    * @Description: 保存入库单
+    * @author liyu
+    */
+    public void save() {
+        // id
+        Long id = getParaToLong("id");
+        // 客户
+        Integer customer = getParaToInt("customer");
+        // 对应仓库 
+        Integer warehouse_id = getParaToInt("warehouse_id");
+        // 摆放位置
+        String location = getPara("location");
+        // 产品列表
+        String productList = getPara("productList");
+        
+        // 返回消息
+        Map<String, Object> message = LeaseInService.save(id, customer, warehouse_id, location, productList);
+        
+        renderJson(message);
+    }
+    
+    /**
+     * @desc:批量删除
+     * @author liyu
+     */
+    public void delete(){
+        // id
+        String idStr = getPara();
+        String[] ids = idStr.split(","); 
+        // 返回信息
+        Map<String, Object> response = new HashMap<>();
+        
+        boolean result = LeaseInService.delete(ids);
+        response.put("isSuccess", result);
+        response.put("tips", result ? "删除成功": "删除失败");
+        renderJson(response);
+    }
+    
+    // 确认入库
+    public void confirm() {
+        // id
+        Long id = getParaToLong();
+        
+        // 返回消息
+        Map<String, Object> message = LeaseInService.confirm(id);
+        
+        renderJson(message);
     }
 }

@@ -45,8 +45,9 @@ public class LeaseInventoryController extends Controller {
         Page<Record> page = LeaseInventoryService.getDataPages(pageindex, pagelimit, warehouse_in_no, company_name);
         
         Map<String, Object> map = new HashMap<String,Object>();
-        
-        map.put("rows", page.getList());
+        // 修改入库单仓库名称 TODO
+        List<Record> list = LeaseInService.modifyWarehouseName(page.getList());
+        map.put("rows", list);
         map.put("total", page.getTotalRow());
         //System.out.println(page.getList());
         
@@ -58,14 +59,27 @@ public class LeaseInventoryController extends Controller {
         // id
         Integer id = getParaToInt();
 
-        /*if (id != null) {//编辑
+        if (id != null) {//编辑
             Record record = Db.findById("t_lease_warehouse_inventory", id);
             setAttr("record", record);
-            // 入库单产品详情
+            // 产品详情
             List<Record> productList = LeaseInventoryService.getProductList(id);
             setAttr("productList", productList);
-        }*/
+        }
         
         render("lease_inventory_detail.html");
+    }
+    
+    // 查看
+    public void check() {
+        // id
+        Integer id = getParaToInt();
+
+        // 产品详情
+        List<Record> productList = LeaseInventoryService.getProductList(id);
+        setAttr("productList", productList);
+
+        
+        render("lease_inventory_check.html");
     }
 }

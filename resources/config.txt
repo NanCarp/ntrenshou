@@ -6,20 +6,7 @@ password = 123456
 # 开发环境
 devMode=true
 
-######### 微信相关设置 #########
-# 微信服务器回调所用的 token
-token=weixin
-
-# 测试用的账号
-appId=wxde758064398fa9bf
-appSecret=89622f356fc2bca96ec647d55929afa5
-
-# 是否对消息进行加密，是否对消息进行加密，对应于微信平台的消息加解密方式，false支持明文模式及兼容模式，true支持安全模式及兼容模式
-encryptMessage=true
-encodingAesKey=5C8csBd4cG4c9039OKDnNaZmYlkAzXV31piXQFRZKHC
-
 # host 地址
-
 host = http://liyutest.tunnel.qydev.com
 
 #文件下载地址
@@ -27,4 +14,4 @@ filepath = D:/upload/morality/file/
 host = http://liyutest.tunnel.qydev.com
 
 # 文件上传地址
-uploadPath = D:/upload/stms/
+uploadPath = D:/upload/renshou/

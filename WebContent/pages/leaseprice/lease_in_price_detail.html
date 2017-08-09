@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>租赁费用核算-入库费用</title>
+
+    <!-- Bootstrap Core CSS -->
+    <link href="../../../vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom CSS -->
+    <link href="../../../dist/css/sb-admin-2.css" rel="stylesheet">
+    <link href="../../../css/common/common.css" rel="stylesheet">
+    <link href="../../../css/admin.css" rel="stylesheet">
+
+    <!-- Custom Fonts -->
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+    <style>
+        .unit_price {
+            width: 100px;
+        }
+        tbody .form-group {
+		    margin-bottom: 0px;
+		}
+    </style>
+</head>
+
+<body>
+<div class="panel-body">
+    <table width="100%" class="table table-striped table-bordered table-hover" id="dataTables-example">
+        <thead>
+            <tr>
+                <th>序号</th>
+                <th>品名</th>
+                <th>规格</th>
+                <th>单位</th>
+                <th>数量</th>
+                <th>单价</th>
+                <th>每日价格</th>
+                <th>审核状态</th>
+            </tr>
+        </thead>
+        <tbody>
+            <#if productList?? && productList?size gt 0>
+            <#list productList as product>
+            <tr _id="${product.id}">
+                <td>${product_index+1}</td>
+                <td>${product.name!}</td>
+                <td>${product.specification!}</td>
+                <td>${product.unit!}</td>
+                <td class="quantity">${product.quantity!}</td>
+                <td class="unit_price"><div class="form-group form-group-sm"><input class="form-control" type="text" name="unit_price" value="${product.unit_price!}"/></div></td>
+                <td class="price_per_day">${product.price_per_day!}</td>
+                <td ><#if product.is_checked == true>已核算<#else>未核算</#if></td>
+            </tr>
+            </#list>
+            <#else>
+            <!-- <td colspan="5">暂无</td> -->
+            </#if>
+        </tbody>
+    </table>
+    <!-- /.table-responsive -->
+    <div class="form-group">
+        <label class="col-xs-10 control-label" for="v"></label>
+        <div class="col-xs-2">
+            <!-- <button type="button" class="btn btn-10" id="cancel">取消</button> -->
+            <button id="submit" type="button" class="btn btn-11 text-right">　 保存 　</button>
+        </div>
+    </div>
+</div>
+<!-- /.panel-body -->
+
+<!-- jQuery -->
+<script src="../../../vendor/jquery/jquery.min.js"></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="../../../vendor/bootstrap/js/bootstrap.min.js"></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="../../../js/common/admin.js"></script>
+<!-- Page-Level Demo Scripts - Tables - Use for reference -->
+<script>
+var warehouse_in_id = ${record.id};
+// 提交
+$('#submit').on('click', function () {
+	var productList = getProductList();
+	$.post('/leaseprice/leaseInPrice/save', {"productList" : productList, "warehouse_in_id" : warehouse_in_id}, function (result) {
+		if (result.isSuccess) {
+            parent.layer.msg(result.tips, {time: 2000}, function(){
+                layer_close();
+                parent.parent.refresh_iframe();
+            });
+
+        } else {
+            parent.layer.msg(result.tips, {time: 2000});
+        }
+	});
+});
+
+// 获取产品数据
+function getProductList() {
+	var productList = [];
+	
+	$('tbody tr').each(function () {
+		$tr = $(this);
+		var id = $tr.attr('_id');
+		//console.log("id: "+id);
+		var unit_price = $tr.find('input[name="unit_price"]').val();
+		//console.log("unit_price: "+unit_price);
+		var price_per_day = $tr.find('td.price_per_day').html();
+		//console.log("price_per_day: "+price_per_day);
+		var product = {};
+		product.id = id;
+		product.unit_price = unit_price;
+		product.price_per_day = price_per_day;
+		//console.log(product);
+		productList.push(product);
+	});
+	
+	//console.log(productList);
+	return JSON.stringify(productList);
+}
+//自动计算每日价格
+$('input').on('change', function () {
+    var unit_value = $(this).val();
+    //console.log(unit_value);
+    var $tr = $(this).parent().parent().parent();
+    //console.log($tr);
+    var quantity = $tr.find('td.quantity').html();
+    //console.log(quantity);
+    var price_per_day = unit_value * quantity;
+    $tr.find('td.price_per_day').html(price_per_day);
+});
+</script>
+</body>
+</html>

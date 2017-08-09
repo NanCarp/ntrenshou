@@ -1,9 +1,20 @@
 package renshou.base;
 import com.jfinal.config.Routes;
 
+
+import renshou.database.barcode.BarCodeController;
+import renshou.database.customer.CustomController;
+import renshou.database.finishedproduct.FinishedProductController;
+import renshou.database.semimanufactures.SemimanufacturesController;
+import renshou.database.storage.StorageController;
+
+import renshou.leaseprice.in.LeaseInPriceController;
+import renshou.leaseprice.inventory.LeaseInventoryPriceController;
+import renshou.leaseprice.out.LeaseOutPriceController;
 import renshou.leasewarehouse.in.LeaseInController;
 import renshou.leasewarehouse.inventory.LeaseInventoryController;
 import renshou.leasewarehouse.out.LeaseOutController;
+
 import renshou.login.LoginController;
 import renshou.system.authority.AuthorityController;
 import renshou.system.button.ButtonController;
@@ -31,7 +42,16 @@ public class AdminRoutes extends Routes{
 		setBaseViewPath("/pages");
 		// 用户登录控制器
 		add("/pages",LoginController.class,"");
-		
+		//基础信息管理-成品信息管理
+		add("/database/finishedproduct",FinishedProductController.class,"/database");
+		//基础信息管理-半成品信息管理
+		add("/database/semimanufactures",SemimanufacturesController.class,"/database");
+		//基础信息管理-条形码管理
+		add("/database/barcode",BarCodeController.class,"/database");
+		//基础信息管理-仓库管理
+		//add("/database/storage",StorageController.class,"/database");
+		//基础信息管理-公司管理
+		add("/database/customes",CustomController.class,"/database");
 		
 		//系统管理-角色管理控制器
 		add("/system/role",RoleController.class,"/systemcontrol");
@@ -50,5 +70,13 @@ public class AdminRoutes extends Routes{
         add("/leasewarehouse/leaseOut",LeaseOutController.class,"/leasewarehouse");
         //租赁仓库-库存
         add("/leasewarehouse/leaseInventory",LeaseInventoryController.class,"/leasewarehouse");
+        
+        //租赁费用-入库
+        add("/leaseprice/leaseInPrice",LeaseInPriceController.class,"/leaseprice");
+        //租赁费用-出库
+        add("/leaseprice/leaseOutPrice",LeaseOutPriceController.class,"/leaseprice");
+        //租赁费用-库存
+        add("/leaseprice/leaseInventoryPrice",LeaseInventoryPriceController.class,"/leaseprice");
+
 	}
 }
