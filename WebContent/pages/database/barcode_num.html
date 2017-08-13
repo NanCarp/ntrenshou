@@ -110,7 +110,7 @@ $(function(){
 				var id = $(v).find('td').eq(1).html();
 				if(!reg.test($.trim($(v).find('input').val()))){
 					flag = false;
-					layer.tips('请输入正确的打印数量', '#'+id, {tips: [1, '#34495E']});return;
+					layer.tips('请输入正确的打印数量','#'+id, {tips: [1, '#34495E']});return;
 				}					
 			}
 		})

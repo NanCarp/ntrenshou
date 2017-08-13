@@ -186,6 +186,42 @@ $(".form_datetime").datetimepicker({
 	minView: 2,
 });
 
+//提交
+$('#v').on('click', function () {
+    // 校验
+    if ($('#f1').data('bootstrapValidator')) {
+        console.log($('#f1').data('bootstrapValidator'));
+        $('#f1').data('bootstrapValidator', null);
+    }
+    bind();
+    $('#f1').data('bootstrapValidator').validate();
+    $('#defaultForm').data('bootstrapValidator').validate();
+    var flag = $('#f1').data('bootstrapValidator').isValid() && $('#defaultForm').data('bootstrapValidator').isValid();
+    if (flag) {
+        console.log('ok');
+    } else {
+        return;
+    }
+    
+    var id = $('#id').val();
+    var warehouse_in_id = $('#warehouse_in_id').val();
+    var productList = getProductList(); // 产品列表
+    var postData = {"id": id, "warehouse_in_id": warehouse_in_id,  "productList": productList};
+    console.log(postData);
+    
+    $.post("/leasewarehouse/leaseOut/save", postData, function(result) {
+        if (result.isSuccess) {
+            parent.layer.msg(result.tips, {time: 2000}, function(){
+                layer_close();
+                parent.parent.refresh_iframe();
+            });
+
+        } else {
+            parent.layer.msg(result.tips, {time: 2000});
+        }
+        
+    });
+});
 function bind(){
     // 表单校验
     $('#f1').bootstrapValidator({
@@ -196,8 +232,8 @@ function bind(){
             validating: 'glyphicon glyphicon-refresh'
         },
         fields: {
-            name: {
-                "out_quantity": {
+            "out_quantity": {
+                validators: {
                     notEmpty:{
                         message: '不能为空!'
                     },
@@ -211,7 +247,7 @@ function bind(){
                         message: '不能超过 20 个字符',
                     }
                 }
-            }
+            },
         }
     });
 }
@@ -337,42 +373,7 @@ function _addData(data) {
     });
 }
 
-// 提交
-$('#v').on('click', function () {
-    // 校验
-    if ($('#f1').data('bootstrapValidator')) {
-        console.log($('#f1').data('bootstrapValidator'));
-        $('#f1').data('bootstrapValidator', null);
-    }
-    bind();
-    $('#f1').data('bootstrapValidator').validate();
-    $('#defaultForm').data('bootstrapValidator').validate();
-    var flag = $('#f1').data('bootstrapValidator').isValid() && $('#defaultForm').data('bootstrapValidator').isValid();
-    if (flag) {
-        console.log('ok');
-    } else {
-        return;
-    }
-    
-    var id = $('#id').val();
-    var warehouse_in_id = $('#warehouse_in_id').val();
-    var productList = getProductList(); // 产品列表
-    var postData = {"id": id, "warehouse_in_id": warehouse_in_id,  "productList": productList};
-    console.log(postData);
-    
-    $.post("/leasewarehouse/leaseOut/save", postData, function(result) {
-        if (result.isSuccess) {
-            parent.layer.msg(result.tips, {time: 2000}, function(){
-                layer_close();
-                parent.parent.refresh_iframe();
-            });
 
-        } else {
-            parent.layer.msg(result.tips, {time: 2000});
-        }
-        
-    });
-});
 
 function getProductList() {
 	var productList = []; 

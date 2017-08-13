@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>系统管理-部门管理</title>
+
+    <link href="../../../../vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="../../../vendor/metisMenu/metisMenu.min.css" rel="stylesheet">
+    <link href="../../../vendor/datatables-plugins/dataTables.bootstrap.css" rel="stylesheet">
+    <link href="../../../vendor/datatables-responsive/dataTables.responsive.css" rel="stylesheet">
+    <link href="../../../dist/css/sb-admin-2.css" rel="stylesheet">
+    <link href="../../../vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+	<link href="../../../css/admin.css" rel="stylesheet" type="text/css">
+	<link rel="stylesheet" href="../../../resource/layui/css/layui.css" media="all" />
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+</head>
+<style>
+td{text-align: center;}
+th{text-align: center;}
+body {
+	overflow-x: hidden;
+}
+.newbtn{padding-left: 0;padding-right: 0;max-width: 60px}
+</style>
+
+
+<body style="background: #fff">
+<form class="form-horizontal" role="form"  id="defaultForm">
+    <div id="wrapper">   
+        <div>
+            <div class="row">
+                <div class="col-lg-12" > 
+                	<div class="panel panel-default" >                  
+                    	<div class="panel-heading">
+                        	<div class="container container-fluid">
+                        	    <div class="row">                        	                           		
+                                   <div class="col-sm-2 col-xs-6 head_1 newbtn">
+		                        		<button class="btn btn-success" type="button" onclick="_add()">新增</button>
+		                        	</div>
+                                    <div class="col-sm-2 col-xs-6 head_1 newbtn">
+		                        		<button class="btn btn-4" type="button" onclick="_batchDelete()">删除</button>
+		                       		</div>
+		                       		<div class="col-sm-1 col-xs-4 head_1">
+                                    	<button class="btn btn-9 " onclick="location.replace('')"><i class="fa fa-refresh"></i></button>
+                                	</div>
+							    </div>
+                            </div>
+                        </div>
+                        <!-- /.panel-heading -->
+                        <div class="panel-body" style="min-height: 430px">
+                        	<table style="max-width: 560px" class="table table-striped table-bordered table-hover" id="dataTables-example">            
+                                <thead> 
+                                    <tr>
+                                        <th>产品编号</th>
+                                        <th>品名</th>
+                                        <th>规格</th>
+                                        <th>单位</th>
+                                        <th>总数量</th>										
+                                    </tr>
+                                </thead>
+                                <tbody class="t1">
+                                    <tr>
+                                    	<#if record??>
+                                        <td>${record.semimanufactures_number}</td>
+                                        <td>${record.trade_name}</td>
+										<td>${record.specifications}</td>
+										<td>${record.measurement_unit}<input hidden="" value ="${record.id}"><input hidden="" value="${record.semimanufactures_id!}"/></td>
+										<td>${record.semimanufactures_stock_num}</td>
+										<#else>
+										<td style="padding-bottom: 0px"> 
+										<div class="form-group" style="max-width: 160px;margin-left: 10px">
+											<select class="form-control" name="proNum" id="proNum" style="padding-right: 2px"  onchange="getProMessage(this)">
+												<option value="">-请选择产品编号-</option>
+												<#if noRepeatList?? &&noRepeatList?size gt 0>
+												<#list noRepeatList as nore>
+												<option value="${nore.id!}">${nore.semimanufactures_number!}</option>
+												</#list>
+												</#if>
+											</select>
+										</div>
+										</td>
+										<td style="padding-bottom: 0px">
+										<div class="form-group" style="max-width: 160px;margin-left: 10px">
+											<select class="form-control" name="proName" id="proName" style="padding-right: 2px"  onchange="getProMessage(this)">
+												<option value="">-请选择产品名称-</option>
+												<#if noRepeatList?? &&noRepeatList?size gt 0>
+												<#list noRepeatList as nore>
+													<option value="${nore.id!}">${nore.trade_name!}</option>
+												</#list>
+												</#if>
+											</select>
+										</div>
+										</td>
+										<td></td>
+										<td><input hidden="" value =""><input hidden="" value=""/></td>
+										<td></td>
+										</#if>
+                                    </tr>
+                                </tbody>
+                            </table>
+                             <table style="max-width: 800px" class="table table-striped table-bordered table-hover" id="dataTables-example">
+                                <thead>
+                                    <tr>
+                                    	<th><input type="checkbox" id="checkAll"></th>
+                                        <th>序列</th>
+                                        <th>产品对应仓库</th>
+                                        <th>数量</th>										
+										<th class="col-md-1">操作</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="t2">
+                                	<#if im?? &&im?size gt 0>
+                                	<#list im as i>
+                                    <tr> 
+                                    	<td><input type="checkbox" id="checkAll" name="sub"><input hidden="" type="text" value='${i.warehouse_id!}'></td>
+                                        <td>${i_index+1}</td>                                        
+                                        <td>${i.h1}${i.h2}${i.h3}<input hidden="" type="text" value="${i.semimanufactures_id!}"></td>
+                                        <td>${i.num!}</td>
+										<td class="col-md-1"><button class="btn btn-xs btn-3" type="button"  onclick="_edit(this)">编辑</button></td>
+                                    </tr> 
+                                    </#list>
+                                    </#if>
+                                </tbody>
+                            </table> 
+                            <div class="form-group" style="margin-bottom: 20px">
+				        		<div class="col-xs-8">
+				            		<button id="v" type="submit" class="btn btn-primary">　保存　</button>
+				        		</div>
+				    		</div>                           
+                        </div>                                          
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+</body>
+<!-- jQuery -->
+<script src="../../../vendor/jquery/jquery.min.js"></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="../../../vendor/bootstrap/js/bootstrap.min.js"></script>
+
+<!-- DataTables JavaScript -->
+<script src="../../../vendor/datatables/js/jquery.dataTables.min.js"></script>
+<script src="../../../vendor/datatables-plugins/dataTables.bootstrap.min.js"></script>
+<script src="../../../vendor/datatables-responsive/dataTables.responsive.js"></script>
+<script src="../../../resource/bootstrapvalidator/js/bootstrapValidator.min.js"></script>
+<!-- Custom Theme JavaScript -->
+<script src="../../../resource/layer/layer.js"></script>
+<script src="../../../resource/layui/layui.js"></script>
+<script src="../../../js/common/admin.js"></script>
+<script>
+$(function(){
+	// 表单校验
+	$('form').bootstrapValidator({
+		message: 'This value is not valid',
+		feedbackIcons: {
+			valid: 'glyphicon glyphicon-ok',
+			invalid: 'glyphicon glyphicon-remove',
+			validating: 'glyphicon glyphicon-refresh'
+		},
+		fields: {
+			proNum: {
+                validators: {
+                    notEmpty:{
+                        message: '不能为空!'
+                    },
+                }
+            }
+			,proName: {
+                validators: {
+                    notEmpty:{
+                        message: '不能为空!'
+                    },
+                }
+            },
+		}
+	});
+})
+.on('success.form.bv', function(e) {
+	e.preventDefault();
+	var arr = new Array();
+	var id = $(".t1 tr").find("input").eq(0).val();//id
+	var semimanufactures_id = $(".t1 tr").find("input").eq(1).val();//半成品id
+	var semimanufactures_id_num = $(".t1 tr").find("td").eq(4).html();//半成品对应数量
+	//对应仓库以及对应数量
+	$(".t2 tr").each(function(k,v){
+		var warehouse_id = $(v).find("input").eq(1).val();
+		var warehouse_id_num = $(v).find("td").eq(3).html();
+		var data ={"warehouse_id":warehouse_id,"warehouse_id_num":warehouse_id_num}
+		arr[k] = data;
+	})
+	console.log({"list":JSON.stringify(arr),"id":id,"semimanufactures_id":semimanufactures_id
+		,"semimanufactures_id_num":semimanufactures_id_num});
+	if($(".t2").find(".flag").length==1){
+		layer.msg("请添加库存明细",{time:2000});
+	}else{
+		$.post("/private/semistock/saveSemiStock",{"list":JSON.stringify(arr),"id":id,"semimanufactures_id":semimanufactures_id,"semimanufactures_id_num":semimanufactures_id_num},function(result){
+				if(result){					
+					layer_close();	
+					parent.parent.refresh_iframe();
+					parent.layer.msg("保存成功",{time:2000});				
+				}else{
+					parent.layer.msg("保存失败",{time:2000});
+				}	
+			})
+	}
+});
+
+$(function(){
+  	//全选、全不选
+	$("#checkAll").click(function() {
+	    $("input[name='sub']").prop("checked", this.checked);
+	});
+	$("input[name='sub']").click(function() {
+	    var subs = $("input[name='sub']");
+	    $("#checkAll").prop("checked" , subs.length == subs.filter(":checked").length ? true :false);
+	});
+});
+
+function _add(){
+	var obj = $("tbody").find("input").eq(1).val();
+	var pathtrue = $(".t1 tr").find("input").eq(1).val();
+	if(pathtrue!=null&&pathtrue!=""){
+		 open_window('添加明细数据','/private/semistock/getDetail?SemiproductId='+obj,420, 240);		
+	}else{
+		layer.msg("请先选择半成品",{time:2000});
+	}
+
+}
+
+function _edit(_obj){
+	var index = $(_obj).parent().parent().find("td").eq(1).html();
+	var semimanufactures_id = $(_obj).parent().parent().find("input").eq(2).val();
+	var warehouse_id = $(_obj).parent().parent().find("input").eq(1).val()
+	var num = $(_obj).parent().parent().find("td").eq(3).html(); 
+	console.log(index);
+	console.log(semimanufactures_id);	
+	console.log(warehouse_id);	
+	console.log(num);	
+    open_window('编辑明细数据','/private/semistock/getDetail?semimanufactures_id='+semimanufactures_id+'&warehouse_id='+warehouse_id+'&num='+num+'&index='+index,420, 240);
+}
+
+function addData(data){
+	var flag = false;
+	var result = true;
+	var $div = $("<tr></tr>");
+	//index为空表示新增数据，index不为空便是编辑数据
+	if(data.index!=null&&data.index!=""){
+		$(".t2 tr").each(function(k,v){
+			if(data.index == k+1){
+				if(data.cage_id == $(v).find("input").eq(1).val()){
+					flag = true;
+					$div = $(v);
+				}
+			}
+		})
+		//flag为true，表示该tr位置数据但是仓库位置不变，为false表示更改该tr位置但是仓库位置已经改变
+		if(flag){
+			$div.replaceWith("<tr>" 
+				      +"<td><input type='checkbox' id='checkAll' name='sub'><input hidden='' value='"+data.cage_id+"'></td>"
+			          +"<td></td>"
+			          +"<td>"+data.cage_html+"<input hidden='' type='text' value='"+data.semimanufactures_id+"'></td>"
+			          +"<td>"+data.num+"</td>"
+					  +"<td class='col-md-1'><button class='btn btn-xs btn-3' type='button' onclick='_edit(this)'>编辑</button></td>"
+				      +"</tr>" 		
+					)
+					sort();
+		}else{
+			$(".t2 tr").each(function(k,v){
+				if(data.cage_id == $(v).find("input").eq(1).val()){
+					result = false;	
+				}
+			})
+			if(result){//判断改变后的仓库位置在table中是否有重复
+				$(".t2").append("<tr>" 
+					      +"<td><input type='checkbox' id='checkAll' name='sub'><input hidden='' value='"+data.cage_id+"'></td>"
+				          +"<td></td>"
+				          +"<td>"+data.cage_html+"<input hidden='' type='text' value='"+data.semimanufactures_id+"'></td>"
+				          +"<td>"+data.num+"</td>"
+						  +"<td class='col-md-1'><button class='btn btn-xs btn-3' type='button'  onclick='_edit(this)'>编辑</button></td>"
+					      +"</tr>" 		
+						)	
+			}else{
+				layer.msg('该对应库位已有存货',{time:2000});
+			}
+			sort();
+		}
+	}else{
+		var f = true;
+		$(".t2 tr").each(function(k,v){
+			if(data.cage_id == $(v).find("input").eq(1).val()){
+				f = false;	
+			}
+		})
+		if(f){//判断新增数据在table中是否有重复，false表示有重复
+			$(".t2").append("<tr>" 
+				      +"<td><input type='checkbox' id='checkAll' name='sub'><input hidden='' value='"+data.cage_id+"'></td>"
+			          +"<td></td>"
+			          +"<td>"+data.cage_html+"<input hidden='' type='text' value='"+data.semimanufactures_id+"'></td>"
+			          +"<td>"+data.num+"</td>"
+					  +"<td class='col-md-1'><button class='btn btn-xs btn-3' type='button'  onclick='_edit(this)'>编辑</button></td>"
+				      +"</tr>" 		
+					)	
+		}else{
+			layer.msg('该对应库位已有存货',{time:2000});
+		}
+		sort();	
+	}
+	addcount();
+}
+
+//页面序号排序
+function sort(){
+	$(".t2").find(".flag").remove();
+	$(".t2 tr").each(function(k,v){
+		var index = k+1;
+		$(v).find("td").eq(1).html(index);
+	})
+	if($(".t2").find("tr").length==0){
+		$(".t2").append("<tr class='flag'><td colspan='5' style='text-align: center;'>暂无产品数据,请点击新增添加</td></tr>");
+	}
+}
+sort();
+
+
+//删除页面数据
+function _batchDelete(){
+	if($("input[name='sub']:checked").length == 0){
+		parent.layer.msg("请至少选择一条数据", {time: 2000});
+	}else{
+		$("input[name='sub']:checked").each(function(k,v){
+			   $(v).parent().parent().remove();
+			   sort();
+		   })
+	}
+}
+
+//全选、全不选
+$("#checkAll").click(function() {
+    $("input[name='sub']").prop("checked", this.checked);
+});
+$("input[name='sub']").click(function() {
+    var subs = $("input[name='sub']");
+    $("#checkAll").prop("checked" , subs.length == subs.filter(":checked").length ? true :false);
+});
+
+//选择产品编码自动带出数据
+function getProMessage(_obj){
+	var code = $(_obj).find("option:selected").eq(0).val();
+	console.log(code);
+	if(code!=null&&code!=""){
+	 $.post("/private/semistock/getProMessage",{"code":code},function(data){
+		 console.log(data);
+			$(".t1 tr").find("td").eq(2).html(data.specifications);
+			$(".t1 tr").find("td").eq(3).html(data.measurement_unit+"<input hidden='' value =''><input hidden='' value=''/>");
+			$(".t1 tr").find("input").eq(1).val(data.id);
+			$(".t1 tr").find("select").eq(0).find("option").removeAttr("selected");
+			$(".t1 tr").find("select").eq(0).find("option").each(function(k,v){				
+				if($(v).val()==data.id){					
+					$(v).attr("selected",true);
+				}
+			}) 		
+			$(".t1 tr").find("select").eq(1).find("option").removeAttr("selected");
+			$(".t1 tr").find("select").eq(1).find("option").each(function(k,v){					
+				if($(v).val()==data.id){
+					$(v).attr("selected",true);
+				}
+			}) 
+		}) 
+	} 
+}
+
+//计算总数量
+function addcount(){
+	var addcountnum = 0;
+	$(".t2 tr").each(function(k,v){
+		addcountnum +=Number($(v).find("td").eq(3).html());
+	})
+	$(".t1 tr").find("td").eq(4).html(addcountnum);
+}
+
+</script>
+
+</html>

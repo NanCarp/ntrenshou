@@ -60,7 +60,7 @@
 		                     <button class="btn btn-4" onclick=" _batchDelete()">删除</button>
 		                </div>
 		                <div class="col-sm-1 col-xs-12 head_1">
-                            <button class="btn btn-3"  onclick="_check()">查看</button>
+                            <button class="btn btn-3"  onclick="_look()">查看</button>
                         </div>
                         <div class="col-sm-2 col-xs-12 head_4">
                             <button class="btn btn-3"  onclick="_check()">确认入库</button>
@@ -226,12 +226,21 @@ var ButtonInit = function () {
 
 //新增
 function _add(){
-	open_window('新增半成品出库','/private/semiin/getEdit', 1000, 600);
+	open_window('新增半成品入库','/private/semiin/getEdit', 1000, 600);
 }
 
 //编辑
 function _edit(id){
-	open_window('编辑基础数据','/database/finishedproduct/getfinishedproduct/' + id, 400, 380);
+	//判断是否已经确认入库，确认入库不可修改
+	$.post("/private/semiin/checkOr",{"id":id},function(resut){
+		if(resut){
+			open_window('编辑半成品入库','/private/semiin/getEdit/' + id, 1000, 600);
+		}else{
+			layer.msg("已确认入库无法编辑",{time:2000});
+		}
+	})
+	
+	
 }
 
 //批量删除
@@ -248,13 +257,13 @@ function _batchDelete(){
             title: ['信息', 'font-weight:600;color:#fff;background-color: #3367D6;'],
             btn: ['确认','取消'] //按钮
         }, function(){
-            $.post("/database/finishedproduct/delete/" + ids,function(result) {
+            $.post("/private/semiin/delete/" + ids,function(result) {
                 if (result) {
                     layer.msg('删除成功', {time: 2000}, function(){
                         parent.refresh_iframe();
                     });
                 }else{
-                	layer.msg('删除失败', {time: 2000}, function(){
+                	layer.msg('删除失败！确认入库数据不可删除', {time: 2500}, function(){
                     });
                 }
             });
@@ -280,6 +289,51 @@ function getIdSelections() {
         return row.id;
     });
 }
+
+//确认入库
+function _check(){
+	// 获取选中记录 id
+	var ids = getIdSelections();	
+	// 如果没有选择，提示勾选至少一条数据
+	if (ids.length == 0) {
+        layer.msg('请至少选择一条记录', {time: 2000});
+	}else if(ids.length > 1){
+		layer.msg('最多选择一条数据', {time: 2000});
+	}else{
+		 // 询问框
+        layer.confirm('确认入库吗？', {
+            title: ['信息', 'font-weight:600;color:#fff;background-color: #3367D6;'],
+            btn: ['确认','取消'] //按钮
+        }, function(){
+            $.post("/private/semiin/check/" + ids,function(result) {
+                if (result) {
+                    layer.msg('入库成功', {time: 2000}, function(){
+                        parent.refresh_iframe();
+                    });
+                }else{
+                	layer.msg('入库失败', {time: 2000}, function(){
+                    });
+                }
+            });
+        }, function(){
+        });
+	}
+}
+
+//查看入库单
+function _look(){
+	// 获取选中记录 id
+	var ids = getIdSelections();	
+	// 如果没有选择，提示勾选至少一条数据
+	if (ids.length == 0) {
+        layer.msg('请至少选择一条记录', {time: 2000});
+	}else if(ids.length > 1){
+		layer.msg('最多选择一条数据', {time: 2000});
+	}else{
+		open_window('半成品入库单','/private/semiin/look/'+ids, 800, 500);
+	}
+}
+
 
 </script>
 

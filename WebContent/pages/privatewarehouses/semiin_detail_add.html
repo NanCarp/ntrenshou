@@ -80,7 +80,7 @@
                         <div class="panel-footer" style="height: 50px">
                        		<div class="form-group" style="text-align: right;position:relative;top:0px;left:0px;">
 	            				<div class="col-xs-12">
-	            					<button id="v" type="submit" class="btn btn-primary">　添加　</button>
+	            					<button id="v" type="submit" class="btn btn-primary" onclick="add()">　添加　</button>
 	        					</div>
     						</div> 
                     	</div>                 
@@ -97,13 +97,39 @@
 
 <!-- Metis Menu Plugin JavaScript -->
 <script src="../../../vendor/metisMenu/metisMenu.min.js"></script>
-
+<script src="../../../resource/layer/layer.js"></script>
+<script src="../../../resource/layui/layui.js"></script>
 <!-- Custom Theme JavaScript -->
 <script src="../../../resource/bootstrapvalidator/js/bootstrapValidator.min.js"></script>
 <script src="../../../js/common/admin.js"></script>
 <script type="text/javascript">
+//全选、全不选
+$("#checkAll").click(function() {
+    $("input[name='sub']").prop("checked", this.checked);
+});
+$("input[name='sub']").click(function() {
+    var subs = $("input[name='sub']");
+    $("#checkAll").prop("checked" , subs.length == subs.filter(":checked").length ? true :false);
+});
 
- 
+function add(){
+	var pronum = new Array();
+	var subs = $("input[name='sub']:checked");
+	if(subs.length == 0){
+		parent.layer.msg("请至少选择一条数据",{time: 2500});
+	}else{
+		$("input[name='sub']:checked").each(function(k,v){
+			pronum.push($(v).parent().next().next().html());
+		})
+	}
+	parent.window.addcontant(pronum);
+	layer_close();
+}
+
+
+
+
+
 </script>
 </body>
 

@@ -456,10 +456,10 @@ function bind(){
                     notEmpty:{
                         message: '不能为空!'
                     },
-                    /* regexp: {
+                    regexp: {
                         regexp: /^[a-zA-Z0-9_\u0391-\uFFE5]+$/,
                         message: '不能包含特殊字符'
-                    }, */
+                    }, 
                     stringLength: {
                         min: 0,
                         max: 20,
@@ -469,6 +469,10 @@ function bind(){
             },
             specification: {
                 validators: {
+                	regexp: {
+                        regexp: /^[a-zA-Z0-9_\u0391-\uFFE5]+$/,
+                        message: '不能包含特殊字符'
+                    }, 
                 	stringLength: {
                         min: 0,
                         max: 20,
@@ -492,6 +496,10 @@ function bind(){
                 validators: {
                 	notEmpty:{
                         message: '不能为空!'
+                    },
+                    regexp: {
+                        regexp: /^[0-9]+(\.[0-9]{1,})?$/,
+                        message: '请输入正确的数量'
                     },
                     stringLength: {
                         min: 0,

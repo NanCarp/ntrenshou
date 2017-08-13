@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>入库明细查看</title>
+
+    <!-- Bootstrap Core CSS -->
+    <link href="../../../vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom CSS -->
+    <link href="../../../dist/css/sb-admin-2.css" rel="stylesheet">
+    <link href="../../../css/common/common.css" rel="stylesheet">
+    <link href="../../../css/admin.css" rel="stylesheet">
+    <link href="../../../css/leasewarehouse/lease_in_check.css" rel="stylesheet">
+
+    <!-- Custom Fonts -->
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+</head>
+
+<body>
+<#if im??>
+<div id="jqprint">
+    <div class="r1">南通仁寿食品有限公司</div>
+    <div class="r2">半成品入库单</div>
+    <div class="r3">
+        <div class="left">单号：${imm.storage_number!}</div>
+        <div class="right">入库时间：</div>
+    </div>
+    <table>
+        <tbody>
+            <tr>
+                <td>序号</td>
+                <td>产品编码</td>
+                <td>品名</td>
+                <td>规格</td>
+                <td>单位</td>
+                <td>数量</td>
+            </tr>
+            <#if rlist?? && rlist?size gt 0>
+            <#list rlist as product>
+            <tr>
+                <td>${product_index+1}</td>
+                <td>${product.semimanufactures_number}</td>
+                <td>${product.trade_name!}</td>
+                <td>${product.specifications!}</td>
+                <td>${product.measurement_unit!}</td>
+                <td>${product.num!}</td>
+            </tr>
+            </#list>
+            <#else>
+            <!-- <td colspan="5">暂无联系人</td> -->
+            <tr>
+                <td>1</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            </#if>
+        </tbody>
+    </table>
+    <!-- /.table-responsive -->
+    <div class="r4">入库人：${imm.user_name!}</div>
+    <div class="r4"></div>
+</div>
+</#if>
+<!-- <input type="button" onclick="print()" value="打印"/> -->
+
+<!-- jQuery -->
+<script src="../../../vendor/jquery/jquery.min.js"></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="../../../vendor/bootstrap/js/bootstrap.min.js"></script>
+
+<!-- Custom Theme JavaScript -->
+<script language="javascript" src="../../../resource/jqprint/jquery-1.4.4.min.js"></script>
+<script language="javascript" src="../../../resource/jqprint/jquery.jqprint-0.3.js"></script>
+
+<script>
+function print(){
+    $("#jqprint").jqprint();
+}
+
+</script>
+</body>
+</html>

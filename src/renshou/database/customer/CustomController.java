@@ -59,7 +59,6 @@ public class CustomController extends Controller {
 			setAttr("company", company);
 			setAttr("company_contact", company_contact);
 		}
-		
 		render("customer_detail.html");
 	}
 	

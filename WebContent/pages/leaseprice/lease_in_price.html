@@ -123,10 +123,10 @@ function doQuery(){
                 layer.tips('不允许有特殊字符，最多20个字符', '#company_name', {tips: [1, '#34495E']});return;
             }                   
         }
-        if($.trim($('#material_no').val())!=''){
+        if($.trim($('#warehouse_in_no').val())!=''){
             var reg = /^[a-zA-Z0-9_ ]{1,30}$/;
-            if(!reg.test($('#material_no').val())){
-                layer.tips('不允许有特殊字符，最多20个字符', '#material_no', {tips: [1, '#34495E']});return;
+            if(!reg.test($('#warehouse_in_no').val())){
+                layer.tips('不允许有特殊字符，最多20个字符', '#warehouse_in_no', {tips: [1, '#34495E']});return;
             }                   
         }
         $('#tb_departments').bootstrapTable('refresh');    //刷新表格
@@ -217,8 +217,8 @@ var TableInit = function () {
             maxrows: params.limit,
             search: params.search,
            	in_date: $("#in_date").val(),
-           	company_name: $("#company_name").val(),
-           	warehouse_in_no: $("#warehouse_in_no").val(),
+           	company_name: $.trim($("#company_name").val()),
+           	warehouse_in_no: $.trim($("#warehouse_in_no").val()),
         };
         return temp;
     };

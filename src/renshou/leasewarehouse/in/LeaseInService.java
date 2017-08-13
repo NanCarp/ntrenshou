@@ -1,6 +1,5 @@
 package renshou.leasewarehouse.in;
 
-import java.math.BigDecimal;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -15,6 +14,13 @@ import com.jfinal.plugin.activerecord.IAtom;
 import com.jfinal.plugin.activerecord.Page;
 import com.jfinal.plugin.activerecord.Record;
 
+/**
+ * @ClassName: LeaseInService.java
+ * @Description:
+ * @author: LiYu
+ * @date: 2017年8月10日上午10:14:56
+ * @version: 1.0 版本初成
+ */
 public class LeaseInService {
 
     /** 
@@ -72,7 +78,7 @@ public class LeaseInService {
     * @return Map<String,Object>
     * @author liyu
     */
-    public static Map<String, Object> save(Long id, Integer customer, Integer warehouse_id, String location, String productList) {
+    public static Map<String, Object> save(Long id, Integer customer, Integer warehouse_id, String location, String productList, String warehouse_in_person) {
         boolean result = Db.tx(new IAtom() {
             
             @Override
@@ -88,7 +94,7 @@ public class LeaseInService {
                 warehouseIn.set("customer", customer); // 客户
                 warehouseIn.set("warehouse_id", warehouse_id); // 仓库
                 warehouseIn.set("location", location); // 摆放位置
-                warehouseIn.set("warehouse_in_person", "张三"); // 入库人 TODO 
+                warehouseIn.set("warehouse_in_person", warehouse_in_person); // 入库人 
                 
                 if(null != warehouse_in_id) { // 编辑
                     warehouseIn.set("id", id);

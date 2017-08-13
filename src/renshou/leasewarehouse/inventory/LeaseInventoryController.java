@@ -20,12 +20,20 @@ import renshou.leasewarehouse.in.LeaseInService;
  * @version: 1.0 版本初成
  */
 public class LeaseInventoryController extends Controller {
-    // 页面
+    /** 
+    * @Title: index 
+    * @Description: 库存页面
+    * @author liyu
+    */
     public void index() {
         render("lease_inventory.html");
     }
     
-    // 数据列表
+    /** 
+    * @Title: getJson 
+    * @Description: 库存列表数据
+    * @author liyu
+    */
     public void getJson(){
         // 入库单号
         String warehouse_in_no = getPara("warehouse_in_no");
@@ -45,16 +53,19 @@ public class LeaseInventoryController extends Controller {
         Page<Record> page = LeaseInventoryService.getDataPages(pageindex, pagelimit, warehouse_in_no, company_name);
         
         Map<String, Object> map = new HashMap<String,Object>();
-        // 修改入库单仓库名称 TODO
+        // 修改入库单仓库名称 
         List<Record> list = LeaseInService.modifyWarehouseName(page.getList());
         map.put("rows", list);
         map.put("total", page.getTotalRow());
-        //System.out.println(page.getList());
         
         renderJson(map);
     }
     
-    // 获得
+    /** 
+    * @Title: getRecord 
+    * @Description: 获得单条库存数据
+    * @author liyu
+    */
     public void getRecord() {
         // id
         Integer id = getParaToInt();
@@ -70,7 +81,11 @@ public class LeaseInventoryController extends Controller {
         render("lease_inventory_detail.html");
     }
     
-    // 查看
+    /** 
+    * @Title: check 
+    * @Description: 查看单条库存信息
+    * @author liyu
+    */
     public void check() {
         // id
         Integer id = getParaToInt();
@@ -78,7 +93,6 @@ public class LeaseInventoryController extends Controller {
         // 产品详情
         List<Record> productList = LeaseInventoryService.getProductList(id);
         setAttr("productList", productList);
-
         
         render("lease_inventory_check.html");
     }

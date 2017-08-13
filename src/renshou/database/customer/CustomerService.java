@@ -75,8 +75,7 @@ public class CustomerService {
 									record2.set("e_mail", j.getString("e_mail"));
 									record2.set("remark", j.getString("cremark"));
 									Db.save("company_contact", record2);
-								 
-							 }									
+							  }									
 						  } 	 
 					 }
 				}else{

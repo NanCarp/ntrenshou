@@ -42,25 +42,27 @@
  td{text-align: center;}
  body{  
     overflow-x: hidden;   
- } 
+ }
+ .inputclass{text-align:center;padding:0;width: 72px;height: 26px} 
+ .selectclass{padding:0 0 0 2px;width: 168px;height: 26px}
 </style>
 <body>
 <form class="form-horizontal" role="form" style="margin-top: 20px" id="defaultForm">
-	<#if company??>
-	<input id="id" name="id" value="${company.id}" hidden="">
+	<#if imm??>
+	<input id="id" name="id" value="${imm.id!}" hidden="">
 	<div style="display: inline-block;margin-left: 20px">
 	    <div class="form-group">
-	        <label class="col-xs-4 control-label text-right" for="company_name">入库单号：</label>
+	        <label class="col-xs-4 control-label text-right" for="storage_number">入库单号：</label>
 	        <div class="col-xs-8">
-	            <input class="form-control text-left" id="company_name" type="text" placeholder="公司名称" name="company_name" value="${company.company_name!}"/>
+	            <input class="form-control text-left" id="storage_number" type="text" placeholder="入库单号" name="storage_number" value="${imm.storage_number!}" disabled="disabled"/>
 	        </div>
 	    </div>
 	</div>
-	<div style="display: inline-block;margin-left: 40px;margin-bottom:49px">
+	<div style="display: inline-block;margin-left: 40px">
 	     <div class="form-group">
-	        <label class="col-xs-4 control-label text-right" for="company_address">入库人：</label>
+	        <label class="col-xs-4 control-label text-right" for="t_user_id">入库人：</label>
 	        <div class="col-xs-8">
-	            <input style="padding-right: 2px" class="form-control text-left" id="company_address" type="text" placeholder="公司地址" name="company_address" value="${company.company_address!}"/>
+	            <input style="padding-right: 2px" class="form-control text-left" id="t_user_id" type="text" placeholder="入库人" name="t_user_id" value="${imm.user_name!}" disabled="disabled"/>
 	        </div>
 	    </div>
 	</div>
@@ -68,17 +70,17 @@
 	<input id="id" name="id" value="" hidden="">
 	<div style="display: inline-block;margin-left: 16px">
 	    <div class="form-group">
-	        <label class="col-xs-4 control-label text-right" for="company_name">入库单号：</label>
+	        <label class="col-xs-4 control-label text-right" for="storage_number">入库单号：</label>
 	        <div class="col-xs-8">
-	            <input class="form-control text-left" id="company_name" type="text" placeholder="系统自动生成" name="company_name" value="" disabled="disabled"/>
+	            <input class="form-control text-left" id="storage_number" type="text" placeholder="系统自动生成" name="storage_number" value="" disabled="disabled"/>
 	        </div>
 	    </div>
 	</div>
-	<div style="display: inline-block">
+	<div style="display: inline-block;margin-left: 40px;">
 	     <div class="form-group">
-	        <label class="col-xs-4 control-label text-right" for="company_address">入库人：</label>
+	        <label class="col-xs-4 control-label text-right" for="t_user_id">入库人：</label>
 	        <div class="col-xs-8">
-	            <input class="form-control text-left" id="company_address" type="text" placeholder="系统自动录入" name="company_address" value="" disabled="disabled"/>
+	            <input class="form-control text-left" id="t_user_id" type="text" placeholder="系统自动录入" name="t_user_id" value="" disabled="disabled"/>
 	        </div>
 	    </div>
 	</div>
@@ -95,7 +97,13 @@
 		                </div>	          
                         <div class="col-sm-2 col-xs-6 head_1" style="padding-left: 0;margin-left: 0">
 		                     <button class="btn btn-4" type="button" onclick="_batchDelete()">删除</button>
-		                </div>                    									                            									                 
+		                </div>
+		                 <div class="col-sm-2 col-xs-3 head_2" style="margin-top: 6px;margin-left: 300px;text-align: right;">
+                            <span style="font-size: 18px">产品编号:</span>
+                        </div> 
+		                <div class="col-sm-3 col-xs-4 head_2" style="margin-left: 0px">
+                            <input type="text" class="form-control" placeholder="扫码点击此处" name="ProductCodeInfo" id="ProductCodeInfo" value="" >
+                        </div>          									                            									                 
 					</div>				
 				</div>
 			</div>		
@@ -108,32 +116,34 @@
                 <th>品名</th>
                 <th>规格</th>
                 <th>单位</th>
-                <th>数量</th>
-                <th>对应仓库</th>
-                <th>操作</th>
+                <th class="numtips" style="width: 72px">数量</th>
+                <th class="cagetips" style="width: 168px">对应仓库</th>
               </tr>
               </thead>
               <tbody>
+              	<#if rlist?? &&rlist?size gt 0>
+              	<#list rlist as r>
            		<tr>
-           			<td><input type="checkbox" name="sub" value=""></td>
-           			<td>1</td>
-           			<td>CK20171110</td>
-           			<td>场1</td>
-           			<td>大号</td>
-           			<td>KG</td>
-           			<td style="width: 72px"><input  class="form-control" style="text-align:center;padding:0;width: 72px;height: 26px" value="1"></td>
+           			<td><input type="checkbox" name="sub" value="" ><input hidden="" value="${r.id!}"></td>
+           			<td></td>
+           			<td>${r.semimanufactures_number}</td>
+           			<td>${r.trade_name}</td>
+           			<td>${r.specifications}</td>
+           			<td>${r.measurement_unit}</td>
+           			<td style="width: 72px"><input type="text"   class="form-control inputclass" name="${r.semimanufactures_number}" id="${r.semimanufactures_number}" value="${r.num}"></td>
            			<td style="width: 168px">
-           			<select class="form-control" name="cage_name" id="cage_name" style="padding:0 0 0 2px;width: 168px;height: 26px">
-     					<option >--选择对应仓库--</option>
+           			<select class="form-control selectclass" name="cage_name" id="cage_name">
+     					<option value="">--选择对应仓库--</option>
                 		<#if im?? &&im?size gt 0>
 						<#list im as record>
-						<option id="${record.id}">${record.rwarehouse_name}${record.awarehouse_name}${record.warehouse_name}</option>
+						<option <#if r.warehouse_id==record.id>selected</#if>  value="${record.id}">${record.rwarehouse_name}${record.awarehouse_name}${record.warehouse_name}</option>
                			</#list>
 						</#if>
             		</select>
            			</td>
-           			<td><button class="btn btn-xs btn-3" type="button"  onclick="_edit(this)">编辑</button></td>
-           		</tr>             
+           		</tr> 
+           		</#list>
+           		</#if>           
               </tbody>
           </table>
 		</div>             
@@ -160,7 +170,21 @@
 <script src="../../../resource/bootstrapvalidator/js/bootstrapValidator.min.js"></script>
 <script src="../../../js/common/admin.js"></script>
 <script type="text/javascript">
+document.onkeydown = function(e) {
+    var e = e || event;
+    if(e.keyCode == 13) {
+    	 $("#ProductCodeInfo").keydown(function (e) {
+			 AddProduct(this);
+    	})
+        e.preventDefault ? e.preventDefault() : (e.returnValue = false);
+    }
+}
+
 $(function(){
+	//扫码录入
+	  $("#ProductCodeInfo").keydown(function (e) {
+			 AddProduct(this);
+    }) 
 	// 表单校验
 	$('form').bootstrapValidator({
 		message: 'This value is not valid',
@@ -170,115 +194,85 @@ $(function(){
 			validating: 'glyphicon glyphicon-refresh'
 		},
 		fields: {
-			company_name: {
-				notEmpty: {
-					message: '不能为空!'
-				},
-				validators: {
-                    stringLength: {
-                        min: 0,
-                        max: 20,
-                        message: '最多20个字符'
-                    }
-				}
-			}
-			,remark: {
-				validators: {
-					notEmpty: {
-						message: '不能为空!'
-					},
-	                stringLength: {
-	                    min: 0,
-	                    max: 20,
-	                    message: '最多20个字符'
-	                }
-				}
-			}
-			,company_address: {
-				validators: {
-					notEmpty: {
-						message: '不能为空!'
-					},
-                    stringLength: {
-                        min: 0,
-                        max: 40,
-                        message: '最多40个字符'
-                    }
-				}
-			}
+			
 		}
 	});
 })
 .on('success.form.bv', function(e) {
 	e.preventDefault();
 	var list = new Array();
+	var flag = true;
 	$("tbody tr").each(function(k,v){
-		var data = {"name":$(v).find("td").eq(2).html(),"call_num":$(v).find("td").eq(3).html()
-				,"QQ":$(v).find("td").eq(4).html(),"wechat":$(v).find("td").eq(5).html()
-				,"e_mail":$(v).find("td").eq(6).html(),"remark":$(v).find("td").eq(7).html()};
+		var num = $(this).find("input").eq(2).val();
+		var warehouse_id = $(v).find("option:selected").val();
+		var data = {"semimanufactures_number":$(v).find("td").eq(2).html(),"warehouse_id":warehouse_id,"num":num};
 		list[k] = data;
 	})
+	console.log(JSON.stringify(list));
 	var id = $("#id").val();
-	var company_name = $("#company_name").val();
-	var company_address = $("#company_address").val();
-	var remark =$("#remark").val();
-	$.post("/private/semiin/saveCustom", {"list":JSON.stringify(list),"company_name":company_name,"company_address":company_address,"remark":remark,"id":id}, function(result) {
-		if (result) {
-            parent.layer.msg("保存成功", {time: 2000}, function(){
-                layer_close();
-                parent.parent.refresh_iframe();
-            });
-        } else {
-            parent.layer.msg(result.tips, {time: 2000});
-        }
-		
-	});
+	if(flag){
+		$.post("/private/semiin/saveSemiIn", {"list":JSON.stringify(list),"id":id}, function(result) {
+			if (result) {
+	            parent.layer.msg("保存成功", {time: 2000}, function(){
+	                layer_close();
+	                parent.parent.refresh_iframe();
+	            });
+	        } else {
+	            parent.layer.msg("保存失败", {time: 2000});
+	        }
+		});
+	}
 });
 
-function _add(){
+function _add(obj){
 	open_window('新增半成品入库','/private/semiin/addEdit', 720, 540);
 }
 
 //接受子页面添加参数
 function addcontant(data){
-	if(data.position!=null&&data.position!=""){
+	for(var r=0;r<data.length;r++){
+		var flag = true;
 		$("tbody tr").each(function(k,v){
-			if(data.position==k+1){
-				$(v).replaceWith("<tr>"
-			        	  +"<td><input type='checkbox' name='sub' value=''></td>"
-			              +"<td>1</td>"
-			              +"<td>"+data.name+"</td>" 
-			              +"<td>"+data.call_num+"</td>"    
-			              +"<td>"+data.QQ+"</td>"
-			              +"<td>"+data.wechat+"</td>"
-			              +"<td>"+data.e_mail+"</td>"
-			              +"<td>"+data.remark+"</td>"
-			              +"<td><button class='btn btn-xs btn-3'type='button'  onclick='_edit(this)'>编辑</button></td>"
-			              +"</tr>")
-			}
+			if(data[r] == $(v).find("td").eq(2).html()){
+				flag = false;
+			};
 		})
-	}else{
-		$("tbody").append("<tr>"
-	        	  +"<td><input type='checkbox' name='sub' value=''></td>"
-	              +"<td>1</td>"
-	              +"<td>"+data.name+"</td>" 
-	              +"<td>"+data.call_num+"</td>"    
-	              +"<td>"+data.QQ+"</td>"
-	              +"<td>"+data.wechat+"</td>"
-	              +"<td>"+data.e_mail+"</td>"
-	              +"<td>"+data.remark+"</td>"
-	              +"<td><button class='btn btn-xs btn-3'type='button'  onclick='_edit(this)'>编辑</button></td>"
-	              +"</tr>");
-	}        		
+		if(flag){
+			$.post("/private/semiin/getSemiByNum",{"num":data[r]},function(record){
+				$("tbody").append(
+						"<tr>"
+	           			+"<td><input type='checkbox' name='sub' value=''><input hidden=''></td>"
+	           			+"<td></td>"
+	           			+"<td>"+record.semimanufactures_number+"</td>"
+	           			+"<td>"+record.trade_name+"</td>"
+	           			+"<td>"+record.specifications+"</td>"
+	           			+"<td>"+record.measurement_unit+"</td>"
+	           			+"<td><input class='form-control inputclass' value='1'></td>"
+	           			+"<td>"
+	           			+"<select class='form-control selectclass' name='cage_name' id='cage_name'>"
+	     					+"<option>--选择对应仓库--</option>"
+	                		+"<#if im?? &&im?size gt 0>"
+							+"<#list im as record>"
+							+"<option id='${record.id}' value='${record.id}'>${record.rwarehouse_name}${record.awarehouse_name}${record.warehouse_name}</option>"
+	               			+"</#list>"
+							+"</#if>"
+	            		+"</select>"
+	           			+"</td>"
+	           		+"</tr>"		
+				)
+				sort();
+			})
+		}
+	}
 }
 
-//删除页面数据
+/* //删除页面数据
 function _batchDelete(){
 	$("input[name='sub']:checked").each(function(k,v){
 		   $(v).parent().parent().remove();
 		   sort();
 	   })	
-}
+} */
 
 //修改页面数据
 function _edit(_obj){
@@ -299,12 +293,87 @@ function sort(){
 		$(v).find("td").eq(1).html(index);
 	})
 	if($("tbody").find("tr").length==0){
-		$("tbody").append("<tr class='flag'><td colspan='9' style='text-align: center;'>暂无联系人，请先添加联系人</td></tr>");
+		$("tbody").append("<tr class='flag'><td colspan='9' style='text-align: center;'>暂无产品数据,请点击新增添加</td></tr>");
 	}else{
 		$("tbody").find(".flag").remove();
 	}
 }
 sort();
+
+
+//删除页面数据
+function _batchDelete(){
+	if($("input[name='sub']:checked").length == 0){
+		parent.layer.msg("请至少选择一条数据", {time: 2000});
+	}else{
+		$("input[name='sub']:checked").each(function(k,v){
+			   $(v).parent().parent().remove();
+			   sort();
+		   })
+	}
+}
+
+//全选、全不选
+$("#checkAll").click(function() {
+    $("input[name='sub']").prop("checked", this.checked);
+});
+$("input[name='sub']").click(function() {
+    var subs = $("input[name='sub']");
+    $("#checkAll").prop("checked" , subs.length == subs.filter(":checked").length ? true :false);
+});
+
+//扫码录入
+function AddProduct(self) {
+    var barcode = $.trim($(self).val());
+    var flag = true;
+    if(barcode!=null){
+    	if(barcode.length>9){   			
+   			$("tbody tr").each(function(k,v){
+   				if(barcode == $(v).find("td").eq(2).html()){
+   					parent.layer.msg("该条码已经录入", {time: 2000});
+   					$(self).val("");
+   					flag = false;
+   				};
+   			})
+   			if(flag){
+   				$.post("/private/semiin/getSemiByNum",{"num":barcode},function(record){
+   					console.log(record);
+   					if(record!=null){
+   						$("tbody").append(
+   	   							"<tr>"
+   	   		           			+"<td><input type='checkbox' name='sub' value=''><input hidden=''></td>"
+   	   		           			+"<td></td>"
+   	   		           			+"<td>"+record.semimanufactures_number+"</td>"
+   	   		           			+"<td>"+record.trade_name+"</td>"
+   	   		           			+"<td>"+record.specifications+"</td>"
+   	   		           			+"<td>"+record.measurement_unit+"</td>"
+   	   		           			+"<td><input class='form-control inputclass' value='1'></td>"
+   	   		           			+"<td>"
+   	   		           			+"<select class='form-control selectclass' name='cage_name' id='cage_name'>"
+   	   		     					+"<option>--选择对应仓库--</option>"
+   	   		                		+"<#if im?? &&im?size gt 0>"
+   	   								+"<#list im as record>"
+   	   								+"<option id='${record.id}' value='${record.id}'>${record.rwarehouse_name}${record.awarehouse_name}${record.warehouse_name}</option>"
+   	   		               			+"</#list>"
+   	   								+"</#if>"
+   	   		            		+"</select>"
+   	   		           			+"</td>"
+   	   		           		+"</tr>"		
+   	   					)
+   	   					sort();
+   	   					$(self).val("");
+   					}else{
+   						parent.layer.msg("请录入正确的半成品条码", {time: 2000});
+   						$(self).val("");
+   					}
+
+   				})
+    		}
+    	}
+    }
+    $(self).val("");
+}
+
 </script>
 </body>
 

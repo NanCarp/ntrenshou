@@ -37,6 +37,7 @@
     <![endif]-->	
 </head>
 <body>
+	<img class="im"/>
 	<#if storages?? && storages?size gt 0>
 	<#list storages as storage>
 	<div class="contant">
@@ -117,7 +118,7 @@ $(function(){
 })	
 
 function  print(){
-        $(".contant").jqprint();
+   $(".contant").jqprint();
 }
 
 </script>

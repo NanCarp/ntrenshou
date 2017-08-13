@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Map;
 
 import com.jfinal.core.Controller;
-import com.jfinal.plugin.activerecord.Db;
 import com.jfinal.plugin.activerecord.Page;
 import com.jfinal.plugin.activerecord.Record;
 
@@ -20,12 +19,20 @@ import renshou.leasewarehouse.in.LeaseInService;
  * @version: 1.0 版本初成
  */
 public class LeaseInventoryPriceController extends Controller {
-    // 页面
+    /** 
+    * @Title: index 
+    * @Description: 库存价格页面
+    * @author liyu
+    */
     public void index() {
         render("lease_inventory_price.html");
     }
     
-    // 数据列表
+    /** 
+    * @Title: getJson 
+    * @Description: 库存列表数据
+    * @author liyu
+    */
     public void getJson(){
         // 入库单号
         String warehouse_in_no = getPara("warehouse_in_no");
@@ -46,32 +53,32 @@ public class LeaseInventoryPriceController extends Controller {
         
         Map<String, Object> map = new HashMap<String,Object>();
         
-        // 修改入库单仓库名称 TODO
+        // 修改入库单仓库名称 
         List<Record> list = LeaseInService.modifyWarehouseName(page.getList());
         map.put("rows", list);
         map.put("total", page.getTotalRow());
-        //System.out.println(page.getList());
         
         renderJson(map);
     }
     
-    // 获得
+    /** 
+    * @Title: getRecord 
+    * @Description: 获得单条库存数据
+    * @author liyu
+    */
     public void getRecord() {
         // id
         Integer id = getParaToInt();
-
-        /*if (id != null) {//编辑
-            Record record = Db.findById("t_lease_warehouse_inventory", id);
-            setAttr("record", record);
-            // 入库单产品详情
-            List<Record> productList = LeaseInventoryPriceService.getProductList(id);
-            setAttr("productList", productList);
-        }*/
         
         render("lease_inventory_price_detail.html");
     }
     
     // 查看
+    /** 
+    * @Title: check 
+    * @Description: 查看库存价格信息
+    * @author liyu
+    */
     public void check() {
         // 入库单 id
         Long warehouse_in_id = getParaToLong();

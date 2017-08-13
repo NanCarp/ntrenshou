@@ -45,7 +45,7 @@
 				<div class="container container-fluid" >				
 					<div class="row">                        	    		                                            		
 						<div class="col-sm-2 col-xs-3 head_2">
-                            <input type="search" class="form-control" placeholder="出库单号" name="warehouse_in_no" id="warehouse_out_no" value="${warehouse_out_no!}">
+                            <input type="search" class="form-control" placeholder="出库单号" name="warehouse_out_no" id="warehouse_out_no" value="${warehouse_out_no!}">
                         </div>
                         <div class="col-sm-2 col-xs-3 head_2">
                             <input type="search" class="form-control" placeholder="客户名称" name="company_name" id="company_name" value="${company_name!}">
@@ -126,10 +126,10 @@ function doQuery(){
                 layer.tips('不允许有特殊字符，最多20个字符', '#company_name', {tips: [1, '#34495E']});return;
             }                   
         }
-        if($.trim($('#material_no').val())!=''){
+        if($.trim($('#warehouse_out_no').val())!=''){
             var reg = /^[a-zA-Z0-9_ ]{1,30}$/;
-            if(!reg.test($('#material_no').val())){
-                layer.tips('不允许有特殊字符，最多20个字符', '#material_no', {tips: [1, '#34495E']});return;
+            if(!reg.test($('#warehouse_out_no').val())){
+                layer.tips('不允许有特殊字符，最多20个字符', '#warehouse_out_no', {tips: [1, '#34495E']});return;
             }                   
         }
         $('#tb_departments').bootstrapTable('refresh');    //刷新表格

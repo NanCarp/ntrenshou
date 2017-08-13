@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>成品出库-新增/修改</title>
+
+    <!-- Bootstrap Core CSS -->
+    <link href="../../../vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- MetisMenu CSS -->
+    <link href="../../../vendor/metisMenu/metisMenu.min.css" rel="stylesheet">
+
+    <!-- Custom CSS -->
+	<link href="../../../css/admin.css" rel="stylesheet">
+	<link href="../../../resource/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css" rel="stylesheet" />
+	<style type="text/css">
+		body { margin:0 15px;}
+		form { margin-top:20px;}
+		label { padding-top:6px;padding-right:0;}
+		
+		th{text-align: center;}
+		td{text-align: center;}
+		body{  
+		    overflow-x: hidden;   
+		}
+		.inputclass{text-align:center;padding:0;width: 72px;height: 26px} 
+		.selectclass{padding:0 0 0 2px;width: 168px;height: 26px}
+ 
+		.form-group.form-group-sm
+        {
+            margin-right: 5px !important;
+            margin-left: 5px !important;
+        }
+        tbody .form-group {
+            margin-bottom: 0px;
+        }
+	</style>
+	
+    <!-- Custom Fonts -->
+    <link href="../../../vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+</head>
+<style>
+
+</style>
+<body>
+<form class="form-horizontal" role="form" style="margin-top: 20px" id="defaultForm">
+	<#if imm??>
+	<input id="id" name="id" value="${imm.id!}" hidden="">
+	<div style="display: inline-block;margin-left: 20px">
+	    <div class="form-group">
+	        <label class="col-xs-4 control-label text-right" for="storage_number">出库单号：</label>
+	        <div class="col-xs-8">
+	            <input class="form-control text-left" id="storage_number" type="text" placeholder="入库单号" name="storage_number" value="${imm.storage_number!}" disabled="disabled"/>
+	        </div>
+	    </div>
+	</div>
+	<div style="display: inline-block;margin-left: 40px">
+	     <div class="form-group">
+	        <label class="col-xs-4 control-label text-right" for="t_user_id">出库人：</label>
+	        <div class="col-xs-8">
+	            <input style="padding-right: 2px" class="form-control text-left" id="t_user_id" type="text" placeholder="入库人" name="t_user_id" value="${imm.user_name!}" disabled="disabled"/>
+	        </div>
+	    </div>
+	</div>
+	<#else>
+	<input id="id" name="id" value="" hidden="">
+	<div style="display: inline-block;margin-left: 16px">
+	    <div class="form-group">
+	        <label class="col-xs-4 control-label text-right" for="storage_number">出库单号：</label>
+	        <div class="col-xs-8">
+	            <input class="form-control text-left" id="storage_number" type="text" placeholder="系统自动生成" name="storage_number" value="" disabled="disabled"/>
+	        </div>
+	    </div>
+	</div>
+	<div style="display: inline-block;margin-left: 40px;">
+	     <div class="form-group">
+	        <label class="col-xs-4 control-label text-right" for="t_user_id">出库人：</label>
+	        <div class="col-xs-8">
+	            <input class="form-control text-left" id="t_user_id" type="text" placeholder="系统自动录入" name="t_user_id" value="" disabled="disabled"/>
+	        </div>
+	    </div>
+	</div>
+	</#if>
+	<div>
+<div id="wrapper">
+	<div class="panel-body" style="padding-bottom:0px;">
+		<div class="panel panel-default">		
+			<div class="panel-heading">					
+				<div class="container container-fluid" >				
+					<div class="row">                         	    		                                            		                   			                   			
+						<div class="col-sm-2 col-xs-6 head_1" style="width:60px;padding-left: 0;margin-left: 0">
+		                    <button class="btn btn-success" type="button" onclick="_add()">新增</button>
+		                </div>	          
+                        <div class="col-sm-2 col-xs-6 head_1" style="padding-left: 0;margin-left: 0">
+		                     <button class="btn btn-4" type="button" onclick="_batchDelete()">删除</button>
+		                </div>
+		                 <div class="col-sm-2 col-xs-3 head_2" style="margin-top: 6px;margin-left: 300px;text-align: right;">
+                            <span style="font-size: 18px">产品编号:</span>
+                        </div> 
+		                <div class="col-sm-3 col-xs-4 head_2" style="margin-left: 0px">
+                            <input type="text" class="form-control" placeholder="扫码点击此处" name="ProductCodeInfo" id="ProductCodeInfo" value="" >
+                        </div>          									                            									                 
+					</div>				
+				</div>
+			</div>		
+			<table width="100%" class="table table-striped table-bordered table-hover" id="dataTables-example">
+           <thead>
+              <tr>
+              	<th><input type="checkbox" id="checkAll"></th>
+                <th>序号</th>
+                <th>产品编号</th>
+                <th>品名</th>
+                <th>规格</th>
+                <th>单位</th>
+                <th>出库数量</th>
+              </tr>
+              </thead>
+              <tbody>
+              	<#if rlist?? &&rlist?size gt 0>
+              	<#list rlist as r>
+           		<tr>
+           			<td><input type="checkbox" name="sub" value="" ><input hidden="" value="${r.id!}"></td>
+           			<td></td>
+           			<td name="finished_number">${r.finished_number}</td>
+           			<td>${r.trade_name}</td>
+           			<td>${r.specifications}</td>
+           			<td>${r.measurement_unit}</td>
+           			<td>
+           			  <button class="btn btn-xs btn-3" type="button" onclick="_edit(${r.finished_number})">编辑</button>
+           			</td>
+           		</tr> 
+           		</#list>
+           		</#if>           
+              </tbody>
+          </table>
+		</div>             
+	</div>
+</div>
+	</div>
+    <div class="form-group" style="padding-left: 16px">
+        <div class="col-xs-8">
+            <button id="submit" type="button" class="btn btn-primary">　保存　</button>
+        </div>
+    </div>
+</form>
+<!-- jQuery -->
+<script src="../../../vendor/jquery/jquery.min.js"></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="../../../vendor/bootstrap/js/bootstrap.min.js"></script>
+
+<!-- Metis Menu Plugin JavaScript -->
+<script src="../../../vendor/metisMenu/metisMenu.min.js"></script>
+<script src="../../../resource/layer/layer.js"></script>
+<script src="../../../resource/layui/layui.js"></script>
+<!-- Custom Theme JavaScript -->
+<script src="../../../resource/bootstrapvalidator/js/bootstrapValidator.min.js"></script>
+<script src="../../../js/common/admin.js"></script>
+<script type="text/javascript">
+document.onkeydown = function(e) {
+    var e = e || event;
+    if(e.keyCode == 13) {
+    	 $("#ProductCodeInfo").keydown(function (e) {
+			 AddProduct(this);
+    	})
+        e.preventDefault ? e.preventDefault() : (e.returnValue = false);
+    }
+}
+
+// 提交
+$('#submit').click(function () {
+	// 绑定校验
+	var validator = bindValidator('tbody');
+	console.log(validator);
+	validator.data('bootstrapValidator').validate();
+	if (!validator.data('bootstrapValidator').isValid()) {
+		return; // 校验不通过，禁止提交
+	}
+	
+	var list = new Array(); // 产品列表
+    $("tbody tr").each(function(k,v){
+        var num = $(this).find("input").eq(2).val();
+        var warehouse_id = $(v).find("option:selected").val();
+        var data = {"finished_number":$(v).find("td").eq(2).html(),"warehouse_id":warehouse_id,"num":num};
+        list[k] = data;
+    })
+    console.log(JSON.stringify(list));
+    var id = $("#id").val(); // 入库单 id
+    $.post("/private/finishedin/saveFinishedIn", {"list":JSON.stringify(list),"id":id}, function(result) {
+        if (result) {
+            parent.layer.msg("保存成功", {time: 2000}, function(){
+                layer_close();
+                parent.parent.refresh_iframe();
+            });
+        } else {
+            parent.layer.msg("保存失败", {time: 2000});
+        }
+        
+    });
+});
+
+
+// 新增出库产品
+var stockList = ${stockList!}; // 库存所有产品列表
+$(stockList).each(function () {
+	this.selected = false;
+});
+// 选择产品列表页面
+function _add(){
+	open_window('新增成品入库','/private/finishedout/getStockList', 720, 540);
+}
+// 产品数据展示到页面
+function addProducts(productNoList) {
+	// 页面已有产品
+	var existProductNoList = getExistProductList();
+	// 排除已存在的与未选中的产品
+	$(stockList).each(function (index, obj) {
+		if (productNoList.indexOf(obj.finished_number) < 0) {
+			//console.log(obj.finished_number + " not in it ");
+			return true; // 未选中的排除
+		}
+		if (existProductNoList.indexOf(obj.finished_number) > 0) {
+            //console.log(obj.finished_number + "exist");
+            return true; // 排除已存在的
+        }
+		addProduct(obj); // 数据展示到页面
+	});
+    sort(); // 排序
+}
+// 页面已有的产品
+function getExistProductList() {
+	var existProductNoList = "";
+    $('tr').each(function () {
+        existProductNoList += $(this).find('td[name="finished_number"]').html() + ",";
+    });
+    //console.log("existProductNoList: " + existProductNoList);
+    return existProductNoList;
+}
+// 单条产品数据展示到页面
+function addProduct(obj) {
+	//console.log(obj);
+	var product = '<tr>'+
+                    '<td><input type="checkbox" name="sub" value="" ><input hidden="" name="id" value="' + obj.id + '"></td>'+
+                    '<td></td>'+
+                    '<td name="finished_number">' + obj.finished_number + '</td>'+
+                    '<td>' + obj.trade_name + '</td>'+
+                    '<td>' + obj.specifications + '</td>'+
+                    '<td>' + obj.measurement_unit + '</td>'+
+                    '<td>'+
+                      '<button class="btn btn-xs btn-3" type="button" onclick="_edit(\'' + obj.finished_number + '\')">编辑</button>'+
+                    '</td>'+
+                '</tr>';
+    $('tbody').append(product);
+}
+
+// 编辑产品出库数量详细
+function _edit(finished_number) {
+	console.log(typeof finished_number);
+	console.log(finished_number);
+	open_window('成品出库详情','/private/finishedout/getStockDetailByProductNo/' + finished_number, 720, 540);
+}
+
+
+//删除页面数据
+function _batchDelete(){
+    $("input[name='sub']:checked").each(function(k,v){
+	    $(v).parent().parent().remove();
+	    sort();
+	});
+}
+
+//页面序号排序
+function sort(){
+	$("tbody").find(".flag").remove();
+	$("tbody tr").each(function(k,v){
+		var index = k+1;
+		$(v).find("td").eq(1).html(index);
+	})
+	if($("tbody").find("tr").length==0){
+		$("tbody").append("<tr class='flag'><td colspan='9' style='text-align: center;'>暂无产品数据,请点击新增添加</td></tr>");
+	}
+}
+sort();
+
+
+//删除页面数据
+function _batchDelete(){
+	if($("input[name='sub']:checked").length == 0){
+		parent.layer.msg("请至少选择一条数据", {time: 2000});
+	}else{
+		$("input[name='sub']:checked").each(function(k,v){
+			   $(v).parent().parent().remove();
+			   sort();
+		});
+	}
+}
+
+//全选、全不选
+$("#checkAll").click(function() {
+    $("input[name='sub']").prop("checked", this.checked);
+});
+$("input[name='sub']").click(function() {
+    var subs = $("input[name='sub']");
+    $("#checkAll").prop("checked" , subs.length == subs.filter(":checked").length ? true :false);
+});
+
+//扫码录入
+function AddProduct(self) {
+    var barcode = $.trim($(self).val()); 
+    if(barcode!=null){
+    	if(barcode.length>13){
+    		for(var r=0;r<data.length;r++){
+    			var flag = true;
+    			$("tbody tr").each(function(k,v){
+    				if(barcode == $(v).find("td").eq(2).html()){
+    					parent.layer.msg("该条码已经录入", {time: 2000});
+    					flag = false;
+    				};
+    			})
+    			if(flag){
+    				$.post("/private/finishedin/getFinishedByNum",{"num":barcode},function(record){
+    					$("tbody").append(
+    							"<tr>"
+    		           			+"<td><input type='checkbox' name='sub' value=''><input hidden=''></td>"
+    		           			+"<td></td>"
+    		           			+"<td>"+record.finished_number+"</td>"
+    		           			+"<td>"+record.trade_name+"</td>"
+    		           			+"<td>"+record.specifications+"</td>"
+    		           			+"<td>"+record.measurement_unit+"</td>"
+    		           			+"<td><input class='form-control inputclass' value='1'></td>"
+    		           			+"<td>"
+    		           			+"<select class='form-control selectclass' name='cage_name' id='cage_name'>"
+    		     					+"<option>--选择对应仓库--</option>"
+    		                		+"<#if im?? &&im?size gt 0>"
+    								+"<#list im as record>"
+    								+"<option id='${record.id}' value='${record.id}'>${record.rwarehouse_name}${record.awarehouse_name}${record.warehouse_name}</option>"
+    		               			+"</#list>"
+    								+"</#if>"
+    		            		+"</select>"
+    		           			+"</td>"
+    		           		+"</tr>"		
+    					)
+    					sort();
+    				})
+    			}
+    		}  		 
+    		 
+    	}
+    }
+    
+}
+
+</script>
+</body>
+
+</html>

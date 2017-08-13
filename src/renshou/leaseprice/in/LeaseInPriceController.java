@@ -1,11 +1,9 @@
 package renshou.leaseprice.in;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.alibaba.fastjson.JSONObject;
 import com.jfinal.core.Controller;
 import com.jfinal.plugin.activerecord.Db;
 import com.jfinal.plugin.activerecord.Page;
@@ -48,16 +46,19 @@ public class LeaseInPriceController extends Controller {
         
         Map<String, Object> map = new HashMap<String,Object>();
         
-        // 修改入库单仓库名称 TODO
+        // 修改入库单仓库名称 
         List<Record> list = LeaseInService.modifyWarehouseName(page.getList());
         map.put("rows", list);
         map.put("total", page.getTotalRow());
-        //System.out.println(page.getList());
         
         renderJson(map);
     }
     
-    // 获得
+    /** 
+    * @Title: getRecord 
+    * @Description: 获得单条数据
+    * @author liyu
+    */
     public void getRecord() {
         // id
         Integer id = getParaToInt();
@@ -74,7 +75,11 @@ public class LeaseInPriceController extends Controller {
         render("lease_in_price_detail.html");
     }
     
-    // 查看
+    /** 
+    * @Title: check 
+    * @Description: 查看入库价格
+    * @author liyu
+    */
     public void check() {
         // id
         Integer id = getParaToInt();
@@ -85,6 +90,11 @@ public class LeaseInPriceController extends Controller {
         render("lease_in_price_check.html");
     }
     
+    /** 
+    * @Title: save 
+    * @Description: 保存入库价格
+    * @author liyu
+    */
     public void save() {
         // 入库单 id
         Long warehouse_in_id = getParaToLong("warehouse_in_id");

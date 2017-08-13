@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+ <!-- Bootstrap Core CSS -->
+    <link href="../../vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <!-- DataTables CSS -->
+    <link href="../../vendor/datatables-plugins/dataTables.bootstrap.css" rel="stylesheet">
+    <!-- DataTables Responsive CSS -->
+    <link href="../../vendor/datatables-responsive/dataTables.responsive.css" rel="stylesheet">
+	<link href="../../css/common/common.css" rel="stylesheet">
+    <link href="../../css/admin.css" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link href="../../resource/bootstrapvalidator/css/bootstrapValidator.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../resource/layui/css/layui.css" media="all" />
+	<link href="../../resource/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css" rel="stylesheet" />
+    <link href="../../dist/css/sb-admin-2.css" rel="stylesheet">
+    <link href="../../css/common/common.css" rel="stylesheet">
+    <link href="../../css/admin.css" rel="stylesheet">
+</head>
+<body>
+<div style="padding: 0 20px">
+<#if ErrorFile>
+	<div style="font-weight: 700;font-size: 16px;margin-left: 16px;color: red;margin-top: 80px;margin-left: 40px">您可能导入了错误的Excel文件，请校验后重新导入！</div>
+<#else>
+<table width="50%" class="table table-striped table-bordered table-hover" >
+<span style="font-weight: 700;font-size: 16px;color: red">您导入的Excel存在数据错误，请检查如下行数信息:</span>
+<thead>
+	<tr>
+		<th style="max-width:2px">
+			序号
+		</th>
+		<th style="max-width: 2px">
+			错误提示
+		</th>
+	</tr>
+</thead>
+<tbody>
+	<#if countlist?? && countlist?size gt 0>
+		<#list countlist as count>
+			<tr>
+				<th>${count_index+1}</th>
+				<th>${count}</th>
+			</tr>
+		</#list>
+	</#if>
+</tbody>
+</table>
+</#if>
+</div>
+</body>
+<!-- jQuery -->
+<script src="../../../vendor/jquery/jquery.min.js"></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="../../../vendor/bootstrap/js/bootstrap.min.js"></script>
+
+<!-- DataTables JavaScript -->
+<script src="../../../../vendor/datatables/js/jquery.dataTables.min.js"></script>
+<script src="../../../vendor/datatables-plugins/dataTables.bootstrap.min.js"></script>
+<script src="../../../vendor/datatables-responsive/dataTables.responsive.js"></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="../../../resource/layer/layer.js"></script>
+<script src="../../../resource/layui/layui.js"></script>
+<script src="../../../js/common/admin.js"></script>
+<script src="../../../resource/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js"></script>
+<script src="../../../resource/bootstrap-datetimepicker/js/moment-with-locales.min.js"></script>
+<script src="../../../resource/bootstrap-datetimepicker/js/locales/bootstrap-datetimepicker.zh-CN.js"></script>
+</html>

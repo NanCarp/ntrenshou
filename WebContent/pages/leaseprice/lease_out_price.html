@@ -119,17 +119,17 @@ function doQuery(){
         var layer = layui.layer;
         
         var company_name = $.trim($('#company_name').val());
-        var material_no = $.trim($('#material_no').val());
+        var warehouse_out_no = $.trim($('#warehouse_out_no').val());
         if($.trim($('#company_name').val())!=''){
             var reg = /^[a-zA-Z0-9_\u0391-\uFFE5 ]{1,30}$/;
             if(!reg.test($('#company_name').val())){
                 layer.tips('不允许有特殊字符，最多20个字符', '#company_name', {tips: [1, '#34495E']});return;
             }                   
         }
-        if($.trim($('#material_no').val())!=''){
+        if($.trim($('#warehouse_out_no').val())!=''){
             var reg = /^[a-zA-Z0-9_ ]{1,30}$/;
-            if(!reg.test($('#material_no').val())){
-                layer.tips('不允许有特殊字符，最多20个字符', '#material_no', {tips: [1, '#34495E']});return;
+            if(!reg.test($('#warehouse_out_no').val())){
+                layer.tips('不允许有特殊字符，最多20个字符', '#warehouse_out_no', {tips: [1, '#34495E']});return;
             }                   
         }
         $('#tb_departments').bootstrapTable('refresh');    //刷新表格

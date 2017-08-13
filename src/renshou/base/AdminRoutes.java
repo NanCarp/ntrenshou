@@ -16,6 +16,12 @@ import renshou.leasewarehouse.inventory.LeaseInventoryController;
 import renshou.leasewarehouse.out.LeaseOutController;
 
 import renshou.login.LoginController;
+import renshou.privatewarehouses.finishedin.FinishedInController;
+import renshou.privatewarehouses.finishedout.FinishedOutController;
+import renshou.privatewarehouses.finishedstock.FinishedStockController;
+import renshou.privatewarehouses.semiin.SemiInController;
+import renshou.privatewarehouses.semiout.SemiOutController;
+import renshou.privatewarehouses.semistock.SemiStockController;
 import renshou.system.authority.AuthorityController;
 import renshou.system.button.ButtonController;
 import renshou.system.menu.MenuController;
@@ -52,6 +58,20 @@ public class AdminRoutes extends Routes{
 		//add("/database/storage",StorageController.class,"/database");
 		//基础信息管理-公司管理
 		add("/database/customes",CustomController.class,"/database");
+		
+		//自用仓库管理 - 半成品入库管理
+		add("/private/semiin",SemiInController.class,"/privatewarehouses");
+		//自用仓库管理 - 半成品出库管理
+		add("/private/semiout",SemiOutController.class,"/privatewarehouses");
+		//自用仓库管理 - 库存管理
+		add("/private/semistock",SemiStockController.class,"/privatewarehouses");
+		
+		//自用仓库管理 - 成品入库管理
+        add("/private/finishedin",FinishedInController.class,"/privatewarehouses");
+        //自用仓库管理 - 成品出库管理
+        add("/private/finishedout",FinishedOutController.class,"/privatewarehouses");
+        //自用仓库管理 - 成品库存管理
+        add("/private/finishedstock",FinishedStockController.class,"/privatewarehouses");
 		
 		//系统管理-角色管理控制器
 		add("/system/role",RoleController.class,"/systemcontrol");

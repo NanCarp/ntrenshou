@@ -2,9 +2,7 @@ package renshou.leaseprice.in;
 
 import java.math.BigDecimal;
 import java.sql.SQLException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -15,8 +13,25 @@ import com.jfinal.plugin.activerecord.IAtom;
 import com.jfinal.plugin.activerecord.Page;
 import com.jfinal.plugin.activerecord.Record;
 
+/**
+ * @ClassName: LeaseInPriceService.java
+ * @Description:
+ * @author: LiYu
+ * @date: 2017年8月9日下午7:40:12
+ * @version: 1.0 版本初成
+ */
 public class LeaseInPriceService {
 
+    /** 
+    * @Title: getDataPages 
+    * @Description: 租赁仓库入库费用列表
+    * @param pageindex
+    * @param pagelimit
+    * @param warehouse_in_no
+    * @param company_name
+    * @return Page<Record>
+    * @author liyu
+    */
     public static Page<Record> getDataPages(Integer pageindex, Integer pagelimit, String warehouse_in_no,
             String company_name) {
         String select = " SELECT a.*,b.company_name,c.warehouse_name ";
@@ -25,7 +40,8 @@ public class LeaseInPriceService {
                 + " ON a.customer = b.id "
                 + " LEFT JOIN warehouse AS c "
                 + " ON a.warehouse_id = c.id "
-                + " WHERE a.is_in = TRUE ";
+                + " WHERE a.is_in = TRUE "
+                + " ORDER BY is_checked, warehouse_in_date ";
         
         if (warehouse_in_no != null && !"".equals(warehouse_in_no)) {
             sql += "AND warehouse_in_no like '%" + warehouse_in_no + "%'";
@@ -34,7 +50,6 @@ public class LeaseInPriceService {
         if (company_name != null && !"".equals(company_name)) {
             sql += "AND company_name like '%" + company_name + "%'";
         }
-        // TODO 对应仓库改为全名
         return Db.paginate(pageindex, pagelimit, select, sql);
     }
 
@@ -52,7 +67,7 @@ public class LeaseInPriceService {
     
     /** 
     * @Title: save 
-    * @Description: TODO(这里用一句话描述这个方法的作用) 
+    * @Description: 保存入库单产品价格，更新出库、库存价格
     * @param id
     * @param customer
     * @param warehouse_id
@@ -87,6 +102,17 @@ public class LeaseInPriceService {
                     Db.update("t_lease_warehouse_in_product", r);
                 }
                 
+                // 如果存在对应出库单，更新其每日仓储价格
+                // 出库单 id 及其出库每日价格
+                List<Record> warehouseOutList = Db.find(" SELECT a.warehouse_out_id AS id,b.id AS warehouse_in_id, "
+                        + " SUM(a.out_quantity * b.unit_price) AS out_price_per_day "
+                        + " FROM `t_lease_warehouse_out_product` AS a "
+                        + " LEFT JOIN t_lease_warehouse_in_product AS b "
+                        + " ON a.product_id = b.id "
+                        + " WHERE warehouse_in_id = 1 "
+                        + " GROUP BY warehouse_out_id");
+                Db.batchUpdate("t_lease_warehouse_out", warehouseOutList, warehouseOutList.size());
+                
                 // 更新库存费用 
                 List<Record> inventoryProductList = Db.find("SELECT * "
                         + " FROM t_lease_warehouse_inventory_product AS a "
@@ -117,7 +143,7 @@ public class LeaseInPriceService {
     
     /** 
     * @Title: jsonToRecordList 
-    * @Description: TODO(这里用一句话描述这个方法的作用) 
+    * @Description: json 转化成 record 列表
     * @param jsonString
     * @return List<Record>
     * @author liyu
@@ -132,7 +158,6 @@ public class LeaseInPriceService {
             String id = product.getString("id");
             BigDecimal unit_price = product.getBigDecimal("unit_price");
             BigDecimal price_per_day = product.getBigDecimal("price_per_day");
-            //System.out.println("name: "+name+" specification: "+specification+" unit: "+unit+" quantity: "+quantity);
             Record record = new Record();
             record.set("id", id);
             record.set("unit_price", unit_price);

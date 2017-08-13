@@ -6,8 +6,25 @@ import com.jfinal.plugin.activerecord.Db;
 import com.jfinal.plugin.activerecord.Page;
 import com.jfinal.plugin.activerecord.Record;
 
+/**
+ * @ClassName: LeaseInventoryService.java
+ * @Description:
+ * @author: LiYu
+ * @date: 2017年8月10日上午10:16:43
+ * @version: 1.0 版本初成
+ */
 public class LeaseInventoryService {
 
+    /** 
+    * @Title: getDataPages 
+    * @Description: 库存列表
+    * @param pageindex
+    * @param pagelimit
+    * @param warehouse_in_no
+    * @param company_name
+    * @return Page<Record>
+    * @author liyu
+    */
     public static Page<Record> getDataPages(Integer pageindex, Integer pagelimit, String warehouse_in_no,
             String company_name) {
         String select = " SELECT c.company_name,d.warehouse_name,d.position, "
@@ -33,6 +50,13 @@ public class LeaseInventoryService {
         return Db.paginate(pageindex, pagelimit, select, sql);
     }
 
+    /** 
+    * @Title: getProductList 
+    * @Description: 库存产品列表
+    * @param inventory_id
+    * @return List<Record>
+    * @author liyu
+    */
     public static List<Record> getProductList(Integer inventory_id) {
         String sql = " SELECT * FROM "
                 + " (SELECT b.* FROM  "
@@ -50,10 +74,7 @@ public class LeaseInventoryService {
         
         List<Record> list = Db.find(sql, inventory_id);
         
-        // 排除已经全部出库的入库单
-        
-        
-        return Db.find(sql, inventory_id);
+        return list;
     }
 
 }

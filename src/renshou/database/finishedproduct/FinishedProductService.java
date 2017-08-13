@@ -57,6 +57,8 @@ public class FinishedProductService {
 	 *@desc 自动生成成品编号,获取最大的编号
 	 *@author xuhui
 	 */
+	
+	
 	public static Record getMaxNum(){
 		String sql = "select MAX(finished_number) as num from finished_product";
 		return Db.findFirst(sql);

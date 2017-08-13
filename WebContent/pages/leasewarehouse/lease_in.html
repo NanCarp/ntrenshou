@@ -105,6 +105,10 @@
 <script src="../../../js/common/admin.js"></script>
 
 <script>
+$('button').keydown(function () {
+	return false;
+});
+
 $(function () {	 
     //1.初始化Table
     var oTable = new TableInit();
@@ -126,10 +130,10 @@ function doQuery(){
                 layer.tips('不允许有特殊字符，最多20个字符', '#company_name', {tips: [1, '#34495E']});return;
             }                   
         }
-        if($.trim($('#material_no').val())!=''){
+        if($.trim($('#warehouse_in_no').val())!=''){
             var reg = /^[a-zA-Z0-9_ ]{1,30}$/;
-            if(!reg.test($('#material_no').val())){
-                layer.tips('不允许有特殊字符，最多20个字符', '#material_no', {tips: [1, '#34495E']});return;
+            if(!reg.test($('#warehouse_in_no').val())){
+                layer.tips('不允许有特殊字符，最多20个字符', '#warehouse_in_no', {tips: [1, '#34495E']});return;
             }                   
         }
         $('#tb_departments').bootstrapTable('refresh');    //刷新表格
@@ -213,7 +217,7 @@ var TableInit = function () {
     };
 
     //得到查询的参数
-  oTableInit.queryParams = function (params) {
+    oTableInit.queryParams = function (params) {
         var temp = {   //这里的键的名字和控制器的变量名必须一直，这边改动，控制器也需要改成一样的
             limit: params.limit,   //页面大小
             offset: params.offset,  //页码
@@ -365,12 +369,11 @@ function getIdSelections() {
         return row.id;
     });
 }
-// 已入库不得删除或编辑
+// 已入库只能查看，不能有其他操作
 function canOperate() {
     var result = true;	
 	$.map($("#tb_departments").bootstrapTable('getSelections'), function(row) {
         if(row.is_in == true) {
-        	//console.log("yiruku");
         	result = false;
         	return false;
         }

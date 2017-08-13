@@ -18,7 +18,7 @@
     <link href="../../../dist/css/sb-admin-2.css" rel="stylesheet">
     <link href="../../../css/common/common.css" rel="stylesheet">
     <link href="../../../css/admin.css" rel="stylesheet">
-
+    <link href="../../../resource/bootstrapvalidator/css/bootstrapValidator.min.css" rel="stylesheet">
     <!-- Custom Fonts -->
 
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
@@ -90,11 +90,49 @@
 
 <!-- Custom Theme JavaScript -->
 <script src="../../../js/common/admin.js"></script>
+<script src="../../../resource/bootstrapvalidator/js/bootstrapValidator.min.js"></script>
 <!-- Page-Level Demo Scripts - Tables - Use for reference -->
 <script>
-var warehouse_in_id = ${record.id};
+var warehouse_in_id = ${record.id}; // 入库单id
+// 绑定表单校验
+$('tbody').bootstrapValidator({
+    message: 'This value is not valid',
+    feedbackIcons: {
+        valid: 'glyphicon glyphicon-ok',
+        invalid: 'glyphicon glyphicon-remove',
+        validating: 'glyphicon glyphicon-refresh'
+    },
+    fields: {
+        unit_price: {
+            message: '验证失败',
+            validators: {
+                notEmpty:{
+                    message: '不能为空!'
+                },
+                regexp: {
+                    regexp: /^[0-9]+(\.[0-9]{1,})?$/,
+                    message: '请输入正确的金额'
+                },
+                stringLength: {
+                    min: 0,
+                    max: 20,
+                    message: '请输入正确的金额',
+                }
+            }
+        },
+    },
+});
 // 提交
 $('#submit').on('click', function () {
+	// 校验
+    $('tbody').data('bootstrapValidator').validate();
+    var flag = $('tbody').data('bootstrapValidator').isValid();
+    if (flag) {
+        console.log('ok');
+    } else {
+        return;
+    }
+	
 	var productList = getProductList();
 	$.post('/leaseprice/leaseInPrice/save', {"productList" : productList, "warehouse_in_id" : warehouse_in_id}, function (result) {
 		if (result.isSuccess) {

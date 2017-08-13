@@ -16,12 +16,20 @@ import com.jfinal.plugin.activerecord.Record;
  * @version: 1.0 版本初成
  */
 public class LeaseInController extends Controller {
-    // 页面
+    /** 
+    * @Title: index 
+    * @Description: 入库页面
+    * @author liyu
+    */
     public void index() {
         render("lease_in.html");
     }
     
-    // 数据列表
+    /** 
+    * @Title: getJson 
+    * @Description: 入库数据列表
+    * @author liyu
+    */
     public void getJson(){
         // 入库单号
         String warehouse_in_no = getPara("warehouse_in_no");
@@ -52,7 +60,11 @@ public class LeaseInController extends Controller {
         renderJson(map);
     }
     
-    // 获得
+    /** 
+    * @Title: getRecord 
+    * @Description: 获取单条入库数据
+    * @author liyu
+    */
     public void getRecord() {
         // id
         Integer id = getParaToInt();
@@ -75,7 +87,11 @@ public class LeaseInController extends Controller {
         render("lease_in_detail.html");
     }
     
-    // 查看
+    /** 
+    * @Title: check 
+    * @Description: 查看单条入库信息
+    * @author liyu
+    */
     public void check() {
         // id
         Integer id = getParaToInt();
@@ -83,7 +99,6 @@ public class LeaseInController extends Controller {
         Record record = Db.findById("t_lease_warehouse_in", id);
         setAttr("record", record);
         // 入库单产品详情
-        //String warehouse_in_no = record.getStr("warehouse_in_no");
         List<Record> productList = LeaseInService.getProductList(id);
         setAttr("productList", productList);
           
@@ -106,9 +121,13 @@ public class LeaseInController extends Controller {
         String location = getPara("location");
         // 产品列表
         String productList = getPara("productList");
+        // 入库人
+        Record user = getSessionAttr("admin");
+        user = Db.findById("t_user", 1); // TODO 测试，完成后删除
+        String warehouse_in_person = user.getStr("user_name");
         
         // 返回消息
-        Map<String, Object> message = LeaseInService.save(id, customer, warehouse_id, location, productList);
+        Map<String, Object> message = LeaseInService.save(id, customer, warehouse_id, location, productList,warehouse_in_person);
         
         renderJson(message);
     }
@@ -130,7 +149,11 @@ public class LeaseInController extends Controller {
         renderJson(response);
     }
     
-    // 确认入库
+    /** 
+    * @Title: confirm 
+    * @Description: 确认入库
+    * @author liyu
+    */
     public void confirm() {
         // id
         Long id = getParaToLong();

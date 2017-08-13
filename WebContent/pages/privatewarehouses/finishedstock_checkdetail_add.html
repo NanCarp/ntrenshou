@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>客户管理-新增/修改</title>
+
+    <!-- Bootstrap Core CSS -->
+    <link href="../../../vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- MetisMenu CSS -->
+    <link href="../../../vendor/metisMenu/metisMenu.min.css" rel="stylesheet">
+
+    <!-- Custom CSS -->
+	<link href="../../../css/admin.css" rel="stylesheet">
+	<link href="../../../resource/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css" rel="stylesheet" />
+	<style type="text/css">
+		body { margin:0 15px;}
+		form { margin-top:20px;}
+		label { padding-top:6px;padding-right:0;}
+	</style>
+	
+    <!-- Custom Fonts -->
+    <link href="../../../vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+</head>
+<style>
+ th{text-align: center;}
+ td{text-align: center;}
+
+</style>
+<body>
+<form class="form-horizontal" role="form" style="margin-top: 20px" id="defaultForm">
+	<#if record??>
+	<input id="finished_product_id" name="finished_product_id" value="${record.finished_product_id!}" hidden="">
+	<input id="index" name="index" value="${record.index!}" hidden="">
+	    <div class="form-group">
+	        <label class="col-xs-4 control-label text-right" for="cage_name">对应仓库：</label>
+	        <div class="col-xs-7">
+	           	<select class="form-control selectclass" name="cage_name" id="cage_name">
+   					<option value="">--选择对应仓库--</option>
+	              	<#if im?? &&im?size gt 0>
+					<#list im as re>
+						<option <#if record.warehouse_id == re.id>selected</#if> value="${re.id}">${re.rwarehouse_name}${re.awarehouse_name}${re.warehouse_name}</option>
+	             	</#list>
+					</#if>
+          		</select>
+	        </div>
+	    </div>
+	    <div class="form-group">
+	        <label class="col-xs-4 control-label text-right" for="num" style="padding-top: 0">数量：</label>
+	        <div class="col-xs-7">
+	        	<input style="padding-right: 2px" class="form-control text-left" id="num" type="text" placeholder="数量" name="num" value="${record.num!}"/>
+	        </div>
+	    </div>
+	   <div class="form-group" style="padding-left: 16px">
+	       <div class="col-xs-8">
+	           <button id="v" type="submit" class="btn btn-primary">　保存　</button>
+	       </div>
+	   </div>
+	<#else>
+	<input id="finished_product_id" name="finished_product_id" value="${SemiproductId!}" hidden="">
+	<input id="index" name="index" value="" hidden="">
+	    <div class="form-group">
+	        <label class="col-xs-4 control-label text-right" for="cage_name">对应仓库：</label>
+	        <div class="col-xs-7">
+	           	<select class="form-control selectclass" name="cage_name" id="cage_name">
+   					<option value="">--选择对应仓库--</option>
+	              	<#if im?? &&im?size gt 0>
+					<#list im as re>
+						<option value="${re.id}">${re.rwarehouse_name}${re.awarehouse_name}${re.warehouse_name}</option>
+	             	</#list>
+					</#if>
+          		</select>
+	        </div>
+	    </div>
+	    <div class="form-group">
+	        <label class="col-xs-4 control-label text-right" for="num" style="padding-top: 0">数量：</label>
+	        <div class="col-xs-7">
+	        	<input style="padding-right: 2px" class="form-control text-left" id="num" type="text" placeholder="数量" name="num"/>
+	        </div>
+	    </div>
+	   <div class="form-group" style="padding-left: 16px">
+	       <div class="col-xs-8">
+	           <button id="v" type="submit" class="btn btn-primary">　保存　</button>
+	       </div>
+	   </div>
+	</#if>
+</form>
+<!-- jQuery -->
+<script src="../../../vendor/jquery/jquery.min.js"></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="../../../vendor/bootstrap/js/bootstrap.min.js"></script>
+
+<!-- Metis Menu Plugin JavaScript -->
+<script src="../../../vendor/metisMenu/metisMenu.min.js"></script>
+<script src="../../../resource/layer/layer.js"></script>
+<script src="../../../resource/layui/layui.js"></script>
+<!-- Custom Theme JavaScript -->
+<script src="../../../resource/bootstrapvalidator/js/bootstrapValidator.min.js"></script>
+<script src="../../../js/common/admin.js"></script>
+<script type="text/javascript">
+$(function(){
+	// 表单校验
+	$('form').bootstrapValidator({
+		message: 'This value is not valid',
+		feedbackIcons: {
+			valid: 'glyphicon glyphicon-ok',
+			invalid: 'glyphicon glyphicon-remove',
+			validating: 'glyphicon glyphicon-refresh'
+		},
+		fields: {
+			cage_name: {				
+				validators: {
+					notEmpty: {
+						message: '不能为空!'
+					},
+                    stringLength: {
+                        min: 0,
+                        max: 20,
+                        message: '最多20个字符'
+                    }
+				}
+			}
+			,num: {
+				validators: {
+					notEmpty: {
+						message: '不能为空!'
+					},
+	                stringLength: {
+	                    min: 0,
+	                    max: 20,
+	                    message: '最多20个字符'
+	                },
+					regexp:{
+						regexp:/^\d+(\.\d{1,2})?$/,
+						message:'最多保留两位小数'
+					}
+				}
+			}
+		}
+	});
+})
+.on('success.form.bv', function(e) {
+	e.preventDefault();
+	var index = $("#index").val();
+	var finished_product_id = $("#finished_product_id").val();
+	var cage_id = $("option:selected").val();
+	var cage_html = $("option:selected").html();
+	var num = $("#num").val();
+	var data={"cage_id":cage_id,"cage_html":cage_html,"num":num,"index":index,"finished_product_id":finished_product_id}
+	parent.window.addData(data);
+	layer_close();
+});
+
+
+//页面序号排序
+function sort(){
+	$("tbody tr").each(function(k,v){
+		var index = k+1;
+		$(v).find("td").eq(1).html(index);
+	})
+	if($("tbody").find("tr").length==0){
+		$("tbody").append("<tr class='flag'><td colspan='9' style='text-align: center;'>暂无数据，请先添加数据</td></tr>");
+	}else{
+		$("tbody").find(".flag").remove();
+	}
+}
+
+</script>
+</body>
+
+</html>
