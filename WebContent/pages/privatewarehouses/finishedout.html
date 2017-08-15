@@ -104,6 +104,12 @@
 var outgoing_number=""; // 出库单号
 var user_name = ""; // 出库人
 
+//阻止键盘点击按钮
+$('button').keydown(function () {
+    return false;
+});
+
+
 $(function () {	 
     //1.初始化Table
     var oTable = new TableInit();
@@ -294,11 +300,6 @@ function getIdSelections() {
 
 //确认出库
 function _confirm(){
-	// 是否可以操作
-    if (canOperate() == false) {
-        layer.msg('已出库！', {time: 2000});
-        return;
-    };
 	// 获取选中记录 id
 	var ids = getIdSelections();	
 	// 如果没有选择，提示勾选至少一条数据
@@ -307,8 +308,13 @@ function _confirm(){
 	}else if(ids.length > 1){
 		layer.msg('最多选择一条数据', {time: 2000});
 	}else{
+		// 是否可以操作
+	    if (canOperate() == false) {
+	        layer.msg('已出库！', {time: 2000});
+	        return;
+	    };
 		 // 询问框
-        layer.confirm('确认入库吗？', {
+        layer.confirm('确认出库吗？', {
             title: ['信息', 'font-weight:600;color:#fff;background-color: #3367D6;'],
             btn: ['确认','取消'] //按钮
         }, function(){

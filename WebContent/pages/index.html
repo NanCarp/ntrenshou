@@ -2,7 +2,7 @@
 <html lang="en">
 
 <head>
-    <link rel="shortcut icon" href="../resource/images/suntech-logo.png" />
+    <link rel="shortcut icon" href="../resource/images/renshou-logo.png" />
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -79,7 +79,7 @@
             <ul class="nav navbar-top-links navbar-right text-right" >             
                 <li class="dropdown">
                     <a class="dropdown-toggle" data-toggle="dropdown" href="#" style="color: white;">
-                        <i class="fa fa-user fa-fw"></i> 管理员 <i class="fa fa-caret-down"></i>
+                        <i class="fa fa-user fa-fw"></i> ${user_name!} <i class="fa fa-caret-down"></i>
                     </a>
                     <ul class="dropdown-menu dropdown-user">
                         <li><a onclick="change_pwd()"><i class="fa fa-user fa-fw"></i> 修改密码</a>
@@ -126,12 +126,12 @@
 				<ul class="layui-tab-title">
 					<li class="layui-this">
 						<i class="fa fa-dashboard" aria-hidden="true"></i>
-						<cite>首页</cite>
+						<cite>自用仓库库存查询</cite>
 					</li>
 				</ul>
 				<div class="layui-tab-content">
 					<div class="layui-tab-item layui-show">
-						<iframe name="iframe" src="indexframe.html" style="width:100%;border-width:0;"></iframe>
+						<iframe name="iframe" src="/pages/iframe" style="width:100%;border-width:0;"></iframe>
 					</div>
 				</div>
 			</div>

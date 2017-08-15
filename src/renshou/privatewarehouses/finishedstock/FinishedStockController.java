@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import com.jfinal.aop.Before;
 import com.jfinal.core.Controller;
 import com.jfinal.plugin.activerecord.Db;
 import com.jfinal.plugin.activerecord.IAtom;
@@ -15,11 +16,13 @@ import com.jfinal.plugin.activerecord.Page;
 import com.jfinal.plugin.activerecord.Record;
 import com.jfinal.upload.UploadFile;
 
-import renshou.until.ExcelKit;
+import renshou.interceptor.ManageInterceptor;
+import renshou.utils.ExcelKit;
 /**
  * @desc 
  * @author liyu
  */
+@Before(ManageInterceptor.class)
 public class FinishedStockController extends Controller {
 
 	/**
@@ -158,13 +161,12 @@ public class FinishedStockController extends Controller {
 		boolean flag=Db.tx(new IAtom() {		
 					@Override
 					public boolean run() throws SQLException {
-						// TODO Auto-generated method stub
 						UploadFile file = getFile("file");
 						List<String[]> list = ExcelKit.getExcelData(file.getFile());
 						//导入excel返回结果，true导入正确，false导入错误
 						boolean result = true;
 						boolean lag = false;
-						//该Excel导入列数应为31列，不符合31列即为错误导入excel文件
+						//该Excel导入列数应为4列，不符合4列即为错误导入excel文件
 						if(list.get(0).length!=4){
 							getSession().setAttribute("ErrorFile", true);
 							result = false;
@@ -181,9 +183,9 @@ public class FinishedStockController extends Controller {
 								}
 								try{
 									Record record = new Record();
-									String sqlpara="select * from semimanufactures where semimanufactures_number='"+strings[1]+"'";
+									String sqlpara="select * from finished_product where finished_number='"+strings[1]+"'";
 									Integer sid = Db.findFirst(sqlpara).getInt("id");						
-									record.set("semimanufactures_id", sid);//产品id
+									record.set("finished_product_id", sid);//产品id
 									String sql ="SELECT a.id,CONCAT(c.warehouse_name,b.warehouse_name,a.warehouse_name) AS warehouse_name"
 												+" FROM `warehouse` AS a"
 												+" INNER JOIN warehouse AS b"
@@ -194,7 +196,7 @@ public class FinishedStockController extends Controller {
 									Integer warse_houseid = Db.findFirst(sql).getInt("id");
 									record.set("warehouse_id",warse_houseid);//仓库id					
 									record.set("num", strings[3]);//数量
-									lag = Db.save("semimanufactures_stock_detail", record);
+									lag = Db.save("finished_product_stock_detail", record);
 								}catch(Exception e){
 									//countWrongList记录错误行数，不重复显示错误行数；
 									//指定一个判定对象，如果countWrongList已有该行数则返回false，否则返回true；
@@ -204,13 +206,13 @@ public class FinishedStockController extends Controller {
 								}
 							}
 							if(lag){
-								List<Record> listSum = FinishedStockService.getSemiStocklistBySemiid();
+								List<Record> listSum = FinishedStockService.getFinishedStocklistByFinishedid();
 								System.out.println("listSum:"+listSum.size());
 								for(Record rec:listSum){
 									Record reco = new Record();
-									reco.set("semimanufactures_id", rec.get("semimanufactures_id"));
-									reco.set("semimanufactures_stock_num", rec.get("semimanufactures_stock_num"));
-									Db.save("semimanufactures_stock", reco);
+									reco.set("finished_product_id", rec.get("finished_product_id"));
+									reco.set("finished_product_stock_num", rec.get("finished_product_stock_num"));
+									Db.save("finished_product_stock", reco);
 								}
 							}
 						}	
@@ -249,9 +251,8 @@ public class FinishedStockController extends Controller {
 	 * @desc 导出安全管理检查记录excel表格
 	 */
 	public  void exportExcel(){
-		System.out.println("5555555");
 		boolean result = FinishedStockService.getExcel(getResponse());
-		if(true){
+		if(result){
 			renderNull();
 		}else{
 			renderText("导出失败");

@@ -28,69 +28,41 @@
 <body style="width: 95%">
 <form class="form-horizontal" role="form" style="margin-top: 20px" id="defaultForm">
     <#if user??>
-        <input hidden="" name="id" value="${user.id}">
-        <div class="form-group">
-            <label class="col-xs-4 control-label text-right" for="companyId">公司：</label>
-            <div class="col-xs-6">
-                <select class="form-control" id="companyId" name="companyId">
-                    <option value="">请选择公司</option>
-                    <#if companyList?? && companyList?size gt 0>
-                    <#list companyList as company>
-                    <option value="${company.id}"<#if user.company_id == company.id>selected</#if> >${company.company_name}</option>
-                    </#list>
-                    </#if>
-                </select>
-            </div>
-        </div>
-        <div class="form-group">
-            <label class="col-xs-4 control-label text-right" for="roleId">角色：</label>
-            <div class="col-xs-6">
-                <select class="form-control" id="roleId" name="roleId">
-                    <option value="">请选择角色</option>
-                    <#if roleList?? && roleList?size gt 0>
-                    <#list roleList as role>
-                    <option value="${role.id}" <#if role.id == user.role_id>selected</#if> >${role.role_type}</option>
-                    </#list>
-                    </#if>
-                </select>
-            </div>
-        </div>
-        <div class="form-group">
-            <label class="col-xs-4 control-label text-right" for="account">用户名：</label>
-            <div class="col-xs-6 ">
-                <input class="form-control text-left" id="account" type="text" placeholder="账号" name="account" value="${user.account}" readonly="readonly"/>
-            </div>
-        </div>
-       <div class="form-group">
-            <label class="col-xs-4 control-label text-right" for="password">密码：</label>
-            <div class="col-xs-6">
-                <input class="form-control text-left" id="password" type="text" placeholder="123456" name="password"/>
-            </div>
-        </div>       
-    <#else>
-    <div class="form-group">
-        <label class="col-xs-4 control-label text-right" for="companyId">公司：</label>
+    <input hidden="" name="id" value="${user.id}">
+	<div class="form-group">
+	    <label class="col-xs-4 control-label text-right" for="account">账号：</label>
+	    <div class="col-xs-6 ">
+	        <input class="form-control text-left" id="account" type="text" placeholder="账号" name="account" value="${user.account}" readonly="readonly"/>
+	    </div>
+	</div>
+	<div class="form-group">
+        <label class="col-xs-4 control-label text-right" for="password">密码：</label>
         <div class="col-xs-6">
-            <select class="form-control" id="companyId" name="companyId">
-                <option value="">请选择公司</option>
-                <#if companyList?? && companyList?size gt 0>
-                <#list companyList as company>
-                <option value="${company.id}">${company.company_name}</option>
-                </#list>
-                </#if>
-            </select>
+            <input class="form-control text-left" id="password" type="text" placeholder="123456" name="password"/>
         </div>
     </div>
     <div class="form-group">
         <label class="col-xs-4 control-label text-right" for="roleId">角色：</label>
         <div class="col-xs-6">
             <select class="form-control" id="roleId" name="roleId">
-  				<option value="">请选择角色</option>
-			</select>
+                <option value="">请选择角色</option>
+                <#if roleList?? && roleList?size gt 0>
+                <#list roleList as role>
+                <option value="${role.id}" <#if role.id == user.role_id>selected</#if> >${role.role_type}</option>
+                </#list>
+                </#if>
+            </select>
         </div>
     </div>
     <div class="form-group">
-        <label class="col-xs-4 control-label text-right" for="account">用户名：</label>
+        <label class="col-xs-4 control-label text-right" for="account">姓名：</label>
+        <div class="col-xs-6 ">
+            <input class="form-control text-left" id="account" type="text" placeholder="姓名" name="user_name" value="${user.user_name}"/>
+        </div>
+    </div>       
+    <#else>
+    <div class="form-group">
+        <label class="col-xs-4 control-label text-right" for="account">账号：</label>
         <div class="col-xs-6 ">
             <input class="form-control text-left" id="account" type="text" placeholder="账号" name="account"/>
         </div>
@@ -100,7 +72,26 @@
         <div class="col-xs-6">
             <input class="form-control text-left" id="password" type="text" placeholder="123456" name="password"/>
         </div>
-    </div>    
+    </div>
+    <div class="form-group">
+        <label class="col-xs-4 control-label text-right" for="roleId">角色：</label>
+        <div class="col-xs-6">
+            <select class="form-control" id="roleId" name="roleId">
+                <option value="">请选择角色</option>
+                <#if roleList?? && roleList?size gt 0>
+                <#list roleList as role>
+                <option value="${role.id}">${role.role_type}</option>
+                </#list>
+                </#if>
+            </select>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-xs-4 control-label text-right" for="account">姓名：</label>
+        <div class="col-xs-6 ">
+            <input class="form-control text-left" id="account" type="text" placeholder="姓名" name="user_name"/>
+        </div>
+    </div>
     </#if>
     <div class="form-group">
         <label class="col-xs-4 control-label" for="v"></label>
@@ -161,6 +152,18 @@ $(function () {
                     }
                 }
             },
+            user_name: {
+                message: '用户名验证失败',
+                validators: {
+                    notEmpty: {
+                        message: '姓名不能为空'
+                    },
+                    regexp: {
+                        regexp: /^[a-zA-Z0-9_\u4e00-\u9fa5\\s·]+$/,
+                        message: '不能有特殊字符'
+                    }
+                }
+            },
         }
 	});
 })
@@ -181,21 +184,6 @@ $(function () {
     });
 });
 
-// 根据公司 id 获取角色列表
-$('#companyId').change(function() {
-    // 公司 id
-    var companyId = $(this).val();
-    // 清空部门下拉菜单
-    $('#roleId').empty().append('<option value="">请选择角色</option>');
-    // 获取部门列表
-    if (!("" === companyId)) {
-        $.post('/system/user/getRoleByCompanyId/'+ companyId, function (roleList) {
-            $(roleList).each(function () {
-                $('#roleId').append('<option value="'+ this.id +'">'+ this.role_type +'</option>');
-            });
-        } );
-    }
-});
 
 //取消
 $('#cancel').on("click",function() {

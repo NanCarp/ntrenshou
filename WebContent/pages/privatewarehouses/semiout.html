@@ -63,10 +63,10 @@
                             <button class="btn btn-3"  onclick="_look()">查看</button>
                         </div>
                         <div class="col-sm-2 col-xs-12 head_4">
-                            <button class="btn btn-3"  onclick="_check()">确认出库</button>
+                            <button class="btn btn-3"  onclick="_confirm()">确认出库</button>
                         </div>
 		                <div class="col-sm-1 col-xs-4 head_1">
-                             <button class="btn btn-9 " onclick=""><i class="fa fa-refresh"></i></button>
+                             <button class="btn btn-9 " onclick="location.replace('/private/semiout')"><i class="fa fa-refresh"></i></button>
                         </div>                  
 					</div>				
 				</div>
@@ -104,6 +104,10 @@
 var storage_number="";
 var user_name = "";
 
+$('button').keydown(function(){
+	return false;
+})
+
 $(function () {	 
     //1.初始化Table
     var oTable = new TableInit();
@@ -139,7 +143,7 @@ var TableInit = function () {
     //初始化Table
     oTableInit.Init = function () {
         $('#tb_departments').bootstrapTable({
-            url: '/private/semiin/getJson',         //请求后台的URL（*）
+            url: '/private/semiout/getJson',         //请求后台的URL（*）
             method: 'get',                      //请求方式（*）
             toolbar: '#toolbar',                //工具按钮用哪个容器
             showExport: true,                     //是否显示导出
@@ -176,13 +180,13 @@ var TableInit = function () {
             		return index+1;
             	}
             },{
-                field: 'storage_time',
+                field: 'outgoing_time',
                 title: '出库时间'
             },{
-                field: 'storage_number',
+                field: 'outgoing_number',
                 title: '出库单号'
             },{
-                field: 'user_name',
+                field: 'company_name',
                 title: '客户名'
             },{
                 field: 'state',
@@ -193,9 +197,6 @@ var TableInit = function () {
             },{
                 field: 'user_name',
                 title: '出库人'
-            },{
-                field: 'remark',
-                title: '备注'
             },{
             	field:'opt',
             	title:'操作',
@@ -232,25 +233,26 @@ var ButtonInit = function () {
 
 //新增
 function _add(){
-	open_window('新增半成品入库','/private/semiin/getEdit', 1000, 600);
+	open_window('新增半成品出库','/private/semiout/getRecord', 1000, 600);
 }
 
 //编辑
-function _edit(id){
-	//判断是否已经确认入库，确认入库不可修改
-	$.post("/private/semiin/checkOr",{"id":id},function(resut){
-		if(resut){
-			open_window('编辑半成品入库','/private/semiin/getEdit/' + id, 1000, 600);
-		}else{
-			layer.msg("已确认入库无法编辑",{time:2000});
-		}
-	})
-	
-	
+function _edit(id, state){
+	// 是否可以操作
+    if (state == true) {
+        layer.msg('已确认出库无法编辑', {time: 2000});
+        return;
+    };
+    open_window('编辑成品出库','/private/semiout/getRecord/' + id, 1000, 600);
 }
 
 //批量删除
 function _batchDelete(){
+	// 是否可以操作
+    if (canOperate() == false) {
+        layer.msg('已确认出库无法删除', {time: 2000});
+        return;
+    };
 	// 获取选中记录 id
 	var ids = getIdSelections();	
 	// 如果没有选择，提示勾选至少一条数据
@@ -263,14 +265,15 @@ function _batchDelete(){
             title: ['信息', 'font-weight:600;color:#fff;background-color: #3367D6;'],
             btn: ['确认','取消'] //按钮
         }, function(){
-            $.post("/private/semiin/delete/" + ids,function(result) {
-                if (result) {
-                    layer.msg('删除成功', {time: 2000}, function(){
-                        parent.refresh_iframe();
+            $.post("/private/semiout/delete/" + ids,function(result) {
+            	if (result.isSuccess) {
+                    parent.layer.msg(result.tips, {time: 2000}, function(){
+                        layer_close();
+                        parent.parent.refresh_iframe();
                     });
-                }else{
-                	layer.msg('删除失败！确认入库数据不可删除', {time: 2500}, function(){
-                    });
+
+                } else {
+                    parent.layer.msg(result.tips, {time: 2000});
                 }
             });
         }, function(){
@@ -296,8 +299,13 @@ function getIdSelections() {
     });
 }
 
-//确认入库
-function _check(){
+//确认出库
+function _confirm(){
+	// 是否可以操作
+    if (canOperate() == false) {
+        layer.msg('已出库！', {time: 2000});
+        return;
+    };
 	// 获取选中记录 id
 	var ids = getIdSelections();	
 	// 如果没有选择，提示勾选至少一条数据
@@ -311,14 +319,15 @@ function _check(){
             title: ['信息', 'font-weight:600;color:#fff;background-color: #3367D6;'],
             btn: ['确认','取消'] //按钮
         }, function(){
-            $.post("/private/semiin/check/" + ids,function(result) {
-                if (result) {
-                    layer.msg('入库成功', {time: 2000}, function(){
-                        parent.refresh_iframe();
+            $.post("/private/semiout/confirm/" + ids,function(result) {
+            	if (result.isSuccess) {
+                    parent.layer.msg(result.tips, {time: 2000}, function(){
+                        layer_close();
+                        parent.parent.refresh_iframe();
                     });
-                }else{
-                	layer.msg('入库失败', {time: 2000}, function(){
-                    });
+
+                } else {
+                    parent.layer.msg(result.tips, {time: 2000});
                 }
             });
         }, function(){
@@ -336,10 +345,21 @@ function _look(){
 	}else if(ids.length > 1){
 		layer.msg('最多选择一条数据', {time: 2000});
 	}else{
-		open_window('半成品入库单','/private/semiin/look/'+ids, 800, 500);
+		open_window('成品入库单','/private/semiout/look/'+ids, 800, 500);
 	}
 }
 
+// 已确认出库只能查看，不能有其他操作
+function canOperate() {
+    var result = true;  
+    $.map($("#tb_departments").bootstrapTable('getSelections'), function(row) {
+        if(row.state == true) {
+            result = false;
+            return false;
+        }
+    });
+    return result;
+}
 
 </script>
 

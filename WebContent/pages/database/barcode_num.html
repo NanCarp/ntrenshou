@@ -109,8 +109,7 @@ $(function(){
 				var reg = /^\d{1,2}$/;
 				var id = $(v).find('td').eq(1).html();
 				if(!reg.test($.trim($(v).find('input').val()))){
-					flag = false;
-					layer.tips('请输入正确的打印数量','#'+id, {tips: [1, '#34495E']});return;
+					flag = false;					
 				}					
 			}
 		})
@@ -119,6 +118,8 @@ $(function(){
 				layer_close();
 				parent.open_window('查看条形码','/database/barcode/showPrint', 600, 400);
 			});
+		}else{
+			layer.tips('请输入正确的打印数量','#v', {tips: [1, '#34495E']});return;
 		}		
 	})
 });

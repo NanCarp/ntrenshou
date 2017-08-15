@@ -28,16 +28,14 @@ public class UserService {
     // 根据查询条件查询用户列表
     public static List<Record> getUserList(Map<String, Object> params) {
         // 公司名称
-        String company = (String) params.get("company");
-        String sql = " SELECT a.*, b.company_name, c.role_type " +
+        String username = (String) params.get("username");
+        String sql = " SELECT a.*, c.role_type " +
                 " FROM t_user AS a " +
-                " LEFT JOIN t_company AS b " +
-                " ON a.company_id = b.id " +
                 " LEFT JOIN t_role AS c " +
                 " ON a.role_id = c.id " +
                 " WHERE 1=1 ";
-        if (!"".equals(company)) {
-            sql += " AND a.account like '%" + company +"%' ";
+        if (!"".equals(username)) {
+            sql += " AND a.user_name like '%" + username +"%' ";
         }
         return Db.find(sql);
     }
@@ -56,7 +54,6 @@ public class UserService {
 				boolean result = true;
 				@Override
 				public boolean run() throws SQLException {
-					// TODO Auto-generated method stub
 					for(String id:allid){
 						if(Integer.parseInt(id) == 1){
 							result = false;
@@ -95,6 +92,30 @@ public class UserService {
     public static boolean isUserDuplicate(String account) {
         
         return Db.find("SELECT * FROM t_user WHERE account = ?", account).size() > 0;
+    }
+    
+    /** 
+     * @Title: getRoleList 
+     * @Description: 获取角色列表
+     * @return List<Record>
+     * @author liyu
+     */
+    public static List<Record> getRoleList() {
+        String sql = " SELECT *  FROM t_role ";
+        return Db.find(sql);
+    }
+     
+    /** 
+    * @Title: freezeOrEnable
+    * @Description: 冻结或启用账号
+    * @param id
+    * @return boolean
+    * @author liyu
+    */
+    public static boolean freezeOrEnable(Integer id) {
+        Record record = Db.findById("t_user", id);
+        record.set("state", !record.getBoolean("state"));
+        return Db.update("t_user", record);
     }
 
     

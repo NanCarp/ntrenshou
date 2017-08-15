@@ -4,17 +4,22 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.jfinal.aop.Before;
 import com.jfinal.core.Controller;
 import com.jfinal.plugin.activerecord.Db;
 import com.jfinal.plugin.activerecord.Page;
 import com.jfinal.plugin.activerecord.Record;
 
+import renshou.interceptor.ManageInterceptor;
+
 /**
  * @ClassName: LeaseInController.java
  * @Description:
  * @author: LiYu
+ * @date: 2017年8月3日上午9:16:46
  * @version: 1.0 版本初成
  */
+@Before(ManageInterceptor.class)
 public class LeaseInController extends Controller {
     /** 
     * @Title: index 
@@ -123,7 +128,7 @@ public class LeaseInController extends Controller {
         String productList = getPara("productList");
         // 入库人
         Record user = getSessionAttr("admin");
-        user = Db.findById("t_user", 1); // TODO 测试，完成后删除
+        //user = Db.findById("t_user", 1); // TODO 测试，完成后删除
         String warehouse_in_person = user.getStr("user_name");
         
         // 返回消息

@@ -44,13 +44,13 @@
 	<div class="form-group">
         <label class="col-xs-4 control-label text-right" for="semimanufactures_number">半成品编号：</label>
         <div class="col-xs-6">
-            <input class="form-control text-left" id="semimanufactures_number" type="text" placeholder="系统自动生成" name="semimanufactures_number" value="${im.semimanufactures_number!}" disabled="disabled"/>
+            <input class="form-control text-left" id="semimanufactures_number" type="text" placeholder="半成品编号" name="semimanufactures_number" value="${im.semimanufactures_number!}" disabled="disabled"/>
         </div>
     </div>
     <div class="form-group">
         <label class="col-xs-4 control-label text-right" for="trade_name">品名：</label>
         <div class="col-xs-6">
-            <input class="form-control text-left" id="trade_name" type="text" placeholder="品名" name="trade_name" value="${im.trade_name!}"/>
+            <input class="form-control text-left" id="trade_name" type="text" placeholder="品名" name="trade_name" value="${im.trade_name!}" disabled="disabled"/>
         </div>
     </div>
     <div class="form-group">
@@ -75,7 +75,7 @@
     <div class="form-group">
         <label class="col-xs-4 control-label text-right" for="semimanufactures_number">半成品编号：</label>
         <div class="col-xs-6">
-            <input class="form-control text-left" id="semimanufactures_number" type="text" placeholder="系统自动生成" name="semimanufactures_number" disabled="disabled"/>
+            <input class="form-control text-left" id="semimanufactures_number" type="text" placeholder="半成品编号" name="semimanufactures_number"/>
         </div>
     </div>
     <div class="form-group">
@@ -135,6 +135,9 @@ $(function(){
 		fields: {
 	semimanufactures_number: {
 				validators: {
+					notEmpty: {
+						message: '不能为空!'
+					},
                     stringLength: {
                         min: 0,
                         max: 20,
@@ -192,12 +195,16 @@ $(function(){
 })
 .on('success.form.bv', function(e) {
 	e.preventDefault();
-	$.post("/database/semimanufactures/saveSemimanufacture", $('#defaultForm').serialize(), function(result) {
-		if (result) {
-            parent.layer.msg("保存成功", {time: 2000}, function(){
-                layer_close();
-                parent.parent.refresh_iframe();
-            });
+	$.post("/database/semimanufactures/saveSemimanufacture", $('#defaultForm').serialize(), function(data) {
+		if (data.result) {
+			if(data.flag){
+				parent.layer.msg(data.tips, {time: 2000})
+			}else{
+				parent.layer.msg("保存成功", {time: 2000}, function(){
+	                layer_close();
+	                parent.parent.refresh_iframe();
+	            });	
+			}
         } else {
             parent.layer.msg("保存失败", {time: 2000});
         }

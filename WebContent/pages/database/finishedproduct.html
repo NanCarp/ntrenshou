@@ -57,7 +57,7 @@
 		                     <button class="btn btn-4" onclick=" _batchDelete()">删除</button>
 		                </div>                    									
 		                <div class="col-sm-1 col-xs-4 head_1">
-                             <button class="btn btn-9 " onclick=""><i class="fa fa-refresh"></i></button>
+                             <button class="btn btn-9 " onclick="location.replace('/database/finishedproduct')"><i class="fa fa-refresh"></i></button>
                         </div>                  
 					</div>				
 				</div>
@@ -230,14 +230,19 @@ function _batchDelete(){
             title: ['信息', 'font-weight:600;color:#fff;background-color: #3367D6;'],
             btn: ['确认','取消'] //按钮
         }, function(){
-            $.post("/database/finishedproduct/delete/" + ids,function(result) {
-                if (result) {
+            $.post("/database/finishedproduct/delete/" + ids,function(data) {
+                if (data.result) {
                     layer.msg('删除成功', {time: 2000}, function(){
                         parent.refresh_iframe();
                     });
                 }else{
-                	layer.msg('删除失败', {time: 2000}, function(){
-                    });
+                	if(data.flag){
+                		layer.msg('已存在业务数据，不可删除', {time: 2000}, function(){
+                        });
+                	}else{
+                		layer.msg('删除失败', {time: 2000}, function(){
+                        });
+                	}
                 }
             });
         }, function(){

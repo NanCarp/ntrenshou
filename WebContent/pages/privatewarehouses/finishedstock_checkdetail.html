@@ -72,7 +72,7 @@ body {
                                 <tbody class="t1">
                                     <tr>
                                     	<#if record??>
-                                        <td>${record.finished_product_number}</td>
+                                        <td>${record.finished_number}</td>
                                         <td>${record.trade_name}</td>
 										<td>${record.specifications}</td>
 										<td>${record.measurement_unit}<input hidden="" value ="${record.id}"><input hidden="" value="${record.finished_product_id!}"/></td>
@@ -207,14 +207,14 @@ $(function(){
 	if($(".t2").find(".flag").length==1){
 		layer.msg("请添加库存明细",{time:2000});
 	}else{
-		$.post("/private/finishedstock/saveFinishedstock",{"list":JSON.stringify(arr),"id":id,"finished_product_id":finished_product_id,"finished_product_id_num":finished_product_id_num},function(result){
-				if(result){					
-					layer_close();	
+		$.post("/private/finishedstock/saveFinishedStock",{"list":JSON.stringify(arr),"id":id,"finished_product_id":finished_product_id,"finished_product_id_num":finished_product_id_num},function(result){
+				if(result){
+					layer_close();
 					parent.parent.refresh_iframe();
-					parent.layer.msg("保存成功",{time:2000});				
+					parent.layer.msg("保存成功",{time:2000});
 				}else{
 					parent.layer.msg("保存失败",{time:2000});
-				}	
+				}
 			})
 	}
 });

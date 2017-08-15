@@ -55,7 +55,7 @@ public class AdminRoutes extends Routes{
 		//基础信息管理-条形码管理
 		add("/database/barcode",BarCodeController.class,"/database");
 		//基础信息管理-仓库管理
-		//add("/database/storage",StorageController.class,"/database");
+		add("/database/storage",StorageController.class,"/database");
 		//基础信息管理-公司管理
 		add("/database/customes",CustomController.class,"/database");
 		

@@ -10,6 +10,7 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import com.jfinal.aop.Before;
 import com.jfinal.core.Controller;
 import com.jfinal.plugin.activerecord.Db;
 import com.jfinal.plugin.activerecord.IAtom;
@@ -18,11 +19,14 @@ import com.jfinal.upload.UploadFile;
 
 import renshou.database.customer.CustomerService;
 import renshou.database.finishedproduct.FinishedProductService;
-import renshou.until.ExcelKit;
+import renshou.interceptor.FrontInterceptor;
+import renshou.interceptor.ManageInterceptor;
+import renshou.utils.ExcelKit;
 /**
  * @author xuhui
  * @desc 自用仓库管理-半成品入库管理
  */
+@Before(ManageInterceptor.class)
 public class SemiInController extends Controller {
 
 	/**
@@ -96,7 +100,7 @@ public class SemiInController extends Controller {
 	 */
 	public void saveSemiIn(){
 		Record admin = (Record) getSession().getAttribute("admin");
-		//Integer t_user_id = admin.getInt("id");
+		Integer t_user_id = admin.getInt("id");
 		String storage_number = "";
 		String list = getPara("list");
 		Integer id = getParaToInt("id");
@@ -115,7 +119,7 @@ public class SemiInController extends Controller {
 			storage_number = "YR"+today+"001";
 		}
 		System.out.println(storage_number);
-		boolean flag = SemiInService.saveSemiIn(storage_number, list, id);
+		boolean flag = SemiInService.saveSemiIn(storage_number, list, id,t_user_id);
 		System.out.println(flag);
 		renderJson(flag);
 	}
@@ -147,10 +151,15 @@ public class SemiInController extends Controller {
 	 */
 	public void check(){
 		String ids = getPara(0);
-		System.out.println(ids);
-		Integer id = Integer.parseInt(ids);
-		boolean result = SemiInService.conform(id);
-		renderJson(result);
+		Record record = SemiInService.getSemi(Integer.parseInt(ids));
+		Boolean flag = true;
+		if(record.getBoolean("state")==true){
+			flag = false;
+		}
+		if(flag){
+			boolean result = SemiInService.conform(Integer.parseInt(ids));
+		}
+		renderJson(flag);
 	}
 	
 	/**

@@ -116,7 +116,10 @@ public class FinishedOutService {
                 + " a.finished_product_id = c.id "
                 + " WHERE IFNULL(num - b.total_out_quantity,num) > 0 ";
         
-        return Db.find(sql);
+        List<Record> list = Db.find(sql);
+        // 仓库名
+        list = modifyWarehouseName(list);
+        return list;
     }
 
     /** 
@@ -129,7 +132,7 @@ public class FinishedOutService {
     * @author liyu
     */
     public static Map<String, Object> save(Long finished_product_outgoing_id, String outgoingDetailList,
-            Integer user_id, Integer company) {
+            Integer user_id, Integer company_id, String remark) {
         
         // 返回信息
         Map<String, Object> message = new HashMap<>(); 
@@ -147,7 +150,8 @@ public class FinishedOutService {
                 Date now = new Date(); // 当前日期
                 outgoing.set("outgoing_time", now); // 出库日期
                 outgoing.set("t_user_id", user_id); // 出库人
-                outgoing.set("company", 4); // 客户 TODO
+                outgoing.set("company", company_id); // 客户 
+                outgoing.set("remark", remark); // 备注
                 
                 if(null != outgoing_id) { // 编辑
                     outgoing.set("id", outgoing_id);
@@ -261,7 +265,6 @@ public class FinishedOutService {
         if (list.size() > 0) {
             String db_warehouse_out_no = list.get(0).getStr("outgoing_number");
             Integer i = Integer.parseInt(db_warehouse_out_no.substring(10, 13));
-            System.out.println(i);
             i += 1001;
             warehouseOutNo = "YC" + dateString + i.toString().substring(1);
         } else {
@@ -306,8 +309,8 @@ public class FinishedOutService {
                 + " ON a.finished_product_id = c.finished_product_id AND a.warehouse_id = c.warehouse_id "
                 + " WHERE a.finished_product_outgoing_id = ? ";
         List<Record> list = Db.find(sql, id);
-        // TODO 仓库名
-        
+        // 仓库名
+        list = modifyWarehouseName(list);
         return list;
     }
 
@@ -395,7 +398,8 @@ public class FinishedOutService {
                 return true;
             }
         });
-
+        // 更新库存
+        updateStock();
         message.put("isSuccess", result);
         
         return message;
@@ -419,9 +423,107 @@ public class FinishedOutService {
                 + " WHERE a.finished_product_outgoing_id = ? "
                 + " GROUP BY a.finished_product_id ";
         List<Record> list = Db.find(sql, id);
-        // TODO 仓库名
+        // 仓库名
+        list = modifyWarehouseName(list);
+        return list;
+    }
+
+    /** 
+    * @Title: getCompanyList 
+    * @Description: 客户列表
+    * @return List<Record>
+    * @author liyu
+    */
+    public static List<Record> getCompanyList() {
+        return Db.find("SELECT * FROM `company`");
+    }  
+    
+    /** 
+    * @Title: modifyWarehouseName 
+    * @Description: 修改仓库名称
+    * @param list
+    * @return List<Record>
+    * @author liyu
+    */
+    public static List<Record> modifyWarehouseName(List<Record> list) {
+        // 仓库 map
+        Map<Integer, String> warehouses = getWarehouses();
+        
+        for(Record r : list) {
+            r.set("warehouse_name", warehouses.get(r.getInt("warehouse_id")));
+        }
         
         return list;
-    }    
+    }
+    
+    /** 
+    * @Title: getWarehouses 
+    * @Description: 所有仓库 map
+    * @return Map<Integer,String>
+    * @author liyu
+    */
+    private static Map<Integer, String> getWarehouses() {
+        String sql = "SELECT a.id,CONCAT(c.warehouse_name,b.warehouse_name,a.warehouse_name) AS warehouse_name "
+                + " FROM `warehouse` AS a "
+                + " INNER JOIN warehouse AS b "
+                + " ON a.pid = b.id "
+                + " INNER JOIN warehouse AS c "
+                + " ON b.pid = c.id";
+        List<Record> warehouseList = Db.find(sql);
+        
+        Map<Integer, String> map = new HashMap<>();
+        for (Record r : warehouseList) {
+            map.put(r.getInt("id"), r.getStr("warehouse_name"));
+        }
+        
+        return map;
+    }
+
+    /** 
+    * @Title: getFinishedByNum 
+    * @Description: 根据产品编号查询产品信息
+    * @param num
+    * @return Record
+    * @author liyu
+    */
+    public static List<Record> getFinishedByNum(String num) {
+        String sql = "SELECT a.id,a.warehouse_id,a.finished_product_id,a.num, "
+                + " c.finished_number,c.trade_name,c.specifications,c.measurement_unit,c.remark, "
+                + " IFNULL(num - b.total_out_quantity,num) AS left_quantity "
+                + " FROM finished_product_stock_detail AS a "
+                + " LEFT JOIN "
+                + " (SELECT b.warehouse_id,b.finished_product_id,SUM(num) AS total_out_quantity  "
+                + " FROM finished_product_outgoing AS a "
+                + " LEFT JOIN finished_product_outgoing_detail AS b "
+                + " ON a.id = b.finished_product_outgoing_id "
+                + " WHERE a.state = 0 "
+                + " GROUP BY warehouse_id, finished_product_id) AS b "
+                + " ON a.finished_product_id = b.finished_product_id AND a.warehouse_id = b.warehouse_id "
+                + " LEFT JOIN finished_product AS c ON "
+                + " a.finished_product_id = c.id "
+                + " WHERE c.finished_number = '"+ num +"'"
+                + " AND IFNULL(num - b.total_out_quantity,num) > 0";
+        List<Record> list = Db.find(sql);
+        // 仓库名
+        list = modifyWarehouseName(list);
+        return list;
+    }
+    
+    /**
+     * @author liyu
+     * @desc 更新库存，删除库存为0数据
+     */
+    public static void updateStock(){
+        Db.tx(new IAtom() {       
+          @Override
+          public boolean run() throws SQLException {
+              String sql1 ="DELETE from finished_product_stock_detail where num = 0";
+              Db.update(sql1);
+              String sql2 = "DELETE from finished_product_stock where finished_product_stock_num = 0";
+              Db.update(sql2);
+              return true;
+          }
+      });
+    }
 
 }

@@ -44,13 +44,13 @@
 	<div class="form-group">
         <label class="col-xs-4 control-label text-right" for="finished_number">成品编号：</label>
         <div class="col-xs-6">
-            <input class="form-control text-left" id="finished_number" type="text" placeholder="系统自动生成" name="finished_number" value="${im.finished_number!}" disabled="disabled"/>
+            <input class="form-control text-left" id="finished_number" type="text" placeholder="成品编号" name="finished_number" value="${im.finished_number!}" disabled="disabled"/>
         </div>
     </div>
     <div class="form-group">
         <label class="col-xs-4 control-label text-right" for="trade_name">品名：</label>
         <div class="col-xs-6">
-            <input class="form-control text-left" id="trade_name" type="text" placeholder="品名" name="trade_name" value="${im.trade_name!}"/>
+            <input class="form-control text-left" id="trade_name" type="text" placeholder="品名" name="trade_name" value="${im.trade_name!}" disabled="disabled"/>
         </div>
     </div>
     <div class="form-group">
@@ -75,7 +75,7 @@
     <div class="form-group">
         <label class="col-xs-4 control-label text-right" for="finished_number">成品编号：</label>
         <div class="col-xs-6">
-            <input class="form-control text-left" id="finished_number" type="text" placeholder="系统自动生成" name="finished_number" disabled="disabled"/>
+            <input class="form-control text-left" id="finished_number" type="text" placeholder="成品编号" name="finished_number"/>
         </div>
     </div>
     <div class="form-group">
@@ -134,6 +134,9 @@ $(function(){
 		},
 		fields: {
 			finished_number: {
+				notEmpty: {
+					message: '不能为空!'
+				},
 				validators: {
                     stringLength: {
                         min: 0,
@@ -192,14 +195,19 @@ $(function(){
 })
 .on('success.form.bv', function(e) {
 	e.preventDefault();
-	$.post("/database/finishedproduct/saveFinishedProduct", $('#defaultForm').serialize(), function(result) {
-		if (result) {
-            parent.layer.msg("保存成功", {time: 2000}, function(){
-                layer_close();
-                parent.parent.refresh_iframe();
-            });
+	$.post("/database/finishedproduct/saveFinishedProduct", $('#defaultForm').serialize(), function(data) {
+		console.log(data);
+		if (data.result) {
+			if(data.flag){
+				parent.layer.msg(data.tips, {time: 2000})
+			}else{
+				 parent.layer.msg(data.tips, {time: 2000}, function(){
+		         layer_close();
+		         parent.parent.refresh_iframe();
+				})
+            }
         } else {
-            parent.layer.msg(result.tips, {time: 2000});
+            parent.layer.msg("保存失败", {time: 2000});
         }
 		
 	});

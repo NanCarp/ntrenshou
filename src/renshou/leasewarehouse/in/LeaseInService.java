@@ -171,7 +171,7 @@ public class LeaseInService {
         String warehouseInNo = "";
         // 当前日期
         Date currentTime = new Date();
-        SimpleDateFormat formatter = new SimpleDateFormat("yyMMdd");
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMdd");
         String dateString = formatter.format(currentTime);
         System.out.println(dateString);
         // 最大入库单号
@@ -183,12 +183,11 @@ public class LeaseInService {
         List<Record> list = Db.find(sql);
         if (list.size() > 0) {
             String db_warehouse_in_no = list.get(0).getStr("warehouse_in_no");
-            Integer i = Integer.parseInt(db_warehouse_in_no.substring(8, 12));
-            System.out.println(i);
-            i += 1;
-            warehouseInNo = "RK" + dateString + i;
+            Integer i = Integer.parseInt(db_warehouse_in_no.substring(10, 13));
+            i += 1001;
+            warehouseInNo = "LR" + dateString + i.toString().substring(1);
         } else {
-            warehouseInNo = "RK" + dateString + "1001";
+            warehouseInNo = "LR" + dateString + "001";
         }
         
         return warehouseInNo;

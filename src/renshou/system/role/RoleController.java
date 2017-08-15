@@ -15,7 +15,7 @@ import renshou.interceptor.ManageInterceptor;
  * @ClassName: RoleController
  * @Description: 系统管理_角色管理
  * @author: xuhui
- * @date: 2017年5月15日下午2:00:00
+ * @date: 2017年8月3日下午2:00:00
  * @version: 1.0 版本初成
  */
 @Before(ManageInterceptor.class)
@@ -43,10 +43,6 @@ public class RoleController extends Controller {
             setAttr("role", role);
         }
 
-        // 公司列表
-        List<Record> companyList = RoleService.getCompanyList();
-        setAttr("companyList", companyList);
-
 		render("role-detail.html");
 	}
 
@@ -56,18 +52,14 @@ public class RoleController extends Controller {
         Integer id = getParaToInt("id");
         // 角色名称
         String role = getPara("role").trim();
-        // 所属公司
-        Integer companyId = getParaToInt("companyId");
         // 备注
         String remark = getPara("remark", "");
-        // 当前时间
-        Date now = new Date();
         // 保存结果
         boolean result = false;
         // 返回信息
         Map<String, Object> response = new HashMap<>();
         // 重复检测
-        if (id == null && RoleService.isDuplicate(role, companyId)) {
+        if (id == null && RoleService.isDuplicate(role)) {
             response.put("tips", "角色重复！");
             response.put("isSuccess", false);
             renderJson(response);
@@ -76,16 +68,13 @@ public class RoleController extends Controller {
         
         Record record = new Record();
         record.set("role_type", role);
-        record.set("company_id", companyId);
         record.set("remark", remark);
-        record.set("review_time", now);// 修改时间
         if (id != null) {// 编辑
             record.set("id", id);
             result = Db.update("t_role", record);
             response.put("isSuccess", result);
             response.put("tips", result ? "保存成功": "保存失败");
         } else {// 新增
-            record.set("create_time", now);
             result = Db.save("t_role", record);
             response.put("isSuccess", result);
             response.put("tips", result ? "保存成功": "保存失败");

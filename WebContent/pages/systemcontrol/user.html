@@ -74,9 +74,10 @@
                                 <tr>
                                 	<th><input type="checkbox" id="checkAll"></th>
                                     <th>序列</th>
-                                    <th>用户名</th>
-                                    <th>公司</th>
+                                    <th>账号</th>
+                                    <th>姓名</th>
                                     <th>角色</th>
+                                    <th>状态</th>
                                     <th>操作</th>
                                 </tr>
                             </thead>
@@ -87,10 +88,18 @@
                                 	<td><input type="checkbox" name="sub" value="${user.id}"></td>
                                     <td>${user_index+1}</td>
                                     <td>${user.account}</td>
-                                    <td>${user.company_name}</td>
+                                    <td>${user.user_name}</td>
                                     <td>${user.role_type}</td>
                                     <td>
+                                        <#if user.state == true>启用中<#else>冻结中</#if>
+                                    </td>
+                                    <td>
                                         <button class="btn btn-3 btn-xs" onclick="_edit(${user.id})">编辑</button>
+                                        <#if user.state == true>
+                                        <button class="btn btn-4  btn-xs" onclick="_freezeOrEnable(${user.id},0)">冻结</button>
+                                        <#else>
+                                        <button class="btn btn-success  btn-xs" onclick="_freezeOrEnable(${user.id},1)">启用</button>
+                                        </#if>
                                     </td>
                                 </tr>
                                 </#list>
@@ -175,7 +184,7 @@
     	open_window('编辑用户','/system/user/getUser/' + id,480, 340);
     }
    
- // 删除以及批量删除
+    // 删除以及批量删除
 	function _delete(){
 	   var ids = [];
 	   $("input[name='sub']:checked").each(function(k,v){
@@ -206,6 +215,29 @@
 
 	   }
 	}
+    
+    // 冻结/启用
+    function _freezeOrEnable(id, state){
+        var info = "启用";
+        if(!state){
+            info = "冻结";
+        }
+        ///询问框
+        layer.confirm('确认' + info + '吗？', {
+            title: ['信息', 'font-weight:600;color:#fff;background-color: #3367D6;'],
+            btn: ['确认','取消'] //按钮
+        }, function(){
+            $.post("/system/user/freezeOrEnable?id=" + id + "&state=" + state,function(result) {
+                if (result) {
+                    layer.msg(info + '成功', {time: 2000}, function(){
+                        parent.refresh_iframe();
+                    });
+                }
+            });
+        }, function(){
+
+        });
+    }
 
 </script>
 </body>

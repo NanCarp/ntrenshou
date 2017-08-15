@@ -134,7 +134,7 @@
               <tbody>
               	<#if rlist?? &&rlist?size gt 0>
               	<#list rlist as r>
-           		<tr>
+           		<tr class="data">
            			<td><input type="checkbox" name="sub" value="" ><input hidden="" value="${r.id!}"></td>
            			<td></td>
            			<td>${r.finished_number}</td>
@@ -190,31 +190,39 @@
 document.onkeydown = function(e) {
     var e = e || event;
     if(e.keyCode == 13) {
-    	 $("#ProductCodeInfo").keydown(function (e) {
-			 AddProduct(this);
-    	})
+		AddProduct(this);
         e.preventDefault ? e.preventDefault() : (e.returnValue = false);
     }
 }
-
+$(function(){
+    //扫码录入
+    $("#ProductCodeInfo").keydown(function (e) {
+        AddProduct(this);
+    });
+});
 // 提交
 $('#submit').click(function () {
 	// 绑定校验
 	var validator = bindValidator('tbody');
-	console.log(validator);
 	validator.data('bootstrapValidator').validate();
 	if (!validator.data('bootstrapValidator').isValid()) {
 		return; // 校验不通过，禁止提交
 	}
 	
 	var list = new Array(); // 产品列表
-    $("tbody tr").each(function(k,v){
+    $("tbody tr[class='data']").each(function(k,v){
         var num = $(this).find("input").eq(2).val();
         var warehouse_id = $(v).find("option:selected").val();
         var data = {"finished_number":$(v).find("td").eq(2).html(),"warehouse_id":warehouse_id,"num":num};
         list[k] = data;
     })
-    console.log(JSON.stringify(list));
+    
+    // 无数据，禁止提交
+    if (list.length == 0) {
+        layer.msg("请添加产品数据", {time: 2000});
+        return;
+    }
+	
     var id = $("#id").val(); // 入库单 id
     $.post("/private/finishedin/saveFinishedIn", {"list":JSON.stringify(list),"id":id}, function(result) {
         if (result) {
@@ -285,7 +293,7 @@ function addcontant(data){
 		if(flag){
 			$.post("/private/finishedin/getFinishedByNum",{"num":data[r]},function(record){
 				$("tbody").append(
-						"<tr>"
+						"<tr class='data'>"
 	           			+"<td><input type='checkbox' name='sub' value=''><input hidden=''></td>"
 	           			+"<td></td>"
 	           			+"<td>"+record.finished_number+"</td>"
@@ -311,26 +319,6 @@ function addcontant(data){
 	}
 }
 
-//删除页面数据
-function _batchDelete(){
-	$("input[name='sub']:checked").each(function(k,v){
-		   $(v).parent().parent().remove();
-		   sort();
-	   })	
-}
-
-//修改页面数据
-function _edit(_obj){
-	var position = $(_obj).parent().parent().find("td").eq(1).html();
-	var name = $(_obj).parent().parent().find("td").eq(2).html();
-	var call_num = $(_obj).parent().parent().find("td").eq(3).html();
-	var QQ = $(_obj).parent().parent().find("td").eq(4).html();
-	var wechat = $(_obj).parent().parent().find("td").eq(5).html();
-	var e_mail = $(_obj).parent().parent().find("td").eq(6).html();
-	var remark = $(_obj).parent().parent().find("td").eq(7).html();
-	var data = "name="+name+"&call_num="+call_num+"&QQ="+QQ+"&wechat="+wechat+"&e_mail="+e_mail+"&remark="+remark+"&position="+position;
-	open_window('修改联系人',"/database/customes/addContant?"+data, 400, 400);
-}
 //页面序号排序
 function sort(){
 	$("tbody").find(".flag").remove();
@@ -368,48 +356,54 @@ $("input[name='sub']").click(function() {
 
 //扫码录入
 function AddProduct(self) {
-    var barcode = $.trim($(self).val()); 
+    var barcode = $.trim($(self).val());
+    var flag = true;
     if(barcode!=null){
-    	if(barcode.length>13){
-    		for(var r=0;r<data.length;r++){
-    			var flag = true;
-    			$("tbody tr").each(function(k,v){
-    				if(barcode == $(v).find("td").eq(2).html()){
-    					parent.layer.msg("该条码已经录入", {time: 2000});
-    					flag = false;
-    				};
-    			})
-    			if(flag){
-    				$.post("/private/finishedin/getFinishedByNum",{"num":barcode},function(record){
-    					$("tbody").append(
-    							"<tr>"
-    		           			+"<td><input type='checkbox' name='sub' value=''><input hidden=''></td>"
-    		           			+"<td></td>"
-    		           			+"<td>"+record.finished_number+"</td>"
-    		           			+"<td>"+record.trade_name+"</td>"
-    		           			+"<td>"+record.specifications+"</td>"
-    		           			+"<td>"+record.measurement_unit+"</td>"
-    		           			+"<td><input class='form-control inputclass' value='1'></td>"
-    		           			+"<td>"
-    		           			+"<select class='form-control selectclass' name='cage_name' id='cage_name'>"
-    		     					+"<option>--选择对应仓库--</option>"
-    		                		+"<#if im?? &&im?size gt 0>"
-    								+"<#list im as record>"
-    								+"<option id='${record.id}' value='${record.id}'>${record.rwarehouse_name}${record.awarehouse_name}${record.warehouse_name}</option>"
-    		               			+"</#list>"
-    								+"</#if>"
-    		            		+"</select>"
-    		           			+"</td>"
-    		           		+"</tr>"		
-    					)
-    					sort();
-    				})
-    			}
-    		}  		 
-    		 
-    	}
+        if(barcode.length>9){               
+            $("tbody tr").each(function(k,v){
+                if(barcode == $(v).find("td").eq(2).html()){
+                    parent.layer.msg("该条码已经录入", {time: 2000});
+                    $(self).val("");
+                    flag = false;
+                };
+            })
+            if(flag){
+                $.post("/private/finishedin/getFinishedByNum",{"num":barcode},function(record){
+                    console.log(record);
+                    if(record!=null){
+                        $("tbody").append(
+                                "<tr class='data'>"
+                                +"<td><input type='checkbox' name='sub' value=''><input hidden=''></td>"
+                                +"<td></td>"
+                                +"<td>"+record.finished_number+"</td>"
+                                +"<td>"+record.trade_name+"</td>"
+                                +"<td>"+record.specifications+"</td>"
+                                +"<td>"+record.measurement_unit+"</td>"
+                                +"<td><div class='form-group form-group-sm'><input class='form-control inputclass' name='quantity' value='1'></div></td>"
+                                +"<td><div class='form-group form-group-sm'>"
+                                +"<select class='form-control selectclass' name='cage_name' id='cage_name'>"
+                                    +"<option value=''>--选择对应仓库--</option>"
+                                    +"<#if warehouseList?? &&warehouseList?size gt 0>"
+                                    +"<#list warehouseList as warehouse>"
+                                    +"<option id='${warehouse.id}' value='${warehouse.id}'>${warehouse.warehouse_name}</option>"
+                                    +"</#list>"
+                                    +"</#if>"
+                                +"</select>"
+                                +"</div></td>"
+                            +"</tr>"        
+                        )
+                        sort();
+                        $(self).val("");
+                    }else{
+                        parent.layer.msg("请录入正确的半成品条码", {time: 2000});
+                        $(self).val("");
+                    }
+
+                })
+            }
+        }
     }
-    
+    //$(self).val("");
 }
 
 </script>

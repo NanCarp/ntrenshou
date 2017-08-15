@@ -48,8 +48,12 @@ public class AuthorityService {
                         buttons += authorityList[i] + ",";
                     }
                 }
-                menus = menus.substring(0, menus.length() - 1);
-                buttons = buttons.substring(0, buttons.length() - 1);
+                if (menus != null && menus.length() > 0) {
+                    menus = menus.substring(0, menus.length() - 1);
+                }
+                if (buttons != null && buttons.length() > 0) {
+                    buttons = buttons.substring(0, buttons.length() - 1);
+                }
                 Date now = new Date();
 
                 Record record1 = new Record();

@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.jfinal.plugin.activerecord.Db;
+import com.jfinal.plugin.activerecord.Page;
 import com.jfinal.plugin.activerecord.Record;
 
 /**
@@ -60,5 +61,24 @@ public class LoginService {
 		System.out.println(loginRecordMap.get("userid"));
 		return Db.save("t_user_log", record);
 	}
-
+	
+	/**
+	 * @desc 自用仓库库存查询
+	 * @author xuhui
+	 */
+	public static Page<Record> getIframe(Integer pageNumber,Integer pageSize,String product_num,String trade_name){
+		String sql ="from (SELECT e.semimanufactures_number as pronum,e.trade_name,e.specifications,e.measurement_unit"
+				+ ",semimanufactures_stock_num,'半成品' as proflag from semimanufactures_stock s LEFT JOIN semimanufactures"
+				+ " e ON e.id = s.semimanufactures_id UNION SELECT p.finished_number as pronum,p.trade_name,p.specifications"
+				+ ",p.measurement_unit,f.finished_product_stock_num,'成品' as proflag from finished_product_stock f LEFT JOIN"
+				+ " finished_product p ON p.id = f.finished_product_id) t where 1=1";
+		if(product_num!=null&&product_num!=""){
+			sql +=" and pronum like '%"+product_num+"%'";
+		}
+		if(trade_name!=null&&trade_name!=""){
+			sql +=" and trade_name like'%"+trade_name+"%'";
+		}
+		return Db.paginate(pageNumber, pageSize, "select *",sql);
+		
+	}
 }

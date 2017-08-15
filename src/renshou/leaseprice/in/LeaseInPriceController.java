@@ -4,11 +4,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.jfinal.aop.Before;
 import com.jfinal.core.Controller;
 import com.jfinal.plugin.activerecord.Db;
 import com.jfinal.plugin.activerecord.Page;
 import com.jfinal.plugin.activerecord.Record;
 
+import renshou.interceptor.ManageInterceptor;
 import renshou.leasewarehouse.in.LeaseInService;
 
 
@@ -19,6 +21,7 @@ import renshou.leasewarehouse.in.LeaseInService;
  * @author: LiYu
  * @version: 1.0 版本初成
  */
+@Before(ManageInterceptor.class)
 public class LeaseInPriceController extends Controller {
     // 页面
     public void index() {

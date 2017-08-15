@@ -60,7 +60,7 @@
                 <option value="">--请选择对应仓库--</option>  
                 <#if corrwarsehouses?? && corrwarsehouses?size gt 0>      
                 <#list corrwarsehouses as corrwarsehouse>
-                	<option <#if im.pid=corrwarsehouse.id>selected</#if> value="${corrwarsehouse.id}">${corrwarsehouse.warehouse_name}</option>
+                	<option <#if im.pid=corrwarsehouse.id>selected</#if> value="${corrwarsehouse.id}">${corrwarsehouse.detailname}</option>
                 </#list>
                 </#if>
            </select>
@@ -137,9 +137,6 @@ $(function(){
 			}
 			,position: {
 				validators: {
-					notEmpty: {
-						message: '不能为空!'
-					},
 	                stringLength: {
 	                    min: 0,
 	                    max: 20,
@@ -152,6 +149,11 @@ $(function(){
 					notEmpty: {
 						message: '不能为空!'
 					}
+					,stringLength: {
+			               min: 0,
+			               max: 20,
+			               message: '最多20个字符'
+			           }
 				}
 			}
 		}

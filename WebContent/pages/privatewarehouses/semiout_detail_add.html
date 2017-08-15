@@ -9,7 +9,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>成品管理-新增/修改</title>
+    <title>半成品出库</title>
 
     <!-- Bootstrap Core CSS -->
     <link href="../../../vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
@@ -137,25 +137,25 @@ function getSelectedProducts() {
 		var $tr = $(this).parent().parent();
 		productNoList.push($tr.find('input[name="id"]').val());
 	});
-	console.log(productNoList);
+	//console.log(productNoList);
 	return productNoList;
 }
 
 //console.log(parent.stockList);
 $(parent.stockList).each(function (index, obj) {
-	//console.log(obj);
+	console.log(obj);
 	var a = '<tr>'+
         '<td>'+
             '<input type="checkbox" name="sub">'+
             '<input type="hidden" name="id" value="' + obj.id + '">'+
         '</td>' +
         '<td>'+(index+1)+'</td>' +
-        '<td name="finished_number">'+obj.finished_number+'</td>' +
+        '<td name="semimanufactures_number">'+obj.semimanufactures_number+'</td>' +
         '<td>'+obj.trade_name+'</td>' +
         '<td>'+obj.specifications+'</td>' +
         '<td>'+obj.measurement_unit+'</td>' +
         '<td>'+obj.remark+'</td>' +
-        '<td>'+obj.warehouse_id+'</td>' +
+        '<td>'+obj.warehouse_name+'</td>' +
         '<td>'+obj.left_quantity+'</td>' +
     '</tr>';
     $('tbody').append(a);

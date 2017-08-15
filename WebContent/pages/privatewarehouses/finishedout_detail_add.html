@@ -50,14 +50,16 @@
                         <div class="panel-body" style="max-height: 420px;min-height:420px;overflow:auto;padding-top:0px">
                             <table style="margin-top: 20px" width="100%" class="table table-striped table-bordered table-hover" id="dataTables-example">
 					    <thead>
-					       <tr>
+                            <tr>
 					       	<th><input type="checkbox" id="checkAll"></th>
 					       	<th>序号</th>
-					         <th>产品编号</th>
-					         <th>品名</th>
-					         <th>规格</th>
-					         <th>单位</th>
-					         <th>备注</th>
+					        <th>产品编号</th>
+					        <th>品名</th>
+					        <th>规格</th>
+					        <th>单位</th>
+					        <th>备注</th>
+					        <th>对应仓库</th>
+					        <th>数量</th>
 					       </tr>
 					       </thead>
 					       <tbody>
@@ -130,11 +132,12 @@ function passProductsToParentPage() {
 }
 
 function getSelectedProducts() {
-	var productNoList = "";
+	var productNoList = new Array();
 	$('tbody').find('input:checked').each(function () {
 		var $tr = $(this).parent().parent();
-		productNoList += $tr.find('td[name="finished_number"]').html() + ",";
+		productNoList.push($tr.find('input[name="id"]').val());
 	});
+	console.log(productNoList);
 	return productNoList;
 }
 
@@ -142,13 +145,18 @@ function getSelectedProducts() {
 $(parent.stockList).each(function (index, obj) {
 	//console.log(obj);
 	var a = '<tr>'+
-        '<td><input type="checkbox" name="sub"></td>' +
+        '<td>'+
+            '<input type="checkbox" name="sub">'+
+            '<input type="hidden" name="id" value="' + obj.id + '">'+
+        '</td>' +
         '<td>'+(index+1)+'</td>' +
         '<td name="finished_number">'+obj.finished_number+'</td>' +
         '<td>'+obj.trade_name+'</td>' +
         '<td>'+obj.specifications+'</td>' +
         '<td>'+obj.measurement_unit+'</td>' +
         '<td>'+obj.remark+'</td>' +
+        '<td>'+obj.warehouse_name+'</td>' +
+        '<td>'+obj.left_quantity+'</td>' +
     '</tr>';
     $('tbody').append(a);
 });

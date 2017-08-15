@@ -6,14 +6,20 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.jfinal.aop.Before;
 import com.jfinal.core.Controller;
 import com.jfinal.plugin.activerecord.Db;
 import com.jfinal.plugin.activerecord.Record;
+
+import renshou.database.finishedproduct.FinishedProductService;
+import renshou.interceptor.FrontInterceptor;
+import renshou.interceptor.ManageInterceptor;
 
 /**
  * @desc 半成品信息管理
  * @author xuhui
  */
+@Before(ManageInterceptor.class)
 public class SemimanufacturesController extends Controller {
 
 	/**
@@ -64,8 +70,15 @@ public class SemimanufacturesController extends Controller {
 	 */
 	public void delete(){
 		String ids = getPara(0);
-		boolean result = SemimanufactureService.delete(ids);
-		renderJson(result);
+		boolean result = false;
+		Map<String,Object> map = new HashMap<String, Object>();
+		boolean flag = SemimanufactureService.deleteOr(ids);
+		if(!flag){
+			result = SemimanufactureService.delete(ids);
+		}	
+		map.put("flag", flag);
+		map.put("result", result);
+		renderJson(map);
 	}
 	
 	/**
@@ -74,8 +87,12 @@ public class SemimanufacturesController extends Controller {
 	 */
 	public void saveSemimanufacture(){
 		boolean result = false;
+		boolean flag = false;
+		Map<String,Object> map = new HashMap<String,Object>();
+		String semimanufactures_number = getPara("semimanufactures_number");
 		Integer id = getParaToInt("id");
 		Record record = new Record();
+		record.set("semimanufactures_number", semimanufactures_number);
 		record.set("trade_name",getPara("trade_name"));
 		record.set("specifications", getPara("specifications"));
 		record.set("measurement_unit", getPara("measurement_unit"));
@@ -83,27 +100,23 @@ public class SemimanufacturesController extends Controller {
 		if(id!=null){
 			record.set("id", getParaToInt("id"));
 			result = Db.update("semimanufactures", record);
+			map.put("tips", "保存成功");
 		}else{
-			//自动生成成品编码
-			Date date = new Date();
-			SimpleDateFormat sdf = new SimpleDateFormat("yyyy");
-			String year = sdf.format(date);
-			String prefix = "BP";
-			String finished_number = "";
-			if(SemimanufactureService.getMaxNum().getStr("num")!=null){
-				System.out.println(SemimanufactureService.getMaxNum());
-				String countstring = SemimanufactureService.getMaxNum().getStr("num").substring(6);						
-				Integer countp = Integer.parseInt(countstring) + 10001;
-				System.out.println(countstring);
-				String countn = String.valueOf(countp).substring(1);
-				finished_number = prefix + year +countn;
+			//id为空判断是否存在该编号
+			Record JudgeRecord = SemimanufactureService.Judge(semimanufactures_number);
+			if(JudgeRecord!=null){
+				map.put("tips", "该成品编号已经存在");
+				flag = true;
+				result = true;
 			}else{
-				finished_number = prefix + year +"0001";
+				result = Db.save("semimanufactures", record);
+				map.put("tips", "保存成功");
 			}
-			record.set("semimanufactures_number", finished_number);
-			result = Db.save("semimanufactures", record);
 		}
-		renderJson(result);
+		map.put("flag", flag);
+		map.put("result",result);
+		renderJson(map);
+
 	}
 	
 }

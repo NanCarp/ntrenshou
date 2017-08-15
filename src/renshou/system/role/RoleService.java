@@ -16,7 +16,7 @@ import com.jfinal.plugin.activerecord.Record;
 public class RoleService {
 	  public static List<Record> getRoleList(String rolename,String department) {
 	        String sql = " SELECT * " +
-	                " FROM t_role ";
+	                " FROM t_role WHERE 1=1 ";
 	        if(rolename!=""&&rolename!=null){
 	        	sql += " and role_type like '%"+rolename+"%'";
 	        }
@@ -91,8 +91,7 @@ public class RoleService {
         * @return boolean
         * @author liyu
         */
-        public static boolean isDuplicate(String role, Integer companyId) {
-            return Db.find("SELECT * FROM t_role WHERE role_type = ? AND company_id = ?", 
-                    role, companyId).size() > 0;
+        public static boolean isDuplicate(String role) {
+            return Db.find("SELECT * FROM t_role WHERE role_type = ? ", role).size() > 0;
         }
 }

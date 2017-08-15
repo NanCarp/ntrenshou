@@ -5,14 +5,18 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.jfinal.aop.Before;
 import com.jfinal.core.Controller;
 import com.jfinal.plugin.activerecord.Record;
 
 import renshou.database.finishedproduct.FinishedProductService;
+import renshou.interceptor.FrontInterceptor;
+import renshou.interceptor.ManageInterceptor;
 /**
  * @author xuhui
  * @desc 条形码管理
  */
+@Before(ManageInterceptor.class)
 public class BarCodeController extends Controller {
 	
 	public void index(){

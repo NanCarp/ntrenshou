@@ -3,7 +3,10 @@ package renshou.privatewarehouses.finishedin;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
 import com.alibaba.fastjson.JSONObject;
 import com.jfinal.plugin.activerecord.Db;
 import com.jfinal.plugin.activerecord.IAtom;
@@ -96,7 +99,7 @@ public class FinishedInService {
 	 * @author liyu
 	 * @desc 获取入库单信息并保存
 	 */
-	public static boolean saveFinishedIn(String storage_number,String list,Integer id){
+	public static boolean saveFinishedIn(String storage_number,String list,Integer id, Integer t_user_id){
 		boolean flag = false;
 		flag = Db.tx(new IAtom() {
 			List<JSONObject> jlist = (List<JSONObject>)JSONObject.parse(list);
@@ -127,7 +130,7 @@ public class FinishedInService {
 					Record record = new Record();
 					record.set("storage_number", storage_number); // 入库单号
 					record.set("storage_time", new Date()); // 入库日期
-					record.set("t_user_id", 1); // 入库人 TODO 需要修改
+					record.set("t_user_id", t_user_id); // 入库人
 					r = Db.save("finished_product_storage", record);
 					//判断是否保存成功
 					if(r){
@@ -296,4 +299,5 @@ public class FinishedInService {
         
         return no;
     }
+    
 }

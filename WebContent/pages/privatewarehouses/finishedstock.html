@@ -45,7 +45,7 @@
 				<div class="container container-fluid" >				
 					<div class="row">                        	    		                                            		
 						<div class="col-sm-2 col-xs-3 head_2">
-                            <input type="search" class="form-control" placeholder="产品编号" name="semimanufactures_number" id="semimanufactures_number" value="">
+                            <input type="search" class="form-control" placeholder="产品编号" name="finished_number" id="finished_number" value="">
                         </div>
                         <div class="col-sm-2 col-xs-3 head_2">
                             <input type="search" class="form-control" placeholder="品名" name="trade_name" id="trade_name" value="">
@@ -101,8 +101,14 @@
 <script src="../../../js/common/admin.js"></script>
 
 <script>
-var semimanufactures_number="";
+var finished_number="";
 var trade_name = "";
+
+//阻止键盘点击按钮
+$('button').keydown(function () {
+    return false;
+});
+
 
 $(function () {	 
     //1.初始化Table
@@ -116,12 +122,12 @@ $(function () {
 function doQuery(){
 	layui.use('layer',function(){
 		var layer = layui.layer;
-		semimanufactures_number = $.trim($('#semimanufactures_number').val());
+		finished_number = $.trim($('#finished_number').val());
 		trade_name = $.trim($('#trade_name').val());
-		if($.trim($('#semimanufactures_number').val())!=''){
+		if($.trim($('#finished_number').val())!=''){
 			var reg = /^[a-zA-Z0-9_\-\u0391-\uFFE5 ]{1,30}$/;
-			if(!reg.test($('#semimanufactures_number').val())){
-				layer.tips('不允许有特殊字符，最多20个字符', '#semimanufactures_number', {tips: [1, '#34495E']});return;
+			if(!reg.test($('#finished_number').val())){
+				layer.tips('不允许有特殊字符，最多20个字符', '#finished_number', {tips: [1, '#34495E']});return;
 			}					
 		}
 		if($.trim($('#trade_name').val())!=''){
@@ -201,13 +207,13 @@ var TableInit = function () {
     };
 
     //得到查询的参数
-  oTableInit.queryParams = function (params) {
+    oTableInit.queryParams = function (params) {
         var temp = {   //这里的键的名字和控制器的变量名必须一直，这边改动，控制器也需要改成一样的
             limit: params.limit,   //页面大小
             offset: params.offset,  //页码
             maxrows: params.limit,
             search: params.search,
-            semimanufactures_number: semimanufactures_number,
+            finished_number: finished_number,
             trade_name: trade_name,
         };
         return temp;

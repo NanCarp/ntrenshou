@@ -370,13 +370,13 @@ function getProMessage(_obj){
 			$(".t1 tr").find("select").eq(0).find("option").removeAttr("selected");
 			$(".t1 tr").find("select").eq(0).find("option").each(function(k,v){				
 				if($(v).val()==data.id){					
-					$(v).attr("selected",true);
+					$(v).prop("selected",true);
 				}
 			}) 		
 			$(".t1 tr").find("select").eq(1).find("option").removeAttr("selected");
 			$(".t1 tr").find("select").eq(1).find("option").each(function(k,v){					
 				if($(v).val()==data.id){
-					$(v).attr("selected",true);
+					$(v).prop("selected",true);
 				}
 			}) 
 		}) 

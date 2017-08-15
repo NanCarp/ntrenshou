@@ -179,7 +179,11 @@ $(function(){
                         min: 0,
                         max: 20,
                         message: '最多20个字符'
-                    }
+                    },
+	                regexp:{
+						regexp:/^[0-9]*$/,
+						message:'请勿输入特殊字符'
+					}
 				}
 			}
 			,wechat: {

@@ -57,10 +57,35 @@ public class FinishedProductService {
 	 *@desc 自动生成成品编号,获取最大的编号
 	 *@author xuhui
 	 */
-	
-	
 	public static Record getMaxNum(){
 		String sql = "select MAX(finished_number) as num from finished_product";
 		return Db.findFirst(sql);
+	}
+	
+	/**
+	 * @desc 判断是否有该成品编号
+	 * @author xuhui
+	 */
+	public static Record Judge(String finished_number){
+		String sql = "select * from finished_product where finished_number ='"+finished_number+"'";
+		return Db.findFirst(sql);
+	}
+	
+	/**
+	 * @desc 判断该半成品是否有后续业务产生
+	 * @author xuhui
+	 */
+	public static boolean deleteOr(String ids){
+		String[] addid = ids.split(",");
+		boolean flag = false;
+		for(String s:addid){
+			Integer sid = Integer.parseInt(s);
+			String sql = "select * from finished_product_storage_detail where finished_product_id ="+sid;
+			Record record = Db.findFirst(sql);
+ 			if(record!=null){
+ 				flag = true;
+ 			} 
+		}	
+		return flag;
 	}
 }

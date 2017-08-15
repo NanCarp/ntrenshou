@@ -43,8 +43,11 @@
  body{  
     overflow-x: hidden;   
  }
- .inputclass{text-align:center;padding:0;width: 72px;height: 26px} 
- .selectclass{padding:0 0 0 2px;width: 168px;height: 26px}
+ .inputclass{text-align:center;padding:0;width: 60px;height: 26px;margin-left: 10px} 
+ .selectclass{padding:0 0 0 2px;width: 152px;height: 26px;;margin-left: 16px;}
+.has-feedback .form-control {
+    padding-right: 0px;
+}
 </style>
 <body>
 <form class="form-horizontal" role="form" style="margin-top: 20px" id="defaultForm">
@@ -123,15 +126,16 @@
               <tbody>
               	<#if rlist?? &&rlist?size gt 0>
               	<#list rlist as r>
-           		<tr>
+           		<tr class="data">
            			<td><input type="checkbox" name="sub" value="" ><input hidden="" value="${r.id!}"></td>
            			<td></td>
            			<td>${r.semimanufactures_number}</td>
            			<td>${r.trade_name}</td>
            			<td>${r.specifications}</td>
            			<td>${r.measurement_unit}</td>
-           			<td style="width: 72px"><input type="text"   class="form-control inputclass" name="${r.semimanufactures_number}" id="${r.semimanufactures_number}" value="${r.num}"></td>
+           			<td style="width: 72px"><div class="form-group"><input type="text"   class="form-control inputclass" name="quantity" id="${r.semimanufactures_number}" value="${r.num}"></div></td>
            			<td style="width: 168px">
+           			<div class="form-group">
            			<select class="form-control selectclass" name="cage_name" id="cage_name">
      					<option value="">--选择对应仓库--</option>
                 		<#if im?? &&im?size gt 0>
@@ -140,6 +144,7 @@
                			</#list>
 						</#if>
             		</select>
+            		<div>
            			</td>
            		</tr> 
            		</#list>
@@ -152,7 +157,7 @@
 	</div>
     <div class="form-group" style="padding-left: 16px">
         <div class="col-xs-8">
-            <button id="v" type="submit" class="btn btn-primary">　保存　</button>
+            <button id="submit" type="button" class="btn btn-primary">　保存　</button>
         </div>
     </div>
 </form>
@@ -173,11 +178,86 @@
 document.onkeydown = function(e) {
     var e = e || event;
     if(e.keyCode == 13) {
-    	 $("#ProductCodeInfo").keydown(function (e) {
-			 AddProduct(this);
-    	})
-        e.preventDefault ? e.preventDefault() : (e.returnValue = false);
+		AddProduct(this);
+   	    e.preventDefault ? e.preventDefault() : (e.returnValue = false);
     }
+}
+
+
+//提交
+$('#submit').click(function () {
+	// 绑定校验
+	var validator = bindValidator('tbody');
+	console.log(validator);
+	validator.data('bootstrapValidator').validate();
+	if (!validator.data('bootstrapValidator').isValid()) {
+		return; // 校验不通过，禁止提交
+	}
+	
+	var list = new Array(); // 产品列表
+    $("tbody tr[class='data']").each(function(k,v){
+        var num = $(this).find("input").eq(2).val();
+        var warehouse_id = $(v).find("option:selected").val();
+        var data = {"semimanufactures_number":$(v).find("td").eq(2).html(),"warehouse_id":warehouse_id,"num":num};
+        list[k] = data;
+    })
+     // 无数据，禁止提交
+    if (list.length == 0) {
+        layer.msg("请添加产品数据", {time: 2000});
+        return;
+    }
+    console.log(JSON.stringify(list));
+    var id = $("#id").val(); // 入库单 id
+    $.post("/private/semiin/saveSemiIn", {"list":JSON.stringify(list),"id":id}, function(result) {
+        if (result) {
+            parent.layer.msg("保存成功", {time: 2000}, function(){
+                layer_close();
+                parent.parent.refresh_iframe();
+            });
+        } else {
+            parent.layer.msg("保存失败", {time: 2000});
+        }
+        
+    });
+});
+//绑定校验
+function bindValidator(obj){
+    // 表单校验
+    var validator = $(obj).bootstrapValidator({
+        //message: 'This value is not valid',
+        feedbackIcons: {
+            valid: 'glyphicon glyphicon-ok',
+            invalid: 'glyphicon glyphicon-remove',
+            validating: 'glyphicon glyphicon-refresh'
+        },
+        fields: {
+            cage_name: {
+                validators: {
+                    notEmpty:{
+                        message: '不能为空!'
+                    },
+                }
+            },
+            quantity: {
+                validators: {
+                    notEmpty:{
+                        message: '不能为空!'
+                    },
+                    regexp: {
+                        regexp: /^[0-9]+(\.[0-9]{1,})?$/,
+                        message: '请输入正确的数量'
+                    },
+                    stringLength: {
+                        min: 0,
+                        max: 20,
+                        message: '不能超过 20 个字符',
+                    }
+                }
+            }
+
+        }
+    });
+    return validator;
 }
 
 $(function(){
@@ -185,44 +265,7 @@ $(function(){
 	  $("#ProductCodeInfo").keydown(function (e) {
 			 AddProduct(this);
     }) 
-	// 表单校验
-	$('form').bootstrapValidator({
-		message: 'This value is not valid',
-		feedbackIcons: {
-			valid: 'glyphicon glyphicon-ok',
-			invalid: 'glyphicon glyphicon-remove',
-			validating: 'glyphicon glyphicon-refresh'
-		},
-		fields: {
-			
-		}
-	});
 })
-.on('success.form.bv', function(e) {
-	e.preventDefault();
-	var list = new Array();
-	var flag = true;
-	$("tbody tr").each(function(k,v){
-		var num = $(this).find("input").eq(2).val();
-		var warehouse_id = $(v).find("option:selected").val();
-		var data = {"semimanufactures_number":$(v).find("td").eq(2).html(),"warehouse_id":warehouse_id,"num":num};
-		list[k] = data;
-	})
-	console.log(JSON.stringify(list));
-	var id = $("#id").val();
-	if(flag){
-		$.post("/private/semiin/saveSemiIn", {"list":JSON.stringify(list),"id":id}, function(result) {
-			if (result) {
-	            parent.layer.msg("保存成功", {time: 2000}, function(){
-	                layer_close();
-	                parent.parent.refresh_iframe();
-	            });
-	        } else {
-	            parent.layer.msg("保存失败", {time: 2000});
-	        }
-		});
-	}
-});
 
 function _add(obj){
 	open_window('新增半成品入库','/private/semiin/addEdit', 720, 540);
@@ -240,23 +283,23 @@ function addcontant(data){
 		if(flag){
 			$.post("/private/semiin/getSemiByNum",{"num":data[r]},function(record){
 				$("tbody").append(
-						"<tr>"
+						"<tr class='data'>"
 	           			+"<td><input type='checkbox' name='sub' value=''><input hidden=''></td>"
 	           			+"<td></td>"
 	           			+"<td>"+record.semimanufactures_number+"</td>"
 	           			+"<td>"+record.trade_name+"</td>"
 	           			+"<td>"+record.specifications+"</td>"
 	           			+"<td>"+record.measurement_unit+"</td>"
-	           			+"<td><input class='form-control inputclass' value='1'></td>"
+	           			+"<td><div class='form-group'><input class='form-control inputclass' value='1' name='quantity'></div></td>"
 	           			+"<td>"
-	           			+"<select class='form-control selectclass' name='cage_name' id='cage_name'>"
-	     					+"<option>--选择对应仓库--</option>"
+	           			+"<div class='form-group'><select class='form-control selectclass' name='cage_name' id='cage_name'>"
+	     					+"<option value=''>--选择对应仓库--</option>"
 	                		+"<#if im?? &&im?size gt 0>"
 							+"<#list im as record>"
 							+"<option id='${record.id}' value='${record.id}'>${record.rwarehouse_name}${record.awarehouse_name}${record.warehouse_name}</option>"
 	               			+"</#list>"
 							+"</#if>"
-	            		+"</select>"
+	            		+"</select></div>"
 	           			+"</td>"
 	           		+"</tr>"		
 				)
@@ -266,13 +309,6 @@ function addcontant(data){
 	}
 }
 
-/* //删除页面数据
-function _batchDelete(){
-	$("input[name='sub']:checked").each(function(k,v){
-		   $(v).parent().parent().remove();
-		   sort();
-	   })	
-} */
 
 //修改页面数据
 function _edit(_obj){
@@ -327,7 +363,7 @@ function AddProduct(self) {
     var barcode = $.trim($(self).val());
     var flag = true;
     if(barcode!=null){
-    	if(barcode.length>9){   			
+    	if(barcode.length>5){   			
    			$("tbody tr").each(function(k,v){
    				if(barcode == $(v).find("td").eq(2).html()){
    					parent.layer.msg("该条码已经录入", {time: 2000});
@@ -340,38 +376,36 @@ function AddProduct(self) {
    					console.log(record);
    					if(record!=null){
    						$("tbody").append(
-   	   							"<tr>"
+   	   							"<tr class='data'>"
    	   		           			+"<td><input type='checkbox' name='sub' value=''><input hidden=''></td>"
    	   		           			+"<td></td>"
    	   		           			+"<td>"+record.semimanufactures_number+"</td>"
    	   		           			+"<td>"+record.trade_name+"</td>"
    	   		           			+"<td>"+record.specifications+"</td>"
    	   		           			+"<td>"+record.measurement_unit+"</td>"
-   	   		           			+"<td><input class='form-control inputclass' value='1'></td>"
+   	   		           			+"<td><div class='form-group'><input class='form-control inputclass' value='1' name='quantity'></div></td>"
    	   		           			+"<td>"
-   	   		           			+"<select class='form-control selectclass' name='cage_name' id='cage_name'>"
-   	   		     					+"<option>--选择对应仓库--</option>"
+   	   		           			+"<div class='form-group'><select class='form-control selectclass' name='cage_name' id='cage_name'>"
+   	   		     					+"<option value=''>--选择对应仓库--</option>"
    	   		                		+"<#if im?? &&im?size gt 0>"
    	   								+"<#list im as record>"
    	   								+"<option id='${record.id}' value='${record.id}'>${record.rwarehouse_name}${record.awarehouse_name}${record.warehouse_name}</option>"
    	   		               			+"</#list>"
    	   								+"</#if>"
-   	   		            		+"</select>"
+   	   		            		+"</select></div>"
    	   		           			+"</td>"
    	   		           		+"</tr>"		
    	   					)
    	   					sort();
    	   					$(self).val("");
-   					}else{
+   					}/* else{
    						parent.layer.msg("请录入正确的半成品条码", {time: 2000});
    						$(self).val("");
-   					}
-
+   					} */
    				})
     		}
-    	}
-    }
-    $(self).val("");
+    	}	
+    } 
 }
 
 </script>

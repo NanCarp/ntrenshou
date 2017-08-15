@@ -9,7 +9,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>成品出库-新增/修改</title>
+    <title>半成品出库-新增/修改</title>
 
     <!-- Bootstrap Core CSS -->
     <link href="../../../vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
@@ -61,42 +61,96 @@
 <form class="form-horizontal" role="form" style="margin-top: 20px" id="defaultForm">
 	<#if outgoing??>
 	<input hidden="" name="finished_product_outgoing_id" id="finished_product_outgoing_id" value="${outgoing.id!}">       
-	<div style="display: inline-block;margin-left: 20px">
-	    <div class="form-group">
-	        <label class="col-xs-4 control-label text-right" for="outgoing_number">出库单号：</label>
-	        <div class="col-xs-8">
-	            <input class="form-control text-left" id="storage_number" type="text" placeholder="出库单号" name="outgoing_number" value="${outgoing.outgoing_number!}" readonly/>
-	        </div>
-	    </div>
-	</div>
-	<div style="display: inline-block;margin-left: 40px">
-	     <div class="form-group">
-	        <label class="col-xs-4 control-label text-right" for="t_user_id">出库人：</label>
-	        <div class="col-xs-8">
-	            <input style="padding-right: 2px" class="form-control text-left" id="t_user_id" type="text" placeholder="出库人" name="t_user_id" value="${outgoing.user_name!}" readonly/>
-	        </div>
-	    </div>
-	</div>
+	<div class="col-xs-6">
+        <div>
+            <div class="form-group">
+                <label class="col-xs-4 control-label text-right" for="storage_number">出库单号：</label>
+                <div class="col-xs-8">
+                    <input class="form-control text-left" id="storage_number" type="text" placeholder="系统自动生成" name="storage_number" value="${outgoing.outgoing_number!}" readonly/>
+                </div>
+            </div>
+        </div>
+        <div>
+            <div class="form-group">
+                <label class="col-xs-4 control-label text-right" for="company_id">客户名 ：</label>
+                <div class="col-xs-8">
+                    <select class="form-control" name="company_id" id="company_id">
+                       <option value="">请选择客户</option>
+                       <#if companyList?? && companyList?size gt 0>
+                       <#list companyList as company>
+                       <option value="${company.id}" <#if outgoing.company_id = company.id>selected</#if> >${company.company_name}</option>
+                       </#list>
+                       </#if>
+                    </select>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xs-6">
+        <div>
+             <div class="form-group">
+                <label class="col-xs-4 control-label text-right" for="t_user_id">出库人：</label>
+                <div class="col-xs-8">
+                    <input class="form-control text-left" id="t_user_id" type="text" placeholder="系统自动录入" name="t_user_id" value="${outgoing.user_name!}" readonly/>
+                </div>
+            </div>
+        </div>
+        <div>
+             <div class="form-group">
+                <label class="col-xs-4 control-label text-right" for="remark">　　备注：</label>
+                <div class="col-xs-8">
+                    <input class="form-control text-left" id="remark" type="text" placeholder="备注" name="remark"  value="${outgoing.remark!}"/>
+                </div>
+            </div>
+        </div>
+    </div>
 	<#else>
-	<input id="id" name="id" value="" hidden="">
-	<div style="display: inline-block;margin-left: 16px">
-	    <div class="form-group">
-	        <label class="col-xs-4 control-label text-right" for="storage_number">出库单号：</label>
-	        <div class="col-xs-8">
-	            <input class="form-control text-left" id="storage_number" type="text" placeholder="系统自动生成" name="storage_number" value="" disabled="disabled"/>
+	<input id="id" name="finished_product_outgoing_id" value="" hidden="">
+	<div class="col-xs-6">
+		<div>
+		    <div class="form-group">
+		        <label class="col-xs-4 control-label text-right" for="storage_number">出库单号：</label>
+		        <div class="col-xs-8">
+		            <input class="form-control text-left" id="storage_number" type="text" placeholder="系统自动生成" name="storage_number" value="" readonly/>
+		        </div>
+		    </div>
+		</div>
+		<div>
+            <div class="form-group">
+                <label class="col-xs-4 control-label text-right" for="company_id">客户名 ：</label>
+                <div class="col-xs-8">
+                    <select class="form-control" name="company_id" id="company_id">
+                       <option value="">请选择客户</option>
+                       <#if companyList?? && companyList?size gt 0>
+                       <#list companyList as company>
+                       <option value="${company.id}">${company.company_name}</option>
+                       </#list>
+                       </#if>
+                    </select>
+                </div>
+            </div>
+        </div>
+	</div>
+	<div class="col-xs-6">
+	    <div>
+             <div class="form-group">
+                <label class="col-xs-4 control-label text-right" for="t_user_id">出库人：</label>
+                <div class="col-xs-8">
+                    <input class="form-control text-left" id="t_user_id" type="text" placeholder="系统自动录入" name="t_user_id" value="" readonly/>
+                </div>
+            </div>
+        </div>
+	    <div>
+	         <div class="form-group">
+	            <label class="col-xs-4 control-label text-right" for="remark">　　备注：</label>
+	            <div class="col-xs-8">
+	                <input class="form-control text-left" id="remark" type="text" placeholder="备注" name="remark"/>
+	            </div>
 	        </div>
 	    </div>
-	</div>
-	<div style="display: inline-block;margin-left: 40px;">
-	     <div class="form-group">
-	        <label class="col-xs-4 control-label text-right" for="t_user_id">出库人：</label>
-	        <div class="col-xs-8">
-	            <input class="form-control text-left" id="t_user_id" type="text" placeholder="系统自动录入" name="t_user_id" value="" disabled="disabled"/>
-	        </div>
-	    </div>
-	</div>
+    </div>
 	</#if>
-	<div>
+	<div style="width:100%;height:110px;"></div>
 <div id="wrapper">
 	<div class="panel-body" style="padding-bottom:0px;">
 		<div class="panel panel-default">		
@@ -108,13 +162,7 @@
 		                </div>	          
                         <div class="col-sm-2 col-xs-6 head_1" style="padding-left: 0;margin-left: 0">
 		                     <button class="btn btn-4" type="button" onclick="_batchDelete()">删除</button>
-		                </div>
-		                 <div class="col-sm-2 col-xs-3 head_2" style="margin-top: 6px;margin-left: 300px;text-align: right;">
-                            <span style="font-size: 18px">产品编号:</span>
-                        </div> 
-		                <div class="col-sm-3 col-xs-4 head_2" style="margin-left: 0px">
-                            <input type="text" class="form-control" placeholder="扫码点击此处" name="ProductCodeInfo" id="ProductCodeInfo" value="" >
-                        </div>          									                            									                 
+		                </div>         									                            									                 
 					</div>				
 				</div>
 			</div>		
@@ -141,15 +189,15 @@
                         <input type="checkbox" name="sub" value="" >
                         <input hidden="" name="id" value="${outgoingDetail.stock_detail_id!}">
                         <input hidden="" name="warehouse_id" value="${outgoingDetail.warehouse_id!}">
-                        <input hidden="" name="finished_product_id" value="${outgoingDetail.finished_product_id!}">
+                        <input hidden="" name="semimanufactures_id" value="${outgoingDetail.semimanufactures_id!}">
                     </td>
                     <td>${outgoingDetail_index+1}</td>
-                    <td>${outgoingDetail.finished_number!}</td>
+                    <td>${outgoingDetail.semimanufactures_number!}</td>
                     <td>${outgoingDetail.trade_name!}</td>
                     <td>${outgoingDetail.specifications!}</td>
                     <td>${outgoingDetail.measurement_unit!}</td>
                     <td>${outgoingDetail.remark!}</td>
-                    <td>${outgoingDetail.warehouse_id!}</td>
+                    <td>${outgoingDetail.warehouse_name!}</td>
                     <!-- <td>${outgoingDetail.num!}</td> -->
                     <td class="num"><div class="form-group form-group-sm"><input class="form-control" type="text" name="num" value="${outgoingDetail.num!}"/></div></td>
                 </tr>
@@ -162,7 +210,6 @@
 		</div>             
 	</div>
 </div>
-	</div>
     <div class="form-group" style="padding-left: 16px">
         <div class="col-xs-8">
             <button id="submit" type="button" class="btn btn-primary">　保存　</button>
@@ -196,21 +243,23 @@ document.onkeydown = function(e) {
 // 提交
 $('#submit').click(function () {
 	// 绑定校验
-	var validator = bindValidator('tbody');
+	var validator = bindValidator('form');
 	validator.data('bootstrapValidator').validate();
 	if (!validator.data('bootstrapValidator').isValid()) {
 		return; // 校验不通过，禁止提交
 	}
-	
 	var outgoingDetailList = getRecordList(); // 出库详情列表
 	// 无数据，禁止提交
 	if (outgoingDetailList.length == 0) {
 		layer.msg("请添加产品数据", {time: 2000});
 		return;
 	}
+	//var outgoingDetailList = getRecordList(); // 出库详情列表
     var id = $("#finished_product_outgoing_id").val(); // 出库单 id
+    var company_id = $('#company_id').val(); // 客户 id
+    var remark = $('#remark').val() // 备注
     // console.log(JSON.stringify(outgoingDetailList));return;
-    $.post("/private/finishedout/save", {"outgoingDetailList": JSON.stringify(outgoingDetailList), "id": id}, function(result) {
+    $.post("/private/semiout/save", {"outgoingDetailList":JSON.stringify(outgoingDetailList), "id": id,"company_id":company_id,"remark":remark}, function(result) {
     	if (result.isSuccess) {
             parent.layer.msg(result.tips, {time: 2000}, function(){
                 layer_close();
@@ -226,15 +275,15 @@ $('#submit').click(function () {
 function getRecordList() {
 	var recordList = [];
 	 
-	$('tbody tr[class="data"]').each(function () {
+	$('tbody tr[class = "data"]').each(function () {
 	    $tr = $(this);
 	    var id = $tr.find('input[name="id"]').val(); // 成品库存detail id
-	    var finished_product_id = $tr.find('input[name="finished_product_id"]').val(); // 成品 id
+	    var semimanufactures_id = $tr.find('input[name="semimanufactures_id"]').val(); // 成品 id
 	    var warehouse_id = $tr.find('input[name="warehouse_id"]').val(); // 仓库 id
 	    var num = $tr.find('input[name="num"]').val(); // 出库数量
 	    var record = {};
 	    record.id = id;
-	    record.finished_product_id = finished_product_id;
+	    record.semimanufactures_id = semimanufactures_id;
 	    record.warehouse_id = warehouse_id;
 	    record.num = num;
 	    console.log(record);
@@ -270,8 +319,23 @@ function bindValidator(obj){
                         message: '不能超过 20 个字符',
                     }
                 }
+            },
+            company_id: {
+                validators: {
+                    notEmpty:{
+                        message: '不能为空!'
+                    } 
+                }
+            },
+            remark: {
+                validators: {
+                    stringLength: {
+                        min: 0,
+                        max: 100,
+                        message: '不能超过 100 个字符',
+                    }
+                }
             }
-
         }
     });
     return validator;
@@ -284,7 +348,7 @@ $(stockList).each(function () {
 });
 // 选择产品列表页面
 function _add(){
-	open_window('新增成品出库','/private/finishedout/getStockList', 720, 540);
+	open_window('新增成品出库','/private/semiout/getStockList', 720, 540);
 }
 
 // 产品数据展示到页面
@@ -328,15 +392,15 @@ function addProduct(obj) {
                         '<input type="checkbox" name="sub" value="" >'+
                         '<input hidden="" name="id" value="' + obj.id + '">'+
                         '<input hidden="" name="warehouse_id" value="' + obj.warehouse_id + '">'+
-                        '<input hidden="" name="finished_product_id" value="' + obj.finished_product_id + '">'+
+                        '<input hidden="" name="semimanufactures_id" value="' + obj.semimanufactures_id + '">'+
                     '</td>'+
                     '<td></td>'+
-                    '<td name="finished_number">' + obj.finished_number + '</td>'+
+                    '<td name="semimanufactures_number">' + obj.semimanufactures_number + '</td>'+
                     '<td>' + obj.trade_name + '</td>'+
                     '<td>' + obj.specifications + '</td>'+
                     '<td>' + obj.measurement_unit + '</td>'+
                     '<td>' + obj.remark + '</td>' +
-                    '<td>' + obj.warehouse_id + '</td>' +
+                    '<td>' + obj.warehouse_name + '</td>' +
                     //'<td>' + obj.num + '</td>' +
                     '<td>'+
                         '<div class="form-group form-group-sm">'+
@@ -348,8 +412,10 @@ function addProduct(obj) {
 }
 
 // 编辑产品出库数量详细
-function _edit(finished_number) {
-	open_window('成品出库详情','/private/finishedout/getStockDetailByProductNo/' + finished_number, 720, 540);
+function _edit(semimanufactures_number) {
+	console.log(typeof semimanufactures_number);
+	console.log(semimanufactures_number);
+	open_window('成品出库详情','/private/semiout/getStockDetailByProductNo/' + semimanufactures_number, 720, 540);
 }
 
 
@@ -415,7 +481,7 @@ function AddProduct(self) {
     							"<tr>"
     		           			+"<td><input type='checkbox' name='sub' value=''><input hidden=''></td>"
     		           			+"<td></td>"
-    		           			+"<td>"+record.finished_number+"</td>"
+    		           			+"<td>"+record.semimanufactures_number+"</td>"
     		           			+"<td>"+record.trade_name+"</td>"
     		           			+"<td>"+record.specifications+"</td>"
     		           			+"<td>"+record.measurement_unit+"</td>"

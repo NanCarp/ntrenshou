@@ -2,7 +2,6 @@ package renshou.system.user;
 
 import java.io.UnsupportedEncodingException;
 import java.security.NoSuchAlgorithmException;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -18,18 +17,18 @@ import renshou.utils.MD5Util;
  * @ClassName: AuthorityController
  * @Description: 系统管理_用户管理
  * @author: xuhui
- * @date: 2017年5月15日下午2:00:00
+ * @date: 2017年8月3日下午2:00:00
  * @version: 1.0 版本初成
  */
 @Before(ManageInterceptor.class)
 public class UserController extends Controller {
 	public void index() {
-	    // 公司名称
-        String company = getPara("username","").trim();
-        setAttr("username", company);
+	    // 用户名称
+        String username = getPara("username","").trim();
+        setAttr("username", username);
         // 查询条件
         Map<String,Object> params = new HashMap<>();
-        params.put("company", company);
+        params.put("username", username);
         // 用户列表
         List<Record> userList =  UserService.getUserList(params);
         setAttr("userList", userList);
@@ -47,17 +46,11 @@ public class UserController extends Controller {
             // 用户
             Record user = UserService.getUserById(id);
             setAttr("user", user);
-            // 公司 id
-            Integer companyId = user.getInt("company_id");
-            // 角色列表
-            List<Record> roleList = UserService.getRoleByCompanyId(companyId);
-            setAttr("roleList", roleList);
         }
-
-        // 公司列表
-        List<Record> companyList = UserService.getCompanyList();
-        setAttr("companyList", companyList);
-
+        // 角色列表
+        List<Record> roleList = UserService.getRoleList();
+        setAttr("roleList", roleList);
+        
 		render("user-detail.html");
 	}
 
@@ -65,18 +58,14 @@ public class UserController extends Controller {
 	public void saveUser() throws NoSuchAlgorithmException, UnsupportedEncodingException {
 	    // 账号 id
         Integer id = getParaToInt("id");
-	    // 账号名
+	    // 账号
         String account = getPara("account");
-        // 公司 id
-        String companyId = getPara("companyId");
-        //账户密码
+        // 账户密码
         String pwd = getPara("password");
-        // 部门 id
-        //String departmentId = getPara("departmentId");
         // 角色 id
         String roleId = getPara("roleId");
-        // 当前时间
-        Date now = new Date();
+        // 姓名
+        String user_name = getPara("user_name");
         // 保存结果
         boolean result = false;
         // 返回信息
@@ -89,13 +78,11 @@ public class UserController extends Controller {
             renderJson(response);
             return;
         }
-        //
+        
         Record record = new Record();
-        record.set("account", account);
-        record.set("company_id", companyId);
-        //record.set("department_id", departmentId);
         record.set("role_id", roleId);
-        record.set("review_time", now);// 修改时间
+        record.set("account", account);
+        record.set("user_name", user_name);
         if (id != null) {// 编辑
             // 密码
             Record user = Db.findById("t_user", id);           
@@ -107,7 +94,6 @@ public class UserController extends Controller {
             
         } else {// 新增            
             record.set("password", MD5Util.getEncryptedPwd(pwd));
-            record.set("create_time", now);
             result = Db.save("t_user", record);
             response.put("isSuccess", result);
             response.put("tips", result ? "保存成功": "保存失败");
@@ -161,6 +147,20 @@ public class UserController extends Controller {
         List<Record> roleList = UserService.getRoleByCompanyId(companyId);
 
         renderJson(roleList);
+    }
+    
+    /**
+     * @desc:冻结或启用账号
+     * 1：启用，0：冻结
+     */
+    public void freezeOrEnable() {
+        // 账号 id
+        Integer id = getParaToInt("id");
+
+        // 启用或冻结公司操作结果
+        boolean result = UserService.freezeOrEnable(id);
+        
+        renderJson(result);
     }
     
 }

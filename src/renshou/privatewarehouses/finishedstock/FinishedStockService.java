@@ -44,7 +44,8 @@ public class FinishedStockService {
 		        + " b.finished_number,b.trade_name,b.specifications,b.measurement_unit,b.remark ";
 		String sql = " FROM finished_product_stock AS a "
                 + " LEFT JOIN finished_product AS b "
-                + " ON a.finished_product_id = b.id ";
+                + " ON a.finished_product_id = b.id "
+                + " WHERE 1=1 ";
 		
 		if(finished_number!=null&&finished_number!=""){
 			sql += " and finished_number like '%"+finished_number+"%'";
@@ -66,7 +67,7 @@ public class FinishedStockService {
 		        + " FROM finished_product_stock AS a "
 		        + " LEFT JOIN finished_product AS b "
 		        + " ON a.finished_product_id = b.id "
-		        + " WHERE a.finished_product_id = ? ";
+		        + " WHERE a.id = ? ";
 		return Db.findFirst(sql, id);
 	}
 	
@@ -93,8 +94,8 @@ public class FinishedStockService {
 	 * @desc 根据库存id查询成品id
 	 * @author liyu
 	 */
-	public static Record getSeimId(Integer id){
-		return Db.findById("semimanufactures_stock", id);
+	public static Record getFinishedId(Integer id){
+		return Db.findById("finished_product_stock", id);
 	}
 	
 	/**
@@ -109,14 +110,14 @@ public class FinishedStockService {
 			public boolean run() throws SQLException {
 				// TODO Auto-generated method stub
 				for(String id:allid){
-					Record record =FinishedStockService.getSeimId(Integer.parseInt(id));
+					Record record =FinishedStockService.getFinishedId(Integer.parseInt(id));
 					System.out.println(Integer.parseInt(id));
 					System.out.println(record);
 					if(record!=null){
-						Integer semimanufactures_id =record.getInt("semimanufactures_id");
-						Db.update("DELETE FROM semimanufactures_stock_detail WHERE semimanufactures_id ="+semimanufactures_id);
+						Integer finished_product_id =record.getInt("finished_product_id");
+						Db.update("DELETE FROM finished_product_stock_detail WHERE finished_product_id ="+finished_product_id);
 					}
-					result = Db.deleteById("semimanufactures_stock", "id", id);	
+					result = Db.deleteById("finished_product_stock", "id", id);	
 				}
 				return result;
 			}
@@ -186,16 +187,16 @@ public class FinishedStockService {
 				return true;
 			}
 		});
-		return true;
+		return flag;
 	}
 	
 	/**
 	 * @desc 统计库存明细表GROUP BY成品id的所有数据
 	 * @author liyu
 	 */
-	public static List<Record> getSemiStocklistBySemiid(){
-		String sql = "select * from(SELECT semimanufactures_id,SUM(num) as semimanufactures_stock_num FROM"
-				+ " semimanufactures_stock_detail GROUP BY semimanufactures_id) s";
+	public static List<Record> getFinishedStocklistByFinishedid(){
+		String sql = "select * from(SELECT finished_product_id,SUM(num) as finished_product_stock_num FROM"
+				+ " finished_product_stock_detail GROUP BY finished_product_id) s";
 		return Db.find(sql);
 	}
 	
@@ -269,7 +270,6 @@ public class FinishedStockService {
 			out.flush();
 			out.close();	
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return true;

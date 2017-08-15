@@ -1,6 +1,7 @@
 package renshou.database.semimanufactures;
 
 import java.sql.SQLException;
+import java.util.List;
 
 import com.jfinal.plugin.activerecord.Db;
 import com.jfinal.plugin.activerecord.IAtom;
@@ -58,4 +59,32 @@ public class SemimanufactureService {
 		String sql = "select MAX(semimanufactures_number) as num from semimanufactures";
 		return Db.findFirst(sql);
 	}
+	
+	/**
+	 * @desc 判断是否有该成品编号
+	 * @author xuhui
+	 */
+	public static Record Judge(String semimanufactures_number){
+		String sql = "select * from semimanufactures where semimanufactures_number ='"+semimanufactures_number+"'";
+		return Db.findFirst(sql);
+	}
+	
+	/**
+	 * @desc 判断该半成品是否有后续业务产生
+	 * @author xuhui
+	 */
+	public static boolean deleteOr(String ids){
+		String[] addid = ids.split(",");
+		boolean flag = false;
+		for(String s:addid){
+			Integer sid = Integer.parseInt(s);
+			String sql = "select * from semimanufactures_storage_detail where semimanufactures_id ="+sid;
+			Record record = Db.findFirst(sql);
+ 			if(record!=null){
+ 				flag = true;
+ 			} 
+		}	
+		return flag;
+	}
+	
 }

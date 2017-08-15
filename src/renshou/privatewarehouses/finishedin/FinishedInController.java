@@ -4,12 +4,16 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.jfinal.aop.Before;
 import com.jfinal.core.Controller;
 import com.jfinal.plugin.activerecord.Record;
+
+import renshou.interceptor.ManageInterceptor;
 /**
  * @author liyu
  * @desc 自用仓库管理-成品入库管理
  */
+@Before(ManageInterceptor.class)
 public class FinishedInController extends Controller {
 
 	/**
@@ -84,13 +88,15 @@ public class FinishedInController extends Controller {
 	 */
 	public void saveFinishedIn(){
 		Record admin = (Record) getSession().getAttribute("admin");
-		//Integer t_user_id = admin.getInt("id");
+		System.out.println(admin);
+		Integer t_user_id = admin.getInt("id");
+		//Integer t_user_id = 1; // TODO
 		String storage_number = FinishedInService.getStorageNo();
 		//System.out.println(storage_number);
 		String list = getPara("list");
 		Integer id = getParaToInt("id");
 		
-		boolean flag = FinishedInService.saveFinishedIn(storage_number, list, id);
+		boolean flag = FinishedInService.saveFinishedIn(storage_number, list, id, t_user_id);
 		System.out.println(flag);
 		renderJson(flag);
 	}

@@ -56,7 +56,7 @@
 			</table>
 		</div>
 		<div class="imgdiv">
-			<img class="${storage.product_num!}"/>
+			<img class="_${storage.product_num!}"/>
 		</div>
 	</div>
 	</#list>
@@ -98,7 +98,7 @@
 $(function(){
 	$('.contant').each(function(k,v){
 		var code=$(v).find("td").eq(1).html();
-		JsBarcode("."+code,code, {
+		JsBarcode("._"+code,code, {
 			  format: "CODE128",//选择要使用的条形码类型
 			  width:3,//设置条之间的宽度
 			  height:60,//高度

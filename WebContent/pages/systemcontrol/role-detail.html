@@ -28,58 +28,32 @@
 <body style="width: 90%">
     <form class="form-horizontal" role="form" style="margin-top: 20px" id="defaultForm">
         <#if role??>
-            <input hidden="" name="id" value="${role.id}">
-            <div class="form-group">
-                <label class="col-xs-4 control-label text-right" for="companyId">公司：</label>
-                <div class="col-xs-6">
-                    <select class="form-control" id="companyId" name="companyId">
-                        <option value="">请选择公司</option>
-                        <#if companyList??>
-                            <#list companyList as company>
-                                <option value="${company.id}" <#if company.id == role.company_id>selected</#if>>${company.company_name}</option>
-                            </#list>
-                        </#if>
-                    </select>
-                </div>
+        <input hidden="" name="id" value="${role.id}">
+        <div class="form-group">
+            <label class="col-xs-4 control-label text-right" for="role">角色：</label>
+            <div class="col-xs-6">
+                <input class="form-control" id="role" type="text" placeholder="角色" name="role" value="${role.role_type}"/>
             </div>
-            <div class="form-group">
-                <label class="col-xs-4 control-label text-right" for="role">角色：</label>
-                <div class="col-xs-6">
-                    <input class="form-control" id="role" type="text" placeholder="角色" name="role" value="${role.role_type}"/>
-                </div>
-            </div>          
-            <div class="form-group">
-                <label class="col-xs-4 control-label text-right" for="remark" style="padding-top: 0">备注：</label>
-                <div class="col-xs-6">
-                    <textarea class="form-control" id="remark" name="remark">${role.remark!}</textarea>
-                </div>
+        </div>          
+        <div class="form-group">
+            <label class="col-xs-4 control-label text-right" for="remark" style="padding-top: 0">备注：</label>
+            <div class="col-xs-6">
+                <textarea class="form-control" id="remark" name="remark">${role.remark!}</textarea>
             </div>
-            <#else>
-              <div class="form-group">
-                    <label class="col-xs-4 control-label text-right" for="companyId">公司：</label>
-                    <div class="col-xs-6">
-                        <select class="form-control" id="companyId" name="companyId">
-                            <option value="">请选择公司</option>
-                            <#if companyList??>
-                                <#list companyList as company>
-                                    <option value="${company.id}">${company.company_name}</option>
-                                </#list>
-                            </#if>
-                        </select>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="col-xs-4 control-label text-right" for="role">角色：</label>
-                    <div class="col-xs-6">
-                        <input class="form-control" id="role" type="text" placeholder="角色" name="role"/>
-                    </div>
-                </div>             
-                <div class="form-group">
-                    <label class="col-xs-4 control-label text-right" for="remark" style="padding-top: 0">备注：</label>
-                    <div class="col-xs-6">
-                        <textarea class="form-control" id="remark" name="remark"></textarea>
-                    </div>
-                </div>
+        </div>
+        <#else>
+        <div class="form-group">
+            <label class="col-xs-4 control-label text-right" for="role">角色：</label>
+            <div class="col-xs-6">
+                <input class="form-control" id="role" type="text" placeholder="角色" name="role"/>
+            </div>
+        </div>             
+        <div class="form-group">
+            <label class="col-xs-4 control-label text-right" for="remark" style="padding-top: 0">备注：</label>
+            <div class="col-xs-6">
+                <textarea class="form-control" id="remark" name="remark"></textarea>
+            </div>
+        </div>
         </#if>
         <div class="form-group">
             <label class="col-xs-4 control-label" for="v"></label>
@@ -115,13 +89,6 @@
                             max: 20,
                             message: '最多20个字符'
                         }
-                    }
-                },
-                company: {
-                    validators: {
-                        notEmpty: {
-                            message: '所属公司不能为空'
-                        },
                     }
                 },
                 remark: {

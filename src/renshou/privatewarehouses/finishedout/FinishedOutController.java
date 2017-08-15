@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.alibaba.fastjson.JSONObject;
+import com.jfinal.aop.Before;
 import com.jfinal.core.Controller;
 import com.jfinal.json.FastJson;
 import com.jfinal.kit.JsonKit;
@@ -14,6 +15,7 @@ import com.jfinal.plugin.activerecord.Db;
 import com.jfinal.plugin.activerecord.Page;
 import com.jfinal.plugin.activerecord.Record;
 
+import renshou.interceptor.ManageInterceptor;
 import renshou.leasewarehouse.in.LeaseInService;
 import renshou.leasewarehouse.out.LeaseOutService;
 import renshou.privatewarehouses.finishedin.FinishedInService;
@@ -25,6 +27,7 @@ import renshou.privatewarehouses.finishedin.FinishedInService;
  * @date: 2017年8月10日下午5:45:14
  * @version: 1.0 版本初成
  */
+@Before(ManageInterceptor.class)
 public class FinishedOutController extends Controller {
     /** 
     * @Title: index 
@@ -79,12 +82,15 @@ public class FinishedOutController extends Controller {
             List<Record> outgoingDetailList = FinishedOutService.getFinishedOutDetailList(id);
             setAttr("outgoingDetailList", outgoingDetailList);
         }
+        // 客户列表
+        List<Record> companyList = FinishedOutService.getCompanyList();
+        setAttr("companyList", companyList);
         // 库存所有产品余量
         List<Record> stockDetailList = FinishedOutService.getStockDetailList();
         // 去除余量为 0 的产品
         setAttr("stockList", JsonKit.toJson(stockDetailList));
         
-        render("finishedout_detail2.html");
+        render("finishedout_detail.html");
     }
     
     /** 
@@ -96,7 +102,7 @@ public class FinishedOutController extends Controller {
         // 库存所有产品
         List<Record> stockDetailList = FinishedOutService.getStockDetailList();
         setAttr("stockList", JsonKit.toJson(stockDetailList));
-        render("finishedout_detail_add2.html");
+        render("finishedout_detail_add.html");
     }
     
     /** 
@@ -125,14 +131,15 @@ public class FinishedOutController extends Controller {
         // 出库详情列表
         String outgoingDetailList = getPara("outgoingDetailList");
         // 客户
-        Integer company = getParaToInt("company");
+        Integer company_id = getParaToInt("company_id");
         // 入库人
         Record user = getSessionAttr("admin");
-        user = Db.findById("t_user", 1); // TODO 测试，完成后删除
         Integer user_id = user.getInt("id");
+        // 备注
+        String remark = getPara("remark");
         
         // 返回消息
-        Map<String, Object> message = FinishedOutService.save(finished_product_outgoing_id, outgoingDetailList, user_id, company);
+        Map<String, Object> message = FinishedOutService.save(finished_product_outgoing_id, outgoingDetailList, user_id, company_id, remark);
         
         renderJson(message);
         
@@ -189,4 +196,13 @@ public class FinishedOutController extends Controller {
         render("finishedout_detail_look.html");
     }
     
+    /**
+     * @author liyu
+     * @desc 根据产品编号查询产品信息
+     */
+    public void getFinishedByNum(){
+        String num = getPara("num");
+        List<Record> list = FinishedOutService.getFinishedByNum(num);
+        renderJson(list);
+    }
 }

@@ -104,6 +104,12 @@
 var storage_number=""; // 入库单号
 var user_name = ""; // 入库人
 
+//阻止键盘点击按钮
+$('button').keydown(function () {
+    return false;
+});
+
+
 $(function () {	 
     //1.初始化Table
     var oTable = new TableInit();
@@ -292,11 +298,6 @@ function getIdSelections() {
 
 //确认入库
 function _check(){
-	// 是否可以操作
-    if (canOperate() == false) {
-        layer.msg('已入库！', {time: 2000});
-        return;
-    };
 	// 获取选中记录 id
 	var ids = getIdSelections();	
 	// 如果没有选择，提示勾选至少一条数据
@@ -305,6 +306,11 @@ function _check(){
 	}else if(ids.length > 1){
 		layer.msg('最多选择一条数据', {time: 2000});
 	}else{
+		// 是否可以操作
+	    if (canOperate() == false) {
+	        layer.msg('已入库！', {time: 2000});
+	        return;
+	    };
 		 // 询问框
         layer.confirm('确认入库吗？', {
             title: ['信息', 'font-weight:600;color:#fff;background-color: #3367D6;'],

@@ -6,17 +6,21 @@ import java.util.Map;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.jfinal.aop.Before;
 import com.jfinal.core.Controller;
 import com.jfinal.json.Json;
 import com.jfinal.plugin.activerecord.Record;
 
 import renshou.database.finishedproduct.FinishedProductService;
 import renshou.database.storage.StorageService;
+import renshou.interceptor.FrontInterceptor;
+import renshou.interceptor.ManageInterceptor;
 
 /**
  * @desc 公司管理
  * @author xuhui
  */
+@Before(ManageInterceptor.class)
 public class CustomController extends Controller {
 
 	/**

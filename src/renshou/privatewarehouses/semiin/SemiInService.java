@@ -1,9 +1,9 @@
 package renshou.privatewarehouses.semiin;
 
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
-
-import org.omg.PortableInterceptor.INACTIVE;
 
 import com.alibaba.fastjson.JSONObject;
 import com.jfinal.plugin.activerecord.Db;
@@ -81,7 +81,7 @@ public class SemiInService {
 	 * @author xuhui
 	 * @desc 获取入库单信息并保存
 	 */
-	public static boolean saveSemiIn(String storage_number,String list,Integer id){
+	public static boolean saveSemiIn(String storage_number,String list,Integer id,Integer t_user_id){
 		boolean flag = false;
 		flag = Db.tx(new IAtom() {
 			List<JSONObject> jlist = (List<JSONObject>)JSONObject.parse(list);
@@ -107,11 +107,11 @@ public class SemiInService {
 						re.set("num", num);
 						re.set("warehouse_id", warehouse_id);
 						r = Db.save("semimanufactures_storage_detail", re);
-						
 					}
 				}else{
 					Record record = new Record();
 					record.set("storage_number", storage_number);
+					record.set("t_user_id", t_user_id);
 					r = Db.save("semimanufactures_storage", record);
 					//判断是否保存成功
 					if(r){
@@ -243,19 +243,33 @@ public class SemiInService {
 						semistockflag = Db.save("semimanufactures_stock_detail", r2);
 					}
 					//查询出该半成品的在库存明细表的总数，保存到库存表中
-					if(semistockflag){
+					if(semistockflag){					
 						String s1 = "SELECT semimanufactures_id,SUM(num) as totalnum from semimanufactures_stock_detail"
 								+ " WHERE semimanufactures_id = "+semimanufactures_id;
 						Double totalnum = Db.findFirst(s1).getBigDecimal("totalnum").doubleValue();
 						Integer semi_id = Db.findFirst(s1).getInt("semimanufactures_id");
-						String s2 ="UPDATE semimanufactures_stock SET semimanufactures_stock_num = "+totalnum
-								+" WHERE semimanufactures_id = "+semi_id;
-						Db.update(s2);
+						String demo = "select * from semimanufactures_stock where semimanufactures_id = ?";
+						Record record = Db.findFirst(demo, semi_id);
+						System.out.println(record);
+						if(record!=null){//按照产品编号查询产品 不为空则表示有该产品库存,空值则表示需要新建
+							String s2 ="UPDATE semimanufactures_stock SET semimanufactures_stock_num = "+totalnum
+									+" WHERE semimanufactures_id = "+semi_id;
+							Db.update(s2);
+						}else{
+							Record r4 =new Record();
+							r4.set("semimanufactures_id", semi_id);
+							r4.set("semimanufactures_stock_num", totalnum);
+							Db.save("semimanufactures_stock", r4);
+						}
+						
 					}
 				}
 				Record record = new Record();
+				Date date = new Date();
+				SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
 				record.set("id", id);
-				record.set("state", 1); 	
+				record.set("state", 1); 
+				record.set("storage_time", df.format(date));//当前时间
 				return Db.update("semimanufactures_storage", record);
 			}
 		});

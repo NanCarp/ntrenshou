@@ -7,16 +7,22 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.jfinal.aop.Before;
 import com.jfinal.core.Controller;
 import com.jfinal.plugin.activerecord.Db;
 import com.jfinal.plugin.activerecord.IAtom;
 import com.jfinal.plugin.activerecord.Record;
+
+import renshou.database.semimanufactures.SemimanufactureService;
+import renshou.interceptor.FrontInterceptor;
+import renshou.interceptor.ManageInterceptor;
 
 
 /**
  * @author xihui
  * @desc 成品信息管理
  */
+@Before(ManageInterceptor.class)
 public class FinishedProductController extends Controller {
 
 	public  void index(){
@@ -63,8 +69,15 @@ public class FinishedProductController extends Controller {
 	 */
 	public void delete(){
 		String ids = getPara(0);
-		boolean result = FinishedProductService.delete(ids);
-		renderJson(result);
+		boolean result = false;
+		Map<String,Object> map = new HashMap<String, Object>();
+		boolean flag = FinishedProductService.deleteOr(ids);
+		if(!flag){
+			result = FinishedProductService.delete(ids);
+		}	
+		map.put("flag", flag);
+		map.put("result", result);
+		renderJson(map);		
 	}
 	
 	/**
@@ -72,9 +85,13 @@ public class FinishedProductController extends Controller {
 	 * @author xuhui
 	 */
 	public void saveFinishedProduct(){
-		boolean result = false;
+		boolean result = false;//判断是否保存成功
+		boolean flag = false;
+		Map<String,Object> map = new HashMap<String,Object>();
+		String finished_number = getPara("finished_number");
 		Integer id = getParaToInt("id");
 		Record record = new Record();
+		record.set("finished_number", finished_number);
 		record.set("trade_name",getPara("trade_name"));
 		record.set("specifications", getPara("specifications"));
 		record.set("measurement_unit", getPara("measurement_unit"));
@@ -82,26 +99,21 @@ public class FinishedProductController extends Controller {
 		if(id!=null){
 			record.set("id", getParaToInt("id"));
 			result = Db.update("finished_product", record);
+			map.put("tips", "保存成功");
 		}else{
-			//自动生成成品编码
-			Date date = new Date();
-			SimpleDateFormat sdf = new SimpleDateFormat("yyyy");
-			String year = sdf.format(date);
-			String prefix = "CP";
-			String finished_number = "";
-			if(FinishedProductService.getMaxNum().getStr("num")!=null){
-				System.out.println(FinishedProductService.getMaxNum());
-				String countstring = FinishedProductService.getMaxNum().getStr("num").substring(6);						
-				Integer countp = Integer.parseInt(countstring) + 10001;
-				System.out.println(countstring);
-				String countn = String.valueOf(countp).substring(1);
-				finished_number = prefix + year +countn;
+			//id为空判断是否存在该编号
+			Record JudgeRecord = FinishedProductService.Judge(finished_number);
+			if(JudgeRecord!=null){
+				map.put("tips", "该成品编号已经存在");
+				flag = true;
+				result = true;
 			}else{
-				finished_number = prefix + year +"0001";
+				result = Db.save("finished_product", record);
+				map.put("tips", "保存成功");
 			}
-			record.set("finished_number", finished_number);
-			result = Db.save("finished_product", record);
 		}
-		renderJson(result);
+		map.put("flag", flag);
+		map.put("result",result);
+		renderJson(map);
 	}
 }

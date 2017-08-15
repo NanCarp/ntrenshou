@@ -8,18 +8,22 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import com.jfinal.aop.Before;
 import com.jfinal.core.Controller;
 import com.jfinal.plugin.activerecord.Db;
 import com.jfinal.plugin.activerecord.IAtom;
 import com.jfinal.plugin.activerecord.Record;
 import com.jfinal.upload.UploadFile;
 
+import renshou.interceptor.FrontInterceptor;
+import renshou.interceptor.ManageInterceptor;
 import renshou.privatewarehouses.semiin.SemiInService;
-import renshou.until.ExcelKit;
+import renshou.utils.ExcelKit;
 /**
  * @desc 
  * @author xuhui
  */
+@Before(ManageInterceptor.class)
 public class SemiStockController extends Controller {
 
 	/**

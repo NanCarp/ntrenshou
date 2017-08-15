@@ -105,6 +105,12 @@
 <script src="../../../js/common/admin.js"></script>
 
 <script>
+//阻止键盘点击按钮
+$('button').keydown(function () {
+    return false;
+});
+
+
 $(function () {	 
     //1.初始化Table
     var oTable = new TableInit();

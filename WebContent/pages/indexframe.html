@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
 
     <meta charset="utf-8">
@@ -8,208 +9,286 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>预报价管理-国内货物运价管理</title>
-    <link href="../vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-    <link href="../vendor/datatables-plugins/dataTables.bootstrap.css" rel="stylesheet">
-    <link href="../dist/css/sb-admin-2.css" rel="stylesheet">
-    <link href="../vendor/metisMenu/metisMenu.min.css" rel="stylesheet">
+    <title>半成品库存管理</title>
+
+    <!-- Bootstrap Core CSS -->
+    <link href="../../../vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- DataTables CSS -->
+  <!--   <link href="../../vendor/datatables-plugins/dataTables.bootstrap.css" rel="stylesheet"> -->
+	<link href="../../../resource/bootstrap-table/bootstrap-table.min.css" rel="stylesheet">
+    <!-- DataTables Responsive CSS -->
+    <link href="../../../vendor/datatables-responsive/dataTables.responsive.css" rel="stylesheet">
+
+    <!-- Custom CSS -->
+    <link href="../../../resource/bootstrapvalidator/css/bootstrapValidator.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../../resource/layui/css/layui.css" media="all" />
+    <link href="../../../dist/css/sb-admin-2.css" rel="stylesheet">
+    <link href="../../../css/common/common.css" rel="stylesheet">
+    <link href="../../../css/admin.css" rel="stylesheet">
     <link href="../vendor/calender/css/jquery.e-calendar.css" rel="stylesheet" rel="nofollow">
-    <link href="../vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
-	<link href="../css/admin.css" rel="stylesheet" type="text/css">
-	<link rel="stylesheet" href="../resource/layui/css/layui.css" media="all" />
+	<link href="../../vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css"> 
+		<link href="../../../resource/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css" rel="stylesheet" />
 	
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 9]>
-        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
-        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
-    <![endif]-->
-<style>
-.top{margin-top: 15px}
-.topfleft{height: 310px;min-width: 330px;}
-.topfright{width: 100%;height: 168px;border: 1px solid #dddddd;}
-.topfleft div{background-size:100% 130px;} 
-.topleft1{margin-left: 30px;display: inline-block;position: relative;top:-40px}
-.topleftthen{display: inline-block;margin-left: 16px;margin-top: 30px}
-.topleftthen p{color: white;}
-.topright{height: 300px;margin-left: 16px;padding-left: 0;}
-.topright1{height: 300px;min-width: 530px;margin-left: 0}
-.topfrightremarks{margin:0 0 0 50px;width: 170px;position: relative;top:-20px;left: 36px;display: -webkit-box;-webkit-box-orient: vertical;-webkit-line-clamp: 3;overflow: hidden;}
-
-.bottomleft{height: 300px;min-width: 400px;}
-.bottomcenter{height:300px;margin-left: 15px;padding-left: 1px;padding-bottom: 0}
-.calend{height: 340px;margin-top: 0;margin-left: 0}
-.bottomright{margin-left: 15px;padding-left: 0;}
-.bottomrighttop{width: 92%;height: 150px;background: #F4F5F6;border: 1px solid #dddddd;}
-.bottomrightbot{width: 92%;height: 136px;background: #5B85DE;border: 1px solid #dddddd;}
-
-.span1{font-size: 15px;font-weight: bold;text-align: left}
-.notice{color: #3367DB;font-weight: bold;font-size: 18px}
-.aler{color: #3367DB;font-weight: bold;font-size: 18px}
-.a_span{width: 100%;height: 40px;float: left;}
-.c_span{width: 100%;height: 40px;float: left;border-bottom: 1px dashed #CCC;overflow: hidden;white-space:nowrap; text-overflow:ellipsis;cursor: pointer;padding-top: 10px}
-i{color: #999999}
-.c_left{width: 10%;overflow: hidden;white-space:nowrap; text-overflow:ellipsis;}
-.c_right{float: right;}
-</style>
+    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->	
 </head>
+<style>
 
-<body style="background: #FFFFFF;width:96%">
-    <div class=".container-fluid ">
-    	<div class="top row">
-    		<div class="topfleft col-sm-3">
-    			<div style="width: 100%;height: 130px;background-image:url('../picture/u175.jpg');">
-    				<div class="topleft1">
-    					<img src="../picture/user.png">
-    				</div>
-    				<div class="topleftthen">
-    					<p><span style="font-size: 17px;font-weight: bold;">关务人员</span><span style="margin-left: 10px">guanwu-1001</span></p>
-    					<p style="margin-top: 10px"><span>创建日期</span></p>
-    					<p>2017-4-17 13:59:06</p>
-    				</div>
-    			</div>
-    			<div  class="topfright">    			
-	    			<div class="panel-body" style="padding-left: 30px">
-	                    <span class="a_span">
-							<span class="span1">部门:</span>
-							<span class="a_right" style="margin-left: 50px">关务部</span>
-						</span>
-						<span class="a_span">
-							<span class="span1">所属公司:</span>
-							<span class="a_right" style="text-align: left;margin-left: 20px">尚德太阳能电力有限公司</span>
-						</span>
-						<span class="a_span">
-							<span class="span1">备注:</span>
-							<div class="a_right topfrightremarks">
-								<p style="word-wrap:break-word; word-break:break-all;">此帐号为无锡总部关务部人员使用，非本人不得外借。</p>
-							</div>
-						</span>							                        
-	                </div>
-    			</div>
-    		</div>
-    		<div class="topright  col-lg-8  col-md-7 col-sm-4">   			
-                    <div class="panel panel-default container-fluid topright1">
-                        <div class="panel-heading row">                   
-							<div class="text-left col-md-3 pull-left notice">
-								通知公告
-							</div>            
+</style>
+<body>
+<div id="wrapper">
+	<div class="panel-body" style="padding-bottom:0px;">
+		<div class="panel panel-default">		
+			<div class="panel-heading">					
+				<div class="container container-fluid" style="max-width: 1100px">				
+					<div class="row">                        	    		                                            		
+						<div class="col-sm-2 col-xs-3 head_2">
+                            <input type="search" class="form-control" placeholder="产品编号" name="product_num" id="product_num" value="">
                         </div>
-                        <!-- /.panel-heading -->
-                        <div class="panel-body sroll" style="height:236px;margin-top: 14px">
-                            <table width="100%" class="table table-bordered table-hover" id="dataTables-example" >                              
-                                <tbody>
-                                    <tr class="gradeX">
-                                        <td><a style="float: left;">关于开展2016年度外向型经济“调结构、促转型”的通知</a><i style="float: right;">2017-3-15</i></td>                                       
-                                    </tr>
-                                    <tr class="even gradeC">
-                                        <td><a style="float: left;">关于申报2016年度苏州市商务发展专项资金的通知</a><i style="float: right;">2017-3-15</i></td>                                        
-                                    </tr>
-                                    <tr class="odd gradeA">                                     
-                                        <td><a style="float: left;">关于停车场收费通知</a><i style="float: right;">2017-3-15</i></td>                                       
-                                    </tr>
-                                    <tr class="even gradeA">
-                                       <td><a style="float: left;">世界睡眠日“特困生”：拿什么拯救睡眠</a><i style="float: right;">2017-3-15</i></td>    
-                                    </tr>
-                                    <tr class="even gradeA">
-                                       <td><a style="float: left;">世界睡眠日“特困生”：拿什么拯救睡眠</a><i style="float: right;">2017-3-15</i></td>    
-                                    </tr>                                                                                 
-                                </tbody>
-                            </table>  
+                        <div class="col-sm-2 col-xs-3 head_2">
+                            <input type="search" class="form-control" placeholder="品名" name="trade_name" id="trade_name" value="">
                         </div>
-                  </div>              		
-    		</div>
-    	</div>
-    	<div class="bottom row" style="margin-top: 10px">
-    		<div class="bottomleft col-sm-5">
-    			<div class="panel panel-default container-fluid" >
-                        <div class="panel-heading row">                   
-							<div class="text-left col-md-3 pull-left notice">
-								提醒
-							</div>            
-                        </div>
-                        <!-- /.panel-heading -->
-                        <div class="panel-body sroll" style="height: 240px">
-                        	<span class="c_span">
-								<span class="c_left">本月还未对供应商考核，请抓紧时间。</span>
-								<span class="c_right"><i>2017-4-13</i></span>
-							</span>
-							<span class="c_span" title="点击查看详细" >
-								<span class="c_left">收到一份新的国内货代对账表。</span>
-								<span class="c_right"><i>2017-4-13</i></span>
-							</span>
-							<span class="c_span" title="点击查看详细" >
-								<span class="c_left">收到一份新的国外货代对账表。</span>
-								<span class="c_right"><i>2017-4-13</i></span>
-							</span>	
-							<span class="c_span" title="点击查看详细" >
-								<span class="c_left">收到一份新的国外货代对账表。</span>
-								<span class="c_right"><i>2017-4-13</i></span>
-							</span>						                         
-                        </div>
-                  </div>
-    		</div>
-    		<div class="bottomcenter col-sm-3" style="max-width: 400px">
-    			<div id="calendar" class="calend"></div>
-    		</div>
-    		<div class="bottomright col-sm-3" style="max-width: 400px">
-    			<div class="bottomrighttop">
-    				<div class="weather_code" style="width: 200px;margin: 0 auto;text-align: center;padding-top: 10px"></div>
-    				<div class="weather_3" style="margin: 0 auto;text-align: center;"></div>
-    				<div class="weather_2" style="margin: 0 auto;text-align: center;"></div>    				
-    			</div>   
-    			<div class="bottomrightbot" >
-    				<div class="col-xs-6" style="height: 130px;text-align: center;padding: 30px">
-    					<div class="weather_4"></div>
-    					<div style="font-size: 14px;color: white;margin-top: 10px">最低温度</div>
-    				</div>
-    				<div class="col-xs-6" style="height:130px;text-align: center;padding: 30px">
-    					<div class="weather_5"></div>
-    					<div style="font-size: 14px;color: white;margin-top: 10px">最高温度</div>
-    				</div>
-    			</div>		
-    		</div>
-    	</div>
-    </div>
+						<div class="col-sm-1 col-xs-12 head_1">
+							<button class="btn btn-primary" onclick="doQuery()">查询</button>
+						</div>                    			                
+					</div>				
+				</div>
+			</div>			
+			<table id="tb_departments"></table>
+		</div>             
+	</div>
+</div>
+
+<!-- jQuery -->
+<script src="../../../vendor/jquery/jquery.min.js"></script>
+<script src="../../../resource/jquery.base64/jquery.base64.js"></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="../../../vendor/bootstrap/js/bootstrap.min.js"></script>
+
+<!-- DataTables JavaScript -->
+<!-- <script src="../../vendor/datatables/js/jquery.dataTables.min.js"></script> -->
+
+<!-- <script src="../../vendor/datatables-plugins/dataTables.bootstrap.min.js"></script> -->
+
+
+<script src="../../../resource/bootstrap-table/bootstrap-table.js" type="text/javascript"></script>
+<script src="../../../resource/tableExport.jquery.plugin/tableExport.jquery.plugin/tableExport.js" type="text/javascript"></script> 
+<script src="../../../resource/bootstrap-table/extensions/export/bootstrap-table-export.js" type="text/javascript"></script>
+<script src="../../../resource/bootstrap-table/locale/bootstrap-table-zh-CN.js" type="text/javascript"></script>
+<script src="../../../resource/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js"></script> 
+<script src="../../../resource/bootstrap-datetimepicker/js/locales/bootstrap-datetimepicker.zh-CN.js"></script>
+<!-- Custom Theme JavaScript -->
+<script src="../../../resource/layer/layer.js"></script>
+<script src="../../../resource/layui/layui.js"></script>
+<script src="../../../js/common/admin.js"></script>
+<script src="../../../vendor/calender/js/jquery.e-calendar.js"></script>
+
+<script>
+var product_num="";
+var trade_name = "";
+
+$(function () {	 
+	$('#calendar').eCalendar();  	
+	
+    //1.初始化Table
+    var oTable = new TableInit();
+    oTable.Init();
+    //2.初始化Button的点击事件
+     var oButtonInit = new ButtonInit();
+    oButtonInit.Init(); 
+});
+
+function doQuery(){
+	layui.use('layer',function(){
+		var layer = layui.layer;
+		product_num = $.trim($('#product_num').val());
+		trade_name = $.trim($('#trade_name').val());
+		if($.trim($('#product_num').val())!=''){
+			var reg = /^[a-zA-Z0-9_\-\u0391-\uFFE5 ]{1,30}$/;
+			if(!reg.test($('#product_num').val())){
+				layer.tips('不允许有特殊字符，最多20个字符', '#product_num', {tips: [1, '#34495E']});return;
+			}					
+		}
+		if($.trim($('#trade_name').val())!=''){
+			var reg = /^[a-zA-Z0-9_\-\u0391-\uFFE5 ]{1,30}$/;
+			if(!reg.test($('#trade_name').val())){
+				layer.tips('不允许有特殊字符，最多20个字符', '#trade_name', {tips: [1, '#34495E']});return;
+			}					
+		}
+		$('#tb_departments').bootstrapTable('refresh');    //刷新表格
+	})
+}
+
+var TableInit = function () {
+    var oTableInit = new Object();
+    //初始化Table
+    oTableInit.Init = function () {
+        $('#tb_departments').bootstrapTable({
+            url: '/pages/getJson',         //请求后台的URL（*）
+            method: 'get',                      //请求方式（*）
+            toolbar: '#toolbar',                //工具按钮用哪个容器
+            showExport: true,                     //是否显示导出
+            buttonsAlign:"right",  				//按钮位置  
+            exportDataType: "basic",              //basic', 'all', 'selected'.
+            exportTypes:['excel'],
+            striped: true,                      //是否显示行间隔色
+            cache: false,                       //是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性（*）
+            pagination: true,                   //是否显示分页（*）
+            sortable: false,                     //是否启用排序
+            sortOrder: "asc",                   //排序方式
+            queryParams: oTableInit.queryParams,//传递参数（*）
+            sidePagination: "server",           //分页方式：client客户端分页，server服务端分页（*）
+            pageNumber:1,                       //初始化加载第一页，默认第一页
+            pageSize: 12,                       //每页的记录行数（*）
+            pageList: [3, 6, 12, 100],        //可供选择的每页的行数（*）
+            strictSearch: true,
+            clickToSelect: true,                //是否启用点击选中行
+            showColumns: true,					//列选择按钮
+            height: 640,                        //行高，如果没有设置height属性，表格自动根据记录条数觉得表格高度
+            uniqueId: "id",                     //每一行的唯一标识，一般为主键列
+            cardView: false,                    //是否显示详细视图
+            detailView: false,
+            showRefresh:true,  
+            locale: "zh-CN",					//中文支持,
+            //是否显示父子表
+            columns: [{
+            	field:"checked",
+            	checkbox: true,
+            },{
+            	field:"SerialNumber",
+            	title:'序号',
+            	formatter:function(value,row,index){
+            		return index+1;
+            	}
+            },{
+                field: 'proflag',
+                title: '产品类型'
+            },{
+                field: 'pronum',
+                title: '产品编号'
+            },{
+                field: 'trade_name',
+                title: '品名'
+            },{
+                field: 'specifications',
+                title: '规格'
+            },{
+                field: 'measurement_unit',
+                title: '单位'
+            },{
+                field: 'semimanufactures_stock_num',
+                title: '库存数量'
+            },]
+        });
+    };
+
+    //得到查询的参数
+  oTableInit.queryParams = function (params) {
+        var temp = {   //这里的键的名字和控制器的变量名必须一直，这边改动，控制器也需要改成一样的
+            limit: params.limit,   //页面大小
+            offset: params.offset,  //页码
+            maxrows: params.limit,
+            search: params.search,
+            product_num: product_num,
+            trade_name: trade_name,
+        };
+        return temp;
+    };
+    return oTableInit;  
+};
+
+var ButtonInit = function () {
+    var oInit = new Object();
+    var postdata = {};
+    oInit.Init = function () {
+        //初始化页面上面的按钮事件
+    };
+    return oInit;
+};
+
+//查看明细
+function _checkdetail(id){
+	open_window('查看明细','/private/semistock/getStockDetail/'+id, 760, 560);
+}
+
+
+//新增
+function _add(){
+	open_window('新增半成品入库','/private/semistock/getStockDetail', 760, 560);
+}
+
+//编辑
+function _edit(id){
+	//判断是否已经确认入库，确认入库不可修改
+	$.post("/private/semiin/checkOr",{"id":id},function(resut){
+		if(resut){
+			open_window('编辑半成品入库','/private/semiin/getEdit/' + id, 1000, 600);
+		}else{
+			layer.msg("已确认入库无法编辑",{time:2000});
+		}
+	})
+}
+
+//批量删除
+function _batchDelete(){
+	// 获取选中记录 id
+	var ids = getIdSelections();	
+	// 如果没有选择，提示勾选至少一条数据
+	if (ids.length == 0) {
+        layer.msg('请至少选择一条记录', {time: 2000});
+	}
+	else {
+        // 询问框
+        layer.confirm('确认删除吗？', {
+            title: ['信息', 'font-weight:600;color:#fff;background-color: #3367D6;'],
+            btn: ['确认','取消'] //按钮
+        }, function(){
+            $.post("/private/semistock/delete/" + ids,function(result) {
+                if (result) {
+                    layer.msg('删除成功', {time: 2000}, function(){
+                        parent.refresh_iframe();
+                    });
+                }else{
+                	layer.msg('删除失败', {time: 2500}, function(){
+                    });
+                }
+            });
+        }, function(){
+        });
+    }
+}
+
+//全选按钮
+function stateFormatter(value, row, index) {
+    if (row.state == true){
+    	return {
+            disabled : true,//设置是否可用
+            checked : true//设置选中
+        };
+    }        
+    return value;
+}
+
+//获取被选中数据的id
+function getIdSelections() {
+    return $.map($("#tb_departments").bootstrapTable('getSelections'), function(row) {
+        return row.id;
+    });
+}
+
+
+
+
+
+
+</script>
+
 </body>
-    <script src="../vendor/calender/js/jquery.min.js"></script>
-    <script src="../vendor/calender/js/jquery.e-calendar.js"></script>
-    <script src="../vendor/bootstrap/js/bootstrap.min.js"></script>
-    <script src="../vendor/datatables/js/jquery.dataTables.min.js"></script>
-    <script src="../vendor/metisMenu/metisMenu.min.js"></script>
-    <script src="../dist/js/sb-admin-2.js"></script>
-	<script src="../resource/layer/layer.js"></script>
-	<script src="../js/jquery.nicescroll.min.js"></script>
-    <!-- Page-Level Demo Scripts - Tables - Use for reference -->
-    <script>  
-    $(document).ready(function(){
-    	$('#calendar').eCalendar();
-    	getWeather();   	
-    	$(".sroll").niceScroll({
-			cursorcolor:"#333",
-			cursoropacitymin: 0.6,
-			cursoropacitymax:0.6
-		});    	
-    })
-    function getWeather(){
-				var province,city;				
-				$.getScript('http://int.dpool.sina.com.cn/iplookup/iplookup.php?format=js', function(){
-					province = remote_ip_info["province"];
-				    city = remote_ip_info["city"];
-				    $.get('https://api.heweather.com/x3/weather?city='+city+'&key=fa26b87b63ee414eae3c64ac7bfdb54f', function(data){
-						var weatherData = data['HeWeather data service 3.0'][0];
-						var now = weatherData['now'];
-						var basic = weatherData['basic'];
-						var aqi = weatherData['aqi'];
-						var suggestion = weatherData['suggestion'];
-						var daily_forecast = weatherData['daily_forecast'];
-						$('.weather_code').append('<img src="http://files.heweather.com/cond_icon/'+now['cond']['code']+'.png" width="40%"/>');
-						$('.weather_1').append('<span style="color:blue;">天气 : '+now['cond']['txt']+'&#12288;/&#12288;气温 : '+now['tmp']+'&deg;C</span>');
-						$('.weather_2').append("<span style='font-size:21px'>"+now['cond']['txt']+"</span>");
-						$('.weather_3').append("<span style='font-size:25px'>"+now['tmp']+"&deg;C</span>");
-						$('.weather_4').append("<span style='font-size:20px;color:white'>"+daily_forecast[0].tmp.min+"&deg;C</span>");
-						$('.weather_5').append("<span style='font-size:20px;color:white'>"+daily_forecast[0].tmp.max+"&deg;C</span>");
-					},'json');
-				});
-			}
-    </script>
+
 </html>

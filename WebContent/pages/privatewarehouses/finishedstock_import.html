@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>成品库存-导入</title>
+
+    <!-- Bootstrap Core CSS -->
+    <link href="../../../vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom CSS -->
+    <link href="../../../dist/css/sb-admin-2.css" rel="stylesheet">
+    <link href="../../../css/admin.css" rel="stylesheet">
+    <link href="../../../resource/bootstrap-fileinput/css/fileinput.css" rel="stylesheet">
+    <style type="text/css">
+        body { margin:0 15px;}
+        form { margin-top:20px;}
+    </style>
+    
+    <!-- Custom Fonts -->
+    <link href="../../../vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <!-- DataTables CSS -->
+    <link href="../../../vendor/datatables-plugins/dataTables.bootstrap.css" rel="stylesheet">
+
+    <!-- DataTables Responsive CSS -->
+    <link href="../../../vendor/datatables-responsive/dataTables.responsive.css" rel="stylesheet">
+    <link href="../../../css/common/common.css" rel="stylesheet">
+    <link href="../../../css/admin.css" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link href="../../../resource/bootstrapvalidator/css/bootstrapValidator.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../../resource/layui/css/layui.css" media="all" />
+    <link href="../../../resource/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css" rel="stylesheet" />
+    <link href="../../../css/common/common.css" rel="stylesheet">
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+</head>
+
+<body>
+<form class="form-horizontal" role="form" style="margin-top:20px;" id="defaultForm">
+	<div style="font-size: 14px;color: red;margin-left: 80px;margin-top: 0">警告：导入数据将不会覆盖原数据，请谨慎操作！</div>
+    <div class="form-group">
+        <label class="col-xs-4 control-label text-right" for="file" style="margin-top: 8px">导入明细:</label>
+        <div class="col-xs-6">
+            <input type="file" class="file" id="file" name="file" value="">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-xs-4 control-label" for="v"></label>
+        <div class="col-xs-6 head_4">
+            <button id="v" type="submit" class="btn btn-11" style="width: 140px;height: 40px;margin-left: 14px">保    存</button>
+        </div>
+    </div>
+</form>
+<!-- jQuery -->
+<script src="../../../vendor/jquery/jquery.min.js"></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="../../../vendor/bootstrap/js/bootstrap.min.js"></script>
+
+<!-- Metis Menu Plugin JavaScript -->
+<script src="../../../vendor/metisMenu/metisMenu.min.js"></script>
+<script src="../../../resource/layer/layer.js"></script>
+<script src="../../../resource/layui/layui.js"></script>
+<!-- Custom Theme JavaScript -->
+<script src="../../../dist/js/sb-admin-2.js"></script>
+<script src="../../../resource/bootstrapvalidator/js/bootstrapValidator.min.js"></script>
+<script src="../../../js/common/admin.js"></script>
+<script src="../../../resource/bootstrap-fileinput/js/fileinput.js"></script>
+<script src="../../../resource/bootstrap-fileinput/js/locales/zh.js"></script>
+<script type="text/javascript">
+function initFileInput(ctrlName){
+    var control = $('#'+ctrlName);
+    control.fileinput({
+        language: 'zh', //设置语言
+        showUpload: false, //是否显示上传按钮
+        showRemove:true,
+        dropZoneEnabled: false,
+        showCaption: true,//是否显示标题
+        showPreview :false,//是否显示预览
+        enctype: 'multipart/form-data',
+        uploadAsync: false, //同步上传
+    })
+}
+initFileInput("file");
+$(function(){
+    $('form').bootstrapValidator({
+        message: 'This value is not valid',
+        feedbackIcons: {
+            valid: 'glyphicon glyphicon-ok',
+            invalid: 'glyphicon glyphicon-remove',
+            validating: 'glyphicon glyphicon-refresh'
+        },
+        fields:{
+            file:{
+                validators:{
+                    notEmpty:{
+                        message:'请选择Excel文件'
+                    }
+                }
+            }
+        }
+    })
+}).on('success.form.bv',function(e){
+    e.preventDefault();
+    var formData = new FormData();
+    formData.append("file",$("#file")[0].files[0]);
+    $.ajax({
+        url:"/private/finishedstock/importExcel",
+        type:"POST",
+        data:formData,
+        processData:false,
+        contentType:false,
+        success:function(result){
+            if(result.flag){
+                layer.msg('导入成功', {time: 2000}, function(){
+                    parent.parent.refresh_iframe();
+                });
+            }else{
+                parent.open_window('导入错误!','/private/finishedstock/showErrorExcelMessage', 500, 268);
+                layer_close();
+            }
+        },
+        error:function(e){
+            console.log("error");
+        },
+    });
+})
+
+
+</script>
+</body>
+</html>

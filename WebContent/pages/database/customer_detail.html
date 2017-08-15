@@ -176,10 +176,10 @@ $(function(){
 		},
 		fields: {
 			company_name: {
-				notEmpty: {
-					message: '不能为空!'
-				},
 				validators: {
+					notEmpty: {
+						message: '不能为空!'
+					},
                     stringLength: {
                         min: 0,
                         max: 20,
@@ -189,9 +189,6 @@ $(function(){
 			}
 			,remark: {
 				validators: {
-					notEmpty: {
-						message: '不能为空!'
-					},
 	                stringLength: {
 	                    min: 0,
 	                    max: 20,
@@ -303,15 +300,15 @@ function _edit(_obj){
 }
 //页面序号排序
 function sort(){
-	$("tbody tr").each(function(k,v){
-		var index = k+1;
-		$(v).find("td").eq(1).html(index);
-	})
 	if($("tbody").find("tr").length==0){
 		$("tbody").append("<tr class='flag'><td colspan='9' style='text-align: center;'>暂无联系人，请先添加联系人</td></tr>");
 	}else{
 		$("tbody").find(".flag").remove();
 	}
+	$("tbody tr").each(function(k,v){
+		var index = k+1;
+		$(v).find("td").eq(1).html(index);
+	})
 }
 sort();
 </script>

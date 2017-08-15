@@ -15,7 +15,7 @@ import renshou.interceptor.ManageInterceptor;
  * @ClassName: MenuController
  * @Description: 系统管理_菜单管理
  * @author: xuhui
- * @date: 2017年5月15日下午2:00:00
+ * @date: 2017年8月3日下午2:00:00
  * @version: 1.0 版本初成
  */
 @Before(ManageInterceptor.class)

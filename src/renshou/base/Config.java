@@ -17,7 +17,7 @@ import renshou.model._MappingKit;
 
 
 /**
- * @ClassName: STMSConfig
+ * @ClassName: Config
  * @Description:基础配置文件类
  * @author: LiYu
  * @date: 2017年5月12日 下午1:50:08
@@ -31,8 +31,8 @@ public class Config extends JFinalConfig {
 		//设置当前环境为开发环境
 		me.setDevMode(PropKit.getBoolean("devMode"));
 		me.setViewType(ViewType.FREE_MARKER);
-		//me.setError404View("/error/404.html");
-		//me.setError500View("/error/500.html");
+		me.setError404View("/pages/error/404.html");
+        me.setError500View("/pages/error/500.html");
 	}
 
 	@Override
