@@ -91,8 +91,6 @@ public class FinishedProductController extends Controller {
 		String finished_number = getPara("finished_number");
 		Integer id = getParaToInt("id");
 		Record record = new Record();
-		record.set("finished_number", finished_number);
-		record.set("trade_name",getPara("trade_name"));
 		record.set("specifications", getPara("specifications"));
 		record.set("measurement_unit", getPara("measurement_unit"));
 		record.set("remark", getPara("remark"));
@@ -108,6 +106,8 @@ public class FinishedProductController extends Controller {
 				flag = true;
 				result = true;
 			}else{
+				record.set("finished_number", finished_number);
+				record.set("trade_name",getPara("trade_name"));
 				result = Db.save("finished_product", record);
 				map.put("tips", "保存成功");
 			}

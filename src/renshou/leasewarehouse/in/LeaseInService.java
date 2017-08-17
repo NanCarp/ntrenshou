@@ -43,11 +43,11 @@ public class LeaseInService {
                 + " LEFT JOIN warehouse AS d "
                 + " ON b.warehouse_id = d.id "
                 + " WHERE 1=1 ";
-        
+        // 入库单号
         if (warehouse_in_no != null && !"".equals(warehouse_in_no)) {
             sql += "AND warehouse_in_no like '%" + warehouse_in_no + "%'";
         }
-        
+        // 客户名称
         if (company_name != null && !"".equals(company_name)) {
             sql += "AND company_name like '%" + company_name + "%'";
         }

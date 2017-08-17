@@ -18,6 +18,7 @@ import com.jfinal.upload.UploadFile;
 
 import renshou.interceptor.ManageInterceptor;
 import renshou.utils.ExcelKit;
+
 /**
  * @desc 
  * @author liyu
@@ -85,7 +86,6 @@ public class FinishedStockController extends Controller {
 	 */
 	public void delete(){
 		String ids = getPara(0);
-		String[] allid = ids.split(",");
 		Boolean flag = true;
 		flag = FinishedStockService.delete(ids);
 		renderJson(flag);

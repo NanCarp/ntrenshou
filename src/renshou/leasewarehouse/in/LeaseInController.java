@@ -128,7 +128,6 @@ public class LeaseInController extends Controller {
         String productList = getPara("productList");
         // 入库人
         Record user = getSessionAttr("admin");
-        //user = Db.findById("t_user", 1); // TODO 测试，完成后删除
         String warehouse_in_person = user.getStr("user_name");
         
         // 返回消息

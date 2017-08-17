@@ -45,10 +45,10 @@
 				<div class="container container-fluid" >				
 					<div class="row">                        	    		                                            		
 						<div class="col-sm-2 col-xs-3 head_2">
-                            <input type="search" class="form-control" placeholder="入库单号" name="storage_number" id="storage_number" value="">
+                            <input type="search" class="form-control" placeholder="出库单号" name="storage_number" id="storage_number" value="">
                         </div>
                         <div class="col-sm-2 col-xs-3 head_2">
-                            <input type="search" class="form-control" placeholder="入库人" name="user_name" id="user_name" value="">
+                            <input type="search" class="form-control" placeholder="出库人" name="user_name" id="user_name" value="">
                         </div>
 						<div class="col-sm-1 col-xs-12 head_1">
 							<button class="btn btn-primary" onclick="doQuery()">查询</button>
@@ -192,7 +192,7 @@ var TableInit = function () {
                 field: 'state',
                 title: '出库状态',
                 formatter:function(value,row,index){
-                    return row.state == true ? "已入库 ": "未确认";
+                    return row.state == true ? "已出库 ": "未确认";
                 }
             },{
                 field: 'user_name',
@@ -201,7 +201,7 @@ var TableInit = function () {
             	field:'opt',
             	title:'操作',
             	formatter:function(value,row,index){
-            			  return['<button class="btn btn-xs btn-3"  onclick="_edit('+row.id+')">编辑</button>' ]
+            			  return['<button class="btn btn-xs btn-3"  onclick="_edit('+row.id +','+row.state+')">编辑</button>' ]
             	},
             }]
         });

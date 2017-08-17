@@ -10,7 +10,7 @@ devMode=true
 host = http://liyutest.tunnel.qydev.com
 
 #文件下载地址
-filepath = D:/upload/morality/file/
+filepath = D:/upload/renshou/file/
 host = http://liyutest.tunnel.qydev.com
 
 # 文件上传地址

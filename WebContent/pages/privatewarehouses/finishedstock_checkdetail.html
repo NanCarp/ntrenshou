@@ -209,9 +209,10 @@ $(function(){
 	}else{
 		$.post("/private/finishedstock/saveFinishedStock",{"list":JSON.stringify(arr),"id":id,"finished_product_id":finished_product_id,"finished_product_id_num":finished_product_id_num},function(result){
 				if(result){
-					layer_close();
-					parent.parent.refresh_iframe();
-					parent.layer.msg("保存成功",{time:2000});
+					parent.layer.msg("保存成功",{time:2000}, function () {
+						layer_close();
+						parent.parent.refresh_iframe();
+					});
 				}else{
 					parent.layer.msg("保存失败",{time:2000});
 				}

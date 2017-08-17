@@ -13,8 +13,6 @@ import com.jfinal.plugin.activerecord.Record;
 import renshou.interceptor.ManageInterceptor;
 import renshou.leasewarehouse.in.LeaseInService;
 
-
-
 /**
  * @ClassName: LeaseInController.java
  * @Description:

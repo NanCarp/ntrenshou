@@ -34,6 +34,7 @@ import renshou.utils.MySessionContext;
  */
 @Before(ManageInterceptor.class)
 public class LoginController extends Controller{
+	
 	/** 
 	* @Title: index 
 	* @Description: 首页
@@ -41,6 +42,7 @@ public class LoginController extends Controller{
 	* @return void
 	* @throws 
 	*/	
+	@Before(ManageInterceptor.class)
 	public void index(){
 		// session 获取用户
 		Record user = getSessionAttr("admin");

@@ -208,12 +208,13 @@ $(function(){
 		layer.msg("请添加库存明细",{time:2000});
 	}else{
 		$.post("/private/semistock/saveSemiStock",{"list":JSON.stringify(arr),"id":id,"semimanufactures_id":semimanufactures_id,"semimanufactures_id_num":semimanufactures_id_num},function(result){
-				if(result){					
-					layer_close();	
-					parent.parent.refresh_iframe();
-					parent.layer.msg("保存成功",{time:2000});				
+				if(result){		
+					layer.msg("保存成功",{time:2000},function(){
+						parent.parent.refresh_iframe();	
+						layer_close();	
+					});						
 				}else{
-					parent.layer.msg("保存失败",{time:2000});
+					layer.msg("保存失败",{time:2000});
 				}	
 			})
 	}

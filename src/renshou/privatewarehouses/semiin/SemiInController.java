@@ -79,7 +79,11 @@ public class SemiInController extends Controller {
 	 * @desc 打开新增页面
 	 */
 	public void addEdit(){
-		List<Record> list = SemiInService.getSemimanufactures();
+		String semimanufactures_number = getPara("semimanufactures_number");
+		String trade_name = getPara("trade_name");
+		List<Record> list = SemiInService.getSemimanufactures(semimanufactures_number,trade_name);
+		setAttr("trade_name", trade_name);
+		setAttr("semimanufactures_number", semimanufactures_number);
 		setAttr("im", list);
 		render("semiin_detail_add.html");
 	}

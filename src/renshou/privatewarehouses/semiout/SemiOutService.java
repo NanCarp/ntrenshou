@@ -121,8 +121,10 @@ public class SemiOutService {
        * @Description: 获得库存产品列表 对应仓库
        * @return List<Record>
        * @author xuhui
+     * @param trade_name 
+     * @param finished_number 
        */
-       public static List<Record> getStockDetailList() {
+       public static List<Record> getStockDetailList(String semimanufactures_number, String trade_name) {
        	String sql = "SELECT a.id,a.warehouse_id,a.semimanufactures_id,a.num, "
                    + " c.semimanufactures_number,c.trade_name,c.specifications,c.measurement_unit,c.remark, "
                    + " IFNULL(num - b.total_out_quantity,num) AS left_quantity "
@@ -137,12 +139,27 @@ public class SemiOutService {
                    + " ON a.semimanufactures_id = b.semimanufactures_id AND a.warehouse_id = b.warehouse_id "
                    + " LEFT JOIN semimanufactures AS c ON "
                    + " a.semimanufactures_id = c.id "
-                   + " WHERE IFNULL(num - b.total_out_quantity,num) > 0 ";        
+                   + " WHERE IFNULL(num - b.total_out_quantity,num) > 0 ";   
+       	
+       	if(semimanufactures_number!=null && !"".equals(semimanufactures_number)) {
+            sql += " AND c.semimanufactures_number like '%"+ semimanufactures_number +"%'";
+        }
+        
+        if(trade_name!=null && !"".equals(trade_name)) {
+            sql += " AND c.trade_name like '%"+ trade_name +"%'";
+        }
+        
+        sql += " ORDER BY c.semimanufactures_number, a.warehouse_id ";
+        
         List<Record> list = Db.find(sql);
-        // TODO 仓库名
+        // 仓库名
         list = modifyWarehouseName(list);
         return list;
 
+       }
+       
+       public static List<Record> getStockDetailList() {
+           return getStockDetailList(null, null);
        }
        
        /** 
@@ -516,5 +533,6 @@ public class SemiOutService {
 				}
 			});
           }
+
 
 }

@@ -92,8 +92,6 @@ public class SemimanufacturesController extends Controller {
 		String semimanufactures_number = getPara("semimanufactures_number");
 		Integer id = getParaToInt("id");
 		Record record = new Record();
-		record.set("semimanufactures_number", semimanufactures_number);
-		record.set("trade_name",getPara("trade_name"));
 		record.set("specifications", getPara("specifications"));
 		record.set("measurement_unit", getPara("measurement_unit"));
 		record.set("remark", getPara("remark"));
@@ -109,6 +107,8 @@ public class SemimanufacturesController extends Controller {
 				flag = true;
 				result = true;
 			}else{
+				record.set("semimanufactures_number", semimanufactures_number);
+				record.set("trade_name",getPara("trade_name"));
 				result = Db.save("semimanufactures", record);
 				map.put("tips", "保存成功");
 			}

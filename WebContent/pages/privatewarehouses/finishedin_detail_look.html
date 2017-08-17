@@ -48,6 +48,7 @@
                 <td>规格</td>
                 <td>单位</td>
                 <td>数量</td>
+                <td>对应仓库</td>
             </tr>
             <#if rlist?? && rlist?size gt 0>
             <#list rlist as product>
@@ -58,6 +59,7 @@
                 <td>${product.specifications!}</td>
                 <td>${product.measurement_unit!}</td>
                 <td>${product.num!}</td>
+                <td>${product.warehouse_name!}</td>
             </tr>
             </#list>
             <#else>

@@ -67,7 +67,11 @@ public class FinishedInController extends Controller {
 	 * @desc 打开新增页面
 	 */
 	public void addEdit(){
-		List<Record> list = FinishedInService.getFinishedProducts();
+		String finished_number = getPara("finished_number");
+		String trade_name = getPara("trade_name");
+		setAttr("finished_number", finished_number);
+		setAttr("trade_name", trade_name);
+		List<Record> list = FinishedInService.getFinishedProducts(finished_number,trade_name);
 		setAttr("im", list);
 		render("finishedin_detail_add.html");
 	}
@@ -90,9 +94,7 @@ public class FinishedInController extends Controller {
 		Record admin = (Record) getSession().getAttribute("admin");
 		System.out.println(admin);
 		Integer t_user_id = admin.getInt("id");
-		//Integer t_user_id = 1; // TODO
 		String storage_number = FinishedInService.getStorageNo();
-		//System.out.println(storage_number);
 		String list = getPara("list");
 		Integer id = getParaToInt("id");
 		

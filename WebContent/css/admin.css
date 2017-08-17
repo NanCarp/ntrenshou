@@ -109,4 +109,14 @@
     background-color: #2556ba;
     border-color: #2556ba;
 }
+.btn-12 {
+	color: #fff;
+    background-color: #8000ff;
+    border-color: #8080ff;
+}
+.btn-12:hover, .btn-12:focus {
+	color: #fff;
+    background-color: #8080ff;
+    border-color: #8000ff;
+}
 /********** 按钮颜色 E **********/

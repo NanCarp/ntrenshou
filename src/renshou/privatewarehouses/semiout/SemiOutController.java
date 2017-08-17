@@ -94,9 +94,16 @@ public class SemiOutController extends Controller{
       * @author xuhui
       */
       public void getStockList() {
+          // 产品编码
+          String semimanufactures_number = getPara("semimanufactures_number");
+          setAttr("semimanufactures_number", semimanufactures_number);
+          // 品名
+          String trade_name = getPara("trade_name");
+          setAttr("trade_name", trade_name);
+          
           // 库存所有产品
-          List<Record> stockDetailList = SemiOutService.getStockDetailList();
-          setAttr("stockList", JsonKit.toJson(stockDetailList));
+          List<Record> stockDetailList = SemiOutService.getStockDetailList(semimanufactures_number, trade_name);
+          setAttr("stockDetailList", JsonKit.toJson(stockDetailList));
           render("semiout_detail_add.html");
       }
       

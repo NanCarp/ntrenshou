@@ -42,11 +42,11 @@ public class LeaseInPriceService {
                 + " ON a.warehouse_id = c.id "
                 + " WHERE a.is_in = TRUE "
                 + " ORDER BY is_checked, warehouse_in_date ";
-        
+        // 根据入库单号模糊查询
         if (warehouse_in_no != null && !"".equals(warehouse_in_no)) {
             sql += "AND warehouse_in_no like '%" + warehouse_in_no + "%'";
         }
-        
+        // 根据客户名称模糊查询
         if (company_name != null && !"".equals(company_name)) {
             sql += "AND company_name like '%" + company_name + "%'";
         }

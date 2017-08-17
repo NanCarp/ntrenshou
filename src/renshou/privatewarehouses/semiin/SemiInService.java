@@ -3,7 +3,9 @@ package renshou.privatewarehouses.semiin;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.alibaba.fastjson.JSONObject;
 import com.jfinal.plugin.activerecord.Db;
@@ -34,6 +36,7 @@ public class SemiInService {
 		{
 			sql +=" and user_name like '%"+user_name+"%'";
 		}
+		sql +=" order by id desc";
 		return Db.paginate(pageNumber, pageSize, "SELECT s.*,u.user_name",sql);
 	}
 	
@@ -52,8 +55,14 @@ public class SemiInService {
 	 * @desc 查询所有半成品
 	 * @author xuhui
 	 */
-	public static List<Record> getSemimanufactures(){
-		String sql ="SELECT * FROM semimanufactures";
+	public static List<Record> getSemimanufactures(String semimanufactures_number,String trade_name){
+		String sql ="SELECT * FROM semimanufactures where 1=1";
+		if(semimanufactures_number!=null&&semimanufactures_number!=""){
+			sql +=" and semimanufactures_number like '%"+semimanufactures_number+"%'";
+		}
+		if(trade_name!=null&&trade_name!=""){
+			sql +=" and trade_name like '%"+trade_name+"%'";
+		}
 		return Db.find(sql);	
 	}
 	
@@ -169,7 +178,7 @@ public class SemiInService {
 				+ ",m.semimanufactures_number,m.trade_name,m.specifications,m.measurement_unit from"
 				+ " semimanufactures_storage_detail s LEFT JOIN semimanufactures m ON s.semimanufactures_id = m.id"
 				+ " WHERE s.semimanufactures_storage_id ="+id;
-		return Db.find(sql);
+		return  modifyWarehouseName(Db.find(sql));
 	}
 	
 	/**
@@ -276,4 +285,45 @@ public class SemiInService {
 		
 		return flag;
 	}
+	
+	/** 
+	    * @Title: modifyWarehouseName 
+	    * @Description: 修改仓库名称
+	    * @param list
+	    * @return List<Record>
+	    * @author liyu
+	    */
+	    public static List<Record> modifyWarehouseName(List<Record> list) {
+	        // 仓库 map
+	        Map<Integer, String> warehouses = getWarehouses();
+	        
+	        for(Record r : list) {
+	            r.set("warehouse_name", warehouses.get(r.getInt("warehouse_id")));
+	        }
+	        
+	        return list;
+	    }
+	    
+	    /** 
+	    * @Title: getWarehouses 
+	    * @Description: 所有仓库 map
+	    * @return Map<Integer,String>
+	    * @author liyu
+	    */
+	    private static Map<Integer, String> getWarehouses() {
+	        String sql = "SELECT a.id,CONCAT(c.warehouse_name,b.warehouse_name,a.warehouse_name) AS warehouse_name "
+	                + " FROM `warehouse` AS a "
+	                + " INNER JOIN warehouse AS b "
+	                + " ON a.pid = b.id "
+	                + " INNER JOIN warehouse AS c "
+	                + " ON b.pid = c.id";
+	        List<Record> warehouseList = Db.find(sql);
+	        
+	        Map<Integer, String> map = new HashMap<>();
+	        for (Record r : warehouseList) {
+	            map.put(r.getInt("id"), r.getStr("warehouse_name"));
+	        }
+	        
+	        return map;
+	    }
 }

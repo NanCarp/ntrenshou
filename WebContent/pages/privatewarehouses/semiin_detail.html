@@ -53,7 +53,7 @@
 <form class="form-horizontal" role="form" style="margin-top: 20px" id="defaultForm">
 	<#if imm??>
 	<input id="id" name="id" value="${imm.id!}" hidden="">
-	<div style="display: inline-block;margin-left: 20px">
+	<div style="display: inline-block;margin-left: 20px;width: 400px">
 	    <div class="form-group">
 	        <label class="col-xs-4 control-label text-right" for="storage_number">入库单号：</label>
 	        <div class="col-xs-8">
@@ -61,7 +61,7 @@
 	        </div>
 	    </div>
 	</div>
-	<div style="display: inline-block;margin-left: 40px">
+	<div style="display: inline-block;margin-left: 40px;width: 400px">
 	     <div class="form-group">
 	        <label class="col-xs-4 control-label text-right" for="t_user_id">入库人：</label>
 	        <div class="col-xs-8">
@@ -71,7 +71,7 @@
 	</div>
 	<#else>
 	<input id="id" name="id" value="" hidden="">
-	<div style="display: inline-block;margin-left: 16px">
+	<div style="display: inline-block;margin-left: 16px;width: 400px" >
 	    <div class="form-group">
 	        <label class="col-xs-4 control-label text-right" for="storage_number">入库单号：</label>
 	        <div class="col-xs-8">
@@ -79,7 +79,7 @@
 	        </div>
 	    </div>
 	</div>
-	<div style="display: inline-block;margin-left: 40px;">
+	<div style="display: inline-block;margin-left: 40px;width: 400px">
 	     <div class="form-group">
 	        <label class="col-xs-4 control-label text-right" for="t_user_id">入库人：</label>
 	        <div class="col-xs-8">
@@ -88,7 +88,6 @@
 	    </div>
 	</div>
 	</#if>
-	<div>
 <div id="wrapper">
 	<div class="panel-body" style="padding-bottom:0px;">
 		<div class="panel panel-default">		
@@ -105,7 +104,7 @@
                             <span style="font-size: 18px">产品编号:</span>
                         </div> 
 		                <div class="col-sm-3 col-xs-4 head_2" style="margin-left: 0px">
-                            <input type="text" class="form-control" placeholder="扫码点击此处" name="ProductCodeInfo" id="ProductCodeInfo" value="" >
+                            <input type="text" class="form-control" placeholder="扫码点击此处" name="ProductCodeInfo" id="ProductCodeInfo" value="" style="width: 200px">
                         </div>          									                            									                 
 					</div>				
 				</div>
@@ -154,7 +153,6 @@
 		</div>             
 	</div>
 </div>
-	</div>
     <div class="form-group" style="padding-left: 16px">
         <div class="col-xs-8">
             <button id="submit" type="button" class="btn btn-primary">　保存　</button>
@@ -207,6 +205,25 @@ $('#submit').click(function () {
         return;
     }
     console.log(JSON.stringify(list));
+    
+    var flagPro = false;//判断是否存在同一入库单下同一商品在同一库存内多次存放
+	 for(var i=0; i<$("tbody tr").length;i++){
+		for(var k=i+1;k<$("tbody tr").length;k++){
+			console.log(k);
+			if($("tbody tr").eq(i).find("td").eq(2).html()==$("tbody tr").eq(k).find("td").eq(2).html()){
+				var wid1 = $("tbody tr").eq(i).find("option:selected").val();
+				var wid2 = $("tbody tr").eq(k).find("option:selected").val();
+				if(wid1==wid2){
+					layer.msg("存在重复数据，请检查", {time: 2000});
+					flagPro = true;
+				}
+			}
+		}
+	}  
+
+	if(flagPro){
+		return;
+	}
     var id = $("#id").val(); // 入库单 id
     $.post("/private/semiin/saveSemiIn", {"list":JSON.stringify(list),"id":id}, function(result) {
         if (result) {
@@ -274,13 +291,13 @@ function _add(obj){
 //接受子页面添加参数
 function addcontant(data){
 	for(var r=0;r<data.length;r++){
-		var flag = true;
+		/* var flag = true;
 		$("tbody tr").each(function(k,v){
 			if(data[r] == $(v).find("td").eq(2).html()){
 				flag = false;
 			};
-		})
-		if(flag){
+		})  */
+		//if(flag){
 			$.post("/private/semiin/getSemiByNum",{"num":data[r]},function(record){
 				$("tbody").append(
 						"<tr class='data'>"
@@ -305,7 +322,7 @@ function addcontant(data){
 				)
 				sort();
 			})
-		}
+		//}
 	}
 }
 
@@ -364,14 +381,14 @@ function AddProduct(self) {
     var flag = true;
     if(barcode!=null){
     	if(barcode.length>5){   			
-   			$("tbody tr").each(function(k,v){
+   			/* $("tbody tr").each(function(k,v){
    				if(barcode == $(v).find("td").eq(2).html()){
    					parent.layer.msg("该条码已经录入", {time: 2000});
    					$(self).val("");
    					flag = false;
    				};
-   			})
-   			if(flag){
+   			}) */
+   			//if(flag){
    				$.post("/private/semiin/getSemiByNum",{"num":barcode},function(record){
    					console.log(record);
    					if(record!=null){
@@ -404,7 +421,7 @@ function AddProduct(self) {
    					} */
    				})
     		}
-    	}	
+    	//}	
     } 
 }
 

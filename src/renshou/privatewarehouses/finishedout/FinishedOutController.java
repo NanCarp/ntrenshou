@@ -1,24 +1,16 @@
 package renshou.privatewarehouses.finishedout;
 
-import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.alibaba.fastjson.JSONObject;
 import com.jfinal.aop.Before;
 import com.jfinal.core.Controller;
-import com.jfinal.json.FastJson;
 import com.jfinal.kit.JsonKit;
-import com.jfinal.plugin.activerecord.Db;
 import com.jfinal.plugin.activerecord.Page;
 import com.jfinal.plugin.activerecord.Record;
 
 import renshou.interceptor.ManageInterceptor;
-import renshou.leasewarehouse.in.LeaseInService;
-import renshou.leasewarehouse.out.LeaseOutService;
-import renshou.privatewarehouses.finishedin.FinishedInService;
 
 /**
  * @ClassName: FinishedOutController.java
@@ -112,12 +104,13 @@ public class FinishedOutController extends Controller {
     */
     public void getStockDetailByProductNo() {
         // 产品编码
-        String finished_number = getPara();
+        String finished_number = getPara("finished_number");
+        // 品名
+        String trade_name = getPara("trade_name");
         // 产品-仓库位置-库存 列表
-        List<Record> stockDetailList = FinishedOutService.getStockDetailByProductNo(finished_number);
-        setAttr("stockDetailList", stockDetailList);
+        List<Record> stockDetailList = FinishedOutService.getStockDetailByProductNo(finished_number, trade_name);
         
-        render("finishedout_stock_detail.html");
+        renderJson(stockDetailList);
     }
     
     /** 
@@ -191,8 +184,6 @@ public class FinishedOutController extends Controller {
         List<Record> outgoingProductList = FinishedOutService.getOutgoingProductList(id);
         setAttr("outgoingProductList",outgoingProductList);
         
-        // List<Record> rlist = FinishedOutService.getFinishedIn(id); //查询入库单明细信息
-        // setAttr("rlist", rlist);
         render("finishedout_detail_look.html");
     }
     

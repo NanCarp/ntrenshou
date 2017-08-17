@@ -79,27 +79,7 @@ public class FinishedOutService {
     * @return List<Record>
     * @author liyu
     */
-    public static List<Record> getStockDetailByProductNo(String finished_number) {
-        String sql = "SELECT * "
-                + " FROM `finished_product_stock_detail` AS a "
-                + " LEFT JOIN finished_product AS b "
-                + " ON a.finished_product_id = b.id "
-                + " WHERE finished_number = '"+ finished_number +"'";
-        return Db.find(sql);
-    }
-
-    /** 
-    * @Title: getStockDetailList 
-    * @Description: 获得库存产品列表 对应仓库
-    * @return List<Record>
-    * @author liyu
-    */
-    public static List<Record> getStockDetailList() {
-        /*String sql = "SELECT a.id,a.warehouse_id,a.finished_product_id,a.num, "
-                + " b.finished_number,b.trade_name,b.specifications,b.measurement_unit,b.remark "
-                + " FROM `finished_product_stock_detail` AS a "
-                + " LEFT JOIN finished_product AS b "
-                + " ON a.finished_product_id = b.id ";*/
+    public static List<Record> getStockDetailByProductNo(String finished_number, String trade_name) {
         String sql = "SELECT a.id,a.warehouse_id,a.finished_product_id,a.num, "
                 + " c.finished_number,c.trade_name,c.specifications,c.measurement_unit,c.remark, "
                 + " IFNULL(num - b.total_out_quantity,num) AS left_quantity "
@@ -115,6 +95,48 @@ public class FinishedOutService {
                 + " LEFT JOIN finished_product AS c ON "
                 + " a.finished_product_id = c.id "
                 + " WHERE IFNULL(num - b.total_out_quantity,num) > 0 ";
+        // 产品编码
+        if(finished_number!=null && !"".equals(finished_number)) {
+            sql += " AND c.finished_number like '%"+ finished_number +"%'";
+        }
+        // 品名
+        if(trade_name!=null && !"".equals(trade_name)) {
+            sql += " AND c.trade_name like '%"+ trade_name +"%'";
+        }
+        
+        sql += " ORDER BY c.finished_number, a.warehouse_id ";
+        
+        List<Record> list = Db.find(sql);
+        // 仓库名
+        list = modifyWarehouseName(list);
+        return list;
+    }
+
+    /** 
+    * @Title: getStockDetailList 
+    * @Description: 获得库存产品列表 对应仓库
+    * @return List<Record>
+    * @author liyu
+    */
+    public static List<Record> getStockDetailList() {
+
+        String sql = "SELECT a.id,a.warehouse_id,a.finished_product_id,a.num, "
+                + " c.finished_number,c.trade_name,c.specifications,c.measurement_unit,c.remark, "
+                + " IFNULL(num - b.total_out_quantity,num) AS left_quantity "
+                + " FROM finished_product_stock_detail AS a "
+                + " LEFT JOIN "
+                + " (SELECT b.warehouse_id,b.finished_product_id,SUM(num) AS total_out_quantity  "
+                + " FROM finished_product_outgoing AS a "
+                + " LEFT JOIN finished_product_outgoing_detail AS b "
+                + " ON a.id = b.finished_product_outgoing_id "
+                + " WHERE a.state = 0 "
+                + " GROUP BY warehouse_id, finished_product_id) AS b "
+                + " ON a.finished_product_id = b.finished_product_id AND a.warehouse_id = b.warehouse_id "
+                + " LEFT JOIN finished_product AS c ON "
+                + " a.finished_product_id = c.id "
+                + " WHERE IFNULL(num - b.total_out_quantity,num) > 0 ";
+        
+        sql += " ORDER BY c.finished_number, a.warehouse_id ";
         
         List<Record> list = Db.find(sql);
         // 仓库名
@@ -260,7 +282,6 @@ public class FinishedOutService {
                 + " FROM finished_product_outgoing "
                 + " WHERE outgoing_number LIKE '%"+ dateString +"%'"
                 + " ORDER BY outgoing_number DESC ";
-        System.out.println(sql);
         List<Record> list = Db.find(sql);
         if (list.size() > 0) {
             String db_warehouse_out_no = list.get(0).getStr("outgoing_number");
@@ -386,7 +407,6 @@ public class FinishedOutService {
                     productIds.add(product_id);
                 }
                 for (Integer product_id : productIds) {
-                    // List<Record> stockProductList = Db.find("SELECT * FROM `finished_product_stock` WHERE finished_product_id = ? ", product_id);
                     BigDecimal finished_product_stock_num = 
                             Db.queryBigDecimal("SELECT SUM(num) FROM `finished_product_stock_detail` WHERE finished_product_id = ? ", product_id);
                     System.out.println(finished_product_stock_num);

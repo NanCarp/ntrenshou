@@ -2,8 +2,6 @@ package renshou.privatewarehouses.finishedstock;
 
 import java.io.IOException;
 import java.sql.SQLException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
 
 import javax.servlet.ServletOutputStream;
@@ -15,9 +13,6 @@ import org.apache.poi.hssf.usermodel.HSSFFont;
 import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.hssf.util.Region;
-import org.omg.PortableInterceptor.INACTIVE;
-
 import com.alibaba.fastjson.JSONObject;
 import com.jfinal.plugin.activerecord.Db;
 import com.jfinal.plugin.activerecord.IAtom;
@@ -46,10 +41,11 @@ public class FinishedStockService {
                 + " LEFT JOIN finished_product AS b "
                 + " ON a.finished_product_id = b.id "
                 + " WHERE 1=1 ";
-		
+		// 产品编码
 		if(finished_number!=null&&finished_number!=""){
 			sql += " and finished_number like '%"+finished_number+"%'";
 		}
+		// 品名
 		if(trade_name!=null&&trade_name!=""){
 			sql +=" and trade_name like '%"+trade_name+"%'";
 		}
@@ -108,7 +104,6 @@ public class FinishedStockService {
 			boolean result = true;
 			@Override
 			public boolean run() throws SQLException {
-				// TODO Auto-generated method stub
 				for(String id:allid){
 					Record record =FinishedStockService.getFinishedId(Integer.parseInt(id));
 					System.out.println(Integer.parseInt(id));
@@ -164,7 +159,6 @@ public class FinishedStockService {
 		flag = Db.tx(new IAtom() {
 			@Override
 			public boolean run() throws SQLException {
-				// TODO Auto-generated method stub
 				Record record = new Record();
 				record.set("finished_product_id", finished_product_id);
 				record.set("finished_product_stock_num", finished_product_id_num);
@@ -212,7 +206,6 @@ public class FinishedStockService {
 		HSSFWorkbook wbook = new HSSFWorkbook();//创建一个workbook对应一个excel
 		HSSFSheet sheet = wbook.createSheet();//创建一个sheet
 		wbook.setSheetName(0, "成品仓库导入表格", (short)1);
-		//sheet.addMergedRegion(new Region(0, (short)0 , 0, (short)11));
 		
 		//设置列宽
 		sheet.setColumnWidth((short)0, (short)2000);//序号

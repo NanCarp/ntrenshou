@@ -277,8 +277,8 @@ function getRecordList() {
 	 
 	$('tbody tr[class = "data"]').each(function () {
 	    $tr = $(this);
-	    var id = $tr.find('input[name="id"]').val(); // 成品库存detail id
-	    var semimanufactures_id = $tr.find('input[name="semimanufactures_id"]').val(); // 成品 id
+	    var id = $tr.find('input[name="id"]').val(); // 半成品库存detail id
+	    var semimanufactures_id = $tr.find('input[name="semimanufactures_id"]').val(); // 半成品 id
 	    var warehouse_id = $tr.find('input[name="warehouse_id"]').val(); // 仓库 id
 	    var num = $tr.find('input[name="num"]').val(); // 出库数量
 	    var record = {};
@@ -348,7 +348,7 @@ $(stockList).each(function () {
 });
 // 选择产品列表页面
 function _add(){
-	open_window('新增成品出库','/private/semiout/getStockList', 720, 540);
+	open_window('新增半成品出库','/private/semiout/getStockList', 820, 540);
 }
 
 // 产品数据展示到页面
@@ -415,7 +415,7 @@ function addProduct(obj) {
 function _edit(semimanufactures_number) {
 	console.log(typeof semimanufactures_number);
 	console.log(semimanufactures_number);
-	open_window('成品出库详情','/private/semiout/getStockDetailByProductNo/' + semimanufactures_number, 720, 540);
+	open_window('半成品出库详情','/private/semiout/getStockDetailByProductNo/' + semimanufactures_number, 720, 540);
 }
 
 

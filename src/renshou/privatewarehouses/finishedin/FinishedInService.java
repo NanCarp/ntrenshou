@@ -39,16 +39,6 @@ public class FinishedInService {
 		return Db.paginate(pageNumber, pageSize, "SELECT s.*,u.user_name",sql);
 	}
 	
-	/**
-	 * @desc 找到最子级仓库
-	 * @author liyu
-	 */
-/*	public static List<Record> getSublevel(){
-		String sql ="SELECT w.id,w.warehouse_name,w.pid,a.id as aid,a.warehouse_name as awarehouse_name,r.id as rid"
-				+ ",r.warehouse_name as rwarehouse_name FROM warehouse w LEFT JOIN warehouse a ON w.pid = a.id LEFT JOIN"
-				+ " warehouse r ON r.id = a.pid where r.id IS NOT NULL";
-		return Db.find(sql); 
-	}*/
     /** 
     * @Title: getWarehouseList 
     * @Description: 仓库列表
@@ -70,8 +60,14 @@ public class FinishedInService {
 	 * @desc 查询所有成品
 	 * @author liyu
 	 */
-	public static List<Record> getFinishedProducts(){
-		String sql ="SELECT * FROM finished_product";
+	public static List<Record> getFinishedProducts(String finished_number,String trade_name){
+		String sql ="SELECT * FROM finished_product where 1=1";
+		if(finished_number!=null&&finished_number!=""){
+			sql +=" and finished_number like '%"+finished_number+"'";
+		}
+		if(trade_name!=null&&trade_name!=""){
+			sql +=" and trade_name like '%"+trade_name+"%'";
+		}
 		return Db.find(sql);	
 	}
 	
@@ -134,12 +130,9 @@ public class FinishedInService {
 					r = Db.save("finished_product_storage", record);
 					//判断是否保存成功
 					if(r){
-						// String sql="SELECT id from finished_product_storage WHERE storage_number= '"+storage_number+"'";
 						//已存入入库单id
-						//Integer sid = Db.findFirst(sql).getInt("id");
 					    Long sid = record.getLong("id");
 						for(JSONObject obj:jlist){
-							//Integer finished_product_storage_id = sid; 
 							String finished_number = obj.getString("finished_number");
 							String sqlMe = "SELECT id from finished_product WHERE finished_number = '"+finished_number+"'";
 							Integer finished_product_id = Db.findFirst(sqlMe).getInt("id");
@@ -188,7 +181,7 @@ public class FinishedInService {
 				+ ",m.finished_number,m.trade_name,m.specifications,m.measurement_unit from"
 				+ " finished_product_storage_detail s LEFT JOIN finished_product m ON s.finished_product_id = m.id"
 				+ " WHERE s.finished_product_storage_id ="+id;
-		return Db.find(sql);
+		return modifyWarehouseName(Db.find(sql));
 	}
 	
 	/**
@@ -299,5 +292,46 @@ public class FinishedInService {
         
         return no;
     }
+    
+    /** 
+	    * @Title: modifyWarehouseName 
+	    * @Description: 修改仓库名称
+	    * @param list
+	    * @return List<Record>
+	    * @author liyu
+	    */
+	    public static List<Record> modifyWarehouseName(List<Record> list) {
+	        // 仓库 map
+	        Map<Integer, String> warehouses = getWarehouses();
+	        
+	        for(Record r : list) {
+	            r.set("warehouse_name", warehouses.get(r.getInt("warehouse_id")));
+	        }
+	        
+	        return list;
+	    }
+	    
+	    /** 
+	    * @Title: getWarehouses 
+	    * @Description: 所有仓库 map
+	    * @return Map<Integer,String>
+	    * @author liyu
+	    */
+	    private static Map<Integer, String> getWarehouses() {
+	        String sql = "SELECT a.id,CONCAT(c.warehouse_name,b.warehouse_name,a.warehouse_name) AS warehouse_name "
+	                + " FROM `warehouse` AS a "
+	                + " INNER JOIN warehouse AS b "
+	                + " ON a.pid = b.id "
+	                + " INNER JOIN warehouse AS c "
+	                + " ON b.pid = c.id";
+	        List<Record> warehouseList = Db.find(sql);
+	        
+	        Map<Integer, String> map = new HashMap<>();
+	        for (Record r : warehouseList) {
+	            map.put(r.getInt("id"), r.getStr("warehouse_name"));
+	        }
+	        
+	        return map;
+	    }
     
 }
