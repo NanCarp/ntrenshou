@@ -2,6 +2,8 @@ package renshou.login;
 
 import java.io.UnsupportedEncodingException;
 import java.security.NoSuchAlgorithmException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -79,6 +81,17 @@ public class LoginController extends Controller{
 	 */
 	@Clear
 	public void adminLogin() throws NoSuchAlgorithmException, UnsupportedEncodingException{
+	    Map<String, Object> responseMap = new HashMap<>(); // 返回信息
+	    String dateStr = "2018-9-1 00:00:00";
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		Date cutoffTime = new Date();
+		try {
+			 cutoffTime = sdf.parse(dateStr);
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 		String username = getPara("username");
 		String password = getPara("password");
 		
@@ -91,12 +104,23 @@ public class LoginController extends Controller{
 		}else{
 		    // 查看是否冻结
 		    if(admin.getBoolean("state") == false) {
-		        Map<String, Object> responseMap = new HashMap<>();
+		        responseMap = new HashMap<>();
 		        responseMap.put("result", result);  
 		        responseMap.put("msg", "此账号已被冻结");
 		        renderJson(responseMap);
 		        return;
 		    }
+		    
+		    // 查看是否到期，0：正常，1：提示快到期，2：已到期，无法登录
+		    System.out.println(compareDate(cutoffTime, new Date()));
+            if(admin.getInt("type") == 2||compareDate(cutoffTime, new Date())==-1) {
+                responseMap = new HashMap<>();
+                responseMap.put("result", result);  
+                responseMap.put("type", admin.getInt("type"));
+                responseMap.put("msg", "已到期，无法登录");
+                renderJson(responseMap);
+                return;
+            }
 		    
 			boolean v = MD5Util.validPassword(password, admin.getStr("password"));
 			if(v){
@@ -107,9 +131,9 @@ public class LoginController extends Controller{
 				msg = "用户名或密码错误";
 			}
 		}
-		Map<String, Object> responseMap = new HashMap<>();
 		responseMap.put("result", result);	
 		responseMap.put("msg", msg);
+		responseMap.put("type", admin.getInt("type"));
 		renderJson(responseMap);
 	}
 	
@@ -156,5 +180,23 @@ public class LoginController extends Controller{
     	map.put("rows", dictionaryList);
     	map.put("total",LoginService.getIframe(pageindex, pagelimit,product_num,trade_name).getTotalRow());
     	renderJson(map);
+	}
+	
+	/**
+	 * @desc 比较时间大小，判断是否可以登录
+	 * @param d1
+	 * @param d2
+	 * @return
+	 */
+	public int compareDate(Date d1,Date d2){
+        if (d1.getTime() > d2.getTime()) {
+            System.out.println("dt1 在dt2前");
+            return 1;
+        } else if (d1.getTime() < d2.getTime()) {
+            System.out.println("dt1在dt2后");
+            return -1;
+        } else {//相等
+            return 0;
+        }
 	}
 }

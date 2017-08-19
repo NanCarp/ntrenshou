@@ -37,31 +37,33 @@
     <![endif]-->	
 </head>
 <body>
-	<img class="im"/>
 	<#if storages?? && storages?size gt 0>
 	<#list storages as storage>
-	<div class="contant">
-		<div class="title">${storage.trade_name!}</div>
-		<div class="center">
-			<table class="tablestyle">
-				<tr>
-					<td class="tabletr">产品编号:</td><td class="tabletext">${storage.product_num!}</td><td class="tabletr">规格:</td><td class="tabletext">${storage.specifications!}</td>
-				</tr>
-				<tr>
-					<td class="tabletr">计量单位:</td><td class="tabletext">${storage.measurement_unit!}</td><td></td><td></td>
-				</tr>	
-				<tr>
-					<td class="tabletr">备注:</td><td colspan="3" style="white-space: normal;font-size: 16px;text-align: left;">${storage.remark!}</td>
-				</tr>		
-			</table>
-		</div>
-		<div class="imgdiv">
-			<img class="_${storage.product_num!}"/>
+	<div class="contantBody">
+		<div class="contant">
+			<div class="title">${storage.trade_name!}</div>
+			<div class="center">
+				<table class="tablestyle">
+					<tr>
+						<td class="tabletr">产品编号:</td><td class="tabletext" style="width: 130px">${storage.product_num!}</td><td class="tabletr" style="width: 40px">规格:</td><td class="tabletext">${storage.specifications!}</td>
+					</tr>
+					<tr>
+						<td class="tabletr">计量单位:</td><td class="tabletext">${storage.measurement_unit!}</td><td></td><td></td>
+					</tr>	
+					<tr>
+						<td class="tabletr">备注:</td><td colspan="3" style="white-space: normal;font-size: 14px;text-align: left;">${storage.remark!}</td>
+					</tr>		
+				</table>
+			</div>
+			<div class="imgdiv">
+				<img class="_${storage.product_num!}"/>
+				<div  style="letter-spacing:12px;width:100%;text-align: center;font-size: 20px;font-weight: bold;">${storage.product_num!}</div>
+			</div>
 		</div>
 	</div>
 	</#list>
 	</#if>
-	<div style="padding-bottom: 40px" class="form-group">
+	<div style="padding-bottom: 40px;margin-top: 20px" class="form-group">
         <label class="col-xs-8 control-label" for="v"></label>
         <div style="padding-left: 36px" class="col-xs-3">
             <button id="v" type="button" class="btn btn-primary" onclick="print()">　打印　</button>
@@ -100,11 +102,11 @@ $(function(){
 		var code=$(v).find("td").eq(1).html();
 		JsBarcode("._"+code,code, {
 			  format: "CODE128",//选择要使用的条形码类型
-			  width:3,//设置条之间的宽度
+			  width:2.5,//设置条之间的宽度
 			  height:60,//高度
-			  displayValue:true,//是否在条形码下方显示文字
+			  displayValue:false,//是否在条形码下方显示文字
 			  //text:"456",//覆盖显示的文本
-			  fontOptions:"bold italic",//使文字加粗体或变斜体
+			  fontOptions:" ",//使文字加粗体或变斜体
 			  font:"fantasy",//设置文本的字体
 			  //textAlign:"left",//设置文本的水平对齐方式
 			  //textPosition:"top",//设置文本的垂直位置

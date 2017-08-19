@@ -53,7 +53,7 @@ public class FinishedOutService {
         if (user_name != null && user_name != "") {
             sql += " and user_name like '%" + user_name + "%'";
         }
-
+        sql +=" order by a.id desc";
         return Db.paginate(pageindex, pagelimit, select, sql);
     }
 

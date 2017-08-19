@@ -173,14 +173,21 @@
 <script src="../../../resource/bootstrapvalidator/js/bootstrapValidator.min.js"></script>
 <script src="../../../js/common/admin.js"></script>
 <script type="text/javascript">
-document.onkeydown = function(e) {
+/* document.onkeydown = function(e) {
     var e = e || event;
     if(e.keyCode == 13) {
-		AddProduct(this);
+    	$("#ProductCodeInfo").keydown(function (e) {
+    		AddProduct(this);
+    	}
    	    e.preventDefault ? e.preventDefault() : (e.returnValue = false);
     }
-}
-
+} */
+document.onkeydown = function(event){
+	var e = event || window.event || arguments.callee.caller.arguments[0];
+	if(e && e.keyCode==13){
+		AddProduct(this);
+	}
+};
 
 //提交
 $('#submit').click(function () {
@@ -229,7 +236,7 @@ $('#submit').click(function () {
         if (result) {
             parent.layer.msg("保存成功", {time: 2000}, function(){
                 layer_close();
-                parent.parent.refresh_iframe();
+                parent.refresh_iframe();
             });
         } else {
             parent.layer.msg("保存失败", {time: 2000});
@@ -279,9 +286,9 @@ function bindValidator(obj){
 
 $(function(){
 	//扫码录入
-	  $("#ProductCodeInfo").keydown(function (e) {
+	 /*  $("#ProductCodeInfo").keydown(function (e) {
 			 AddProduct(this);
-    }) 
+    })  */
 })
 
 function _add(obj){
@@ -376,8 +383,8 @@ $("input[name='sub']").click(function() {
 });
 
 //扫码录入
-function AddProduct(self) {
-    var barcode = $.trim($(self).val());
+function AddProduct(self) {	
+    var barcode = $.trim($("#ProductCodeInfo").val());
     var flag = true;
     if(barcode!=null){
     	if(barcode.length>5){   			
@@ -390,7 +397,6 @@ function AddProduct(self) {
    			}) */
    			//if(flag){
    				$.post("/private/semiin/getSemiByNum",{"num":barcode},function(record){
-   					console.log(record);
    					if(record!=null){
    						$("tbody").append(
    	   							"<tr class='data'>"
@@ -414,11 +420,11 @@ function AddProduct(self) {
    	   		           		+"</tr>"		
    	   					)
    	   					sort();
-   	   					$(self).val("");
-   					}/* else{
-   						parent.layer.msg("请录入正确的半成品条码", {time: 2000});
-   						$(self).val("");
-   					} */
+   	   					$("#ProductCodeInfo").val("");
+   					}else{
+   						parent.layer.msg("无对应数据，请确认后再次录入", {time: 2000});
+   						$("#ProductCodeInfo").val("");
+   					}
    				})
     		}
     	//}	

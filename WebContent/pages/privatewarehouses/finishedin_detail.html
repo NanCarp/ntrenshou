@@ -187,7 +187,7 @@
 <script src="../../../resource/bootstrapvalidator/js/bootstrapValidator.min.js"></script>
 <script src="../../../js/common/admin.js"></script>
 <script type="text/javascript">
-document.onkeydown = function(e) {
+/* document.onkeydown = function(e) {
     var e = e || event;
     if(e.keyCode == 13) {
 		AddProduct(this);
@@ -199,7 +199,13 @@ $(function(){
     $("#ProductCodeInfo").keydown(function (e) {
         AddProduct(this);
     });
-});
+}); */ 
+document.onkeydown = function(event){
+    var e = event || window.event || arguments.callee.caller.arguments[0];
+    if(e && e.keyCode==13){
+        AddProduct(this);
+    }
+};
 // 提交
 $('#submit').click(function () {
 	// 绑定校验
@@ -226,7 +232,6 @@ $('#submit').click(function () {
    // var flagPro = false;//判断是否存在同一入库单下同一商品在同一库存内多次存放
 	 for(var i=0; i<$("tbody tr").length;i++){
 		for(var k=i+1;k<$("tbody tr").length;k++){
-			console.log(k);
 			if($("tbody tr").eq(i).find("td").eq(2).html()==$("tbody tr").eq(k).find("td").eq(2).html()){
 				var wid1 = $("tbody tr").eq(i).find("option:selected").val();
 				var wid2 = $("tbody tr").eq(k).find("option:selected").val();
@@ -376,7 +381,7 @@ $("input[name='sub']").click(function() {
 
 //扫码录入
 function AddProduct(self) {
-    var barcode = $.trim($(self).val());
+	var barcode = $.trim($("#ProductCodeInfo").val());
     var flag = true;
     if(barcode!=null){
         if(barcode.length>5){               
@@ -389,7 +394,6 @@ function AddProduct(self) {
             }) */
            // if(flag){
                 $.post("/private/finishedin/getFinishedByNum",{"num":barcode},function(record){
-                    console.log(record);
                     if(record!=null){
                         $("tbody").append(
                                 "<tr class='data'>"

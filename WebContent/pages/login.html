@@ -138,19 +138,40 @@
                var datajson = {"username": username, "password": password, "isInsider": isInsider};// 增加内部人员标识
     		   $.post("/pages/adminLogin",datajson,function(data){
     			   if(data.result){
-    				   var rem = $("input:checkbox[name='rememberMe']").is(':checked');
-    				   if(rem){
-    					   $.cookie('online','true',{expires: 7});
-    					   $.cookie("accountnum",$("#accountnum").val(),{expires: 7});
-    					   $.cookie("password",$("#password").val(),{expires: 7});
-    				   }else{
-    					   $.cookie('online',"false",{expire: -1 });
-    					   $.cookie("accountnum","",{expire: -1 });
-    					   $.cookie("password","",{expire: -1 });
+    				   if (data.type == 1) {
+    					   layer.msg('系统将于9月1号进入维护期，<br>请尽快联系品德公司！', {time: 5000}, function () {
+    						   var rem = $("input:checkbox[name='rememberMe']").is(':checked');
+    	                       if(rem){
+    	                           $.cookie('online','true',{expires: 7});
+    	                           $.cookie("accountnum",$("#accountnum").val(),{expires: 7});
+    	                           $.cookie("password",$("#password").val(),{expires: 7});
+    	                       }else{
+    	                           $.cookie('online',"false",{expire: -1 });
+    	                           $.cookie("accountnum","",{expire: -1 });
+    	                           $.cookie("password","",{expire: -1 });
+    	                       }
+    	                       location.replace("/pages/index");
+    					   });
+    				   } else {
+    					   var rem = $("input:checkbox[name='rememberMe']").is(':checked');
+                           if(rem){
+                               $.cookie('online','true',{expires: 7});
+                               $.cookie("accountnum",$("#accountnum").val(),{expires: 7});
+                               $.cookie("password",$("#password").val(),{expires: 7});
+                           }else{
+                               $.cookie('online',"false",{expire: -1 });
+                               $.cookie("accountnum","",{expire: -1 });
+                               $.cookie("password","",{expire: -1 });
+                           }
+                           location.replace("/pages/index");
     				   }
-    				   location.replace("/pages/index");
+    				   
     			   }else{
-    				   layer.tips(data.msg, '#msg', {tips: [1, '#E74C3C']});return false;
+    				   if (data.type == 2) {
+    					   layer.msg('已到期，无法登录。<br>请尽快联系品德公司！',{time: 6000});
+    				   } else {
+    					   layer.tips(data.msg, '#msg', {tips: [1, '#E74C3C']});return false;
+    				   }
     			   }
     		   })
     	   //}else{

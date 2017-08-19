@@ -28,6 +28,9 @@ public class BarCodeController extends Controller {
 	 * @author xuhui
 	 */
 	public void getJson(){
+		String product_num = getPara("product_num");
+		String trade_name = getPara("trade_name");
+		
     	Integer	pageindex = 0;
     	Integer pagelimit = getParaToInt("limit")==null? 12 :getParaToInt("limit");
     	Integer offset = getParaToInt("offset")==null?0:getParaToInt("offset");
@@ -36,9 +39,9 @@ public class BarCodeController extends Controller {
     	}
     	pageindex += 1;
     	Map<String, Object> map = new HashMap<String,Object>(); 	
-    	List<Record> dictionaryList = BarCodeService.getProduct(pageindex, pagelimit).getList();
+    	List<Record> dictionaryList = BarCodeService.getProduct(pageindex, pagelimit,product_num,trade_name).getList();
     	map.put("rows", dictionaryList);
-    	map.put("total",BarCodeService.getProduct(pageindex, pagelimit).getTotalRow());
+    	map.put("total",BarCodeService.getProduct(pageindex, pagelimit,product_num,trade_name).getTotalRow());
     	renderJson(map);	
 	}
 	

@@ -47,6 +47,8 @@ public class LeaseInventoryService {
             sql += "AND company_name like '%" + company_name + "%'";
         }
         
+        sql += " ORDER BY b.warehouse_in_no DESC ";
+        
         return Db.paginate(pageindex, pagelimit, select, sql);
     }
 

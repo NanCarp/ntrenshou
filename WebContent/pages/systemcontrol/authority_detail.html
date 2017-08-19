@@ -105,7 +105,10 @@
 
         var treeObj = $.fn.zTree.getZTreeObj("authority");
         var nodes = treeObj.getCheckedNodes(true);
-        //console.log(nodes);
+        
+        console.log(treeObj);
+        console.log(nodes);
+        
         if(nodes.length == 0){
             layer.msg('请选择添加权限');return;
         }
@@ -116,7 +119,7 @@
         // 权限 ids
         var authorityIds = myArray.join();
 
-        $.post("/system/authority/saveAuthority",{"roleId":roleId, "authorityIds": authorityIds, "menusId":menusId, "buttonsId":buttonsId}, function(result) {
+       $.post("/system/authority/saveAuthority",{"roleId":roleId, "authorityIds": authorityIds, "menusId":menusId, "buttonsId":buttonsId}, function(result) {
             if (result) {
                 parent.layer.msg("保存成功", {time: 2000}, function(){
                     layer_close();
@@ -127,7 +130,7 @@
                 parent.layer.msg('保存失败', {icon: 1});
             }
 
-        });
+        }); 
     });
 
     // 权限树

@@ -232,7 +232,7 @@ var ButtonInit = function () {
 
 //新增
 function _add(){
-	open_window('新增成品入库','/private/finishedin/getEdit', 1000, 600);
+	parent.open_window('新增成品入库','/private/finishedin/getEdit', 1000, 600);
 }
 
 //编辑
@@ -240,7 +240,7 @@ function _edit(id){
 	// 判断是否已经确认入库，确认入库不可修改
 	$.post("/private/finishedin/checkOr",{"id":id},function(resut){
 		if(resut){
-			open_window('编辑成品入库','/private/finishedin/getEdit/' + id, 1000, 600);
+			parent.open_window('编辑成品入库','/private/finishedin/getEdit/' + id, 1000, 600);
 		}else{
 			layer.msg("已确认入库无法编辑",{time:2000});
 		}
@@ -341,7 +341,7 @@ function _look(){
 	}else if(ids.length > 1){
 		layer.msg('最多选择一条数据', {time: 2000});
 	}else{
-		open_window('成品入库单','/private/finishedin/look/'+ids, 800, 500);
+		parent.open_window('成品入库单','/private/finishedin/look/'+ids, 800, 500);
 	}
 }
 

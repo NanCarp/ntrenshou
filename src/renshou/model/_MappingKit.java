@@ -16,35 +16,7 @@ import com.jfinal.plugin.activerecord.ActiveRecordPlugin;
 public class _MappingKit {
 
 	public static void mapping(ActiveRecordPlugin arp) {
-		arp.addMapping("company", "id", Company.class);
-		arp.addMapping("company_contact", "id", CompanyContact.class);
-		arp.addMapping("finished_product", "id", FinishedProduct.class);
-		arp.addMapping("finished_product_outgoing", "id", FinishedProductOutgoing.class);
-		arp.addMapping("finished_product_outgoing_detail", "id", FinishedProductOutgoingDetail.class);
-		arp.addMapping("finished_product_stock", "id", FinishedProductStock.class);
-		arp.addMapping("finished_product_stock_detail", "id", FinishedProductStockDetail.class);
-		arp.addMapping("finished_product_storage", "id", FinishedProductStorage.class);
-		arp.addMapping("finished_product_storage_detail", "id", FinishedProductStorageDetail.class);
-		arp.addMapping("semimanufactures", "id", Semimanufactures.class);
-		arp.addMapping("semimanufactures_outgoing", "id", SemimanufacturesOutgoing.class);
-		arp.addMapping("semimanufactures_outgoing_detail", "id", SemimanufacturesOutgoingDetail.class);
-		arp.addMapping("semimanufactures_stock", "id", SemimanufacturesStock.class);
-		arp.addMapping("semimanufactures_stock_detail", "id", SemimanufacturesStockDetail.class);
-		arp.addMapping("semimanufactures_storage", "id", SemimanufacturesStorage.class);
-		arp.addMapping("semimanufactures_storage_detail", "id", SemimanufacturesStorageDetail.class);
-		arp.addMapping("t_button", "id", Button.class);
-		arp.addMapping("t_lease_warehouse_in", "id", LeaseWarehouseIn.class);
-		arp.addMapping("t_lease_warehouse_in_product", "id", LeaseWarehouseInProduct.class);
-		arp.addMapping("t_lease_warehouse_inventory", "id", LeaseWarehouseInventory.class);
-		arp.addMapping("t_lease_warehouse_inventory_product", "id", LeaseWarehouseInventoryProduct.class);
-		arp.addMapping("t_lease_warehouse_out", "id", LeaseWarehouseOut.class);
-		arp.addMapping("t_lease_warehouse_out_product", "id", LeaseWarehouseOutProduct.class);
-		arp.addMapping("t_menu", "id", Menu.class);
-		arp.addMapping("t_role", "id", Role.class);
-		arp.addMapping("t_role_button", "id", RoleButton.class);
-		arp.addMapping("t_role_menu", "id", RoleMenu.class);
-		arp.addMapping("t_user", "id", User.class);
-		arp.addMapping("warehouse", "id", Warehouse.class);
+
 	}
 }
 

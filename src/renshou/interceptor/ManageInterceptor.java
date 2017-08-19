@@ -15,6 +15,7 @@ import com.jfinal.plugin.activerecord.Record;
  */
 public class ManageInterceptor implements Interceptor {
 
+	
 	@Override
 	public void intercept(Invocation inv) {
 		Controller c = inv.getController();

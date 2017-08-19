@@ -232,7 +232,7 @@ var ButtonInit = function () {
 
 //新增
 function _add(){
-	open_window('新增成品出库','/private/finishedout/getRecord', 1000, 600);
+	parent.open_window('新增成品出库','/private/finishedout/getRecord', 1000, 600);
 }
 
 //编辑
@@ -242,7 +242,7 @@ function _edit(id, state){
         layer.msg('已确认出库无法编辑', {time: 2000});
         return;
     };
-    open_window('编辑成品出库','/private/finishedout/getRecord/' + id, 1000, 600);
+    parent.open_window('编辑成品出库','/private/finishedout/getRecord/' + id, 1000, 600);
 }
 
 //批量删除
@@ -344,7 +344,7 @@ function _look(){
 	}else if(ids.length > 1){
 		layer.msg('最多选择一条数据', {time: 2000});
 	}else{
-		open_window('成品出库单','/private/finishedout/look/'+ids, 800, 500);
+		parent.open_window('成品出库单','/private/finishedout/look/'+ids, 800, 500);
 	}
 }
 

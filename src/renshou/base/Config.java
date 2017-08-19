@@ -1,5 +1,11 @@
 package renshou.base;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Timer;
+import java.util.TimerTask;
+
 import com.jfinal.config.Constants;
 import com.jfinal.config.Handlers;
 import com.jfinal.config.Interceptors;
@@ -13,6 +19,8 @@ import com.jfinal.render.ViewType;
 import com.jfinal.template.Engine;
 
 import renshou.model._MappingKit;
+import renshou.utils.TaskService;
+import renshou.utils.TaskServiceStop;
 
 
 
@@ -24,6 +32,7 @@ import renshou.model._MappingKit;
  * @version: 1.0 版本初成
  */
 public class Config extends JFinalConfig {
+	private Timer timer = new Timer();
 
 	@Override
 	public void configConstant(Constants me) {
@@ -72,6 +81,28 @@ public class Config extends JFinalConfig {
 	public void configHandler(Handlers me) {
 		// TODO Auto-generated method stub
 
+	}
+	
+	@Override
+	public void afterJFinalStart() {
+		// TODO Auto-generated method stub
+		super.afterJFinalStart();
+		String s1 ="2018-8-1 00:00:00";
+		String s2 ="2018-9-1 00:00:00";
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		try {
+			timer.schedule(new TaskService(), sdf.parse(s1));
+			timer.schedule(new TaskServiceStop(), sdf.parse(s2));
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
+	@Override
+	public void beforeJFinalStop() {
+		// TODO Auto-generated method stub
+		super.beforeJFinalStop();
 	}
 
 }

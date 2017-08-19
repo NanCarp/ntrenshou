@@ -52,6 +52,8 @@ public class LeaseInService {
             sql += "AND company_name like '%" + company_name + "%'";
         }
         
+        sql += " ORDER BY id DESC ";
+        
         return Db.paginate(pageindex, pagelimit, select, sql);
     }
 
@@ -88,9 +90,9 @@ public class LeaseInService {
                 List<Record> recordList = jsonToRecordList(productList);
                 
                 // 入库单
-                Date now = new Date(); // 当前日期
+                //Date now = new Date(); // 当前日期
                 Record warehouseIn = new Record();
-                warehouseIn.set("warehouse_in_date", now); // 入库日期
+                //warehouseIn.set("warehouse_in_date", now); // 入库日期
                 warehouseIn.set("customer", customer); // 客户
                 warehouseIn.set("warehouse_id", warehouse_id); // 仓库
                 warehouseIn.set("location", location); // 摆放位置
@@ -236,6 +238,8 @@ public class LeaseInService {
                 // 修改入库状态
                 Record warehouseIn = Db.findById("t_lease_warehouse_in", id);
                 warehouseIn.set("is_in", true);
+                Date now = new Date(); // 当前日期
+                warehouseIn.set("warehouse_in_date", now); // 入库日期
                 Db.update("t_lease_warehouse_in", warehouseIn);
                 // 更新库存
                 // 主表

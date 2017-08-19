@@ -6,12 +6,6 @@ password = 123456
 # 开发环境
 devMode=true
 
-# host 地址
-host = http://liyutest.tunnel.qydev.com
-
 #文件下载地址
 filepath = D:/upload/renshou/file/
-host = http://liyutest.tunnel.qydev.com
 
-# 文件上传地址
-uploadPath = D:/upload/renshou/

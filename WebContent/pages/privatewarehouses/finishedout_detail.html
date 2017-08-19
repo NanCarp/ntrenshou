@@ -266,13 +266,6 @@ $('#submit').click(function () {
     var id = $("#finished_product_outgoing_id").val(); // 出库单 id
     var company_id = $('#company_id').val(); // 客户 id
     var remark = $('#remark').val() // 备注
-    /* var postData = {
-		"outgoingDetailList": JSON.stringify(outgoingDetailList),
-		"id": id,
-		"company_id":company_id,
-		"remark":remark
-    }; */
-    //console.log(postData);return;
     $.post("/private/finishedout/save", {"outgoingDetailList": JSON.stringify(outgoingDetailList),"id": id,"company_id":company_id,"remark":remark}, function(result) {
     	if (result.isSuccess) {
             parent.layer.msg(result.tips, {time: 2000}, function(){
@@ -300,11 +293,9 @@ function getRecordList() {
 	    record.finished_product_id = finished_product_id;
 	    record.warehouse_id = warehouse_id;
 	    record.num = num;
-	    console.log(record);
 	    recordList.push(record);
 	});
 	
-	console.log(recordList);
 	return recordList;
 }
 //绑定校验
@@ -384,11 +375,9 @@ function addProducts(productNoList) {
 	// 排除已存在的与未选中的产品
 	$(stockList).each(function (index, obj) {
 		if (!contains(productNoList, obj.id)) {
-			console.log(obj.id + " not in it ");
 			return true; 
 		}
 		if (contains(existProductNoList, obj.id)) {
-            console.log(obj.id + "exist");
             return true; // 排除已存在的
         }
 		addProduct(obj); // 数据展示到页面
@@ -401,12 +390,10 @@ function getExistProductList() {
     $('tr').each(function () {
         existProductNoList.push($(this).find('input[name="id"]').val());
     });
-    console.log("existProductNoList: " + existProductNoList);
     return existProductNoList;
 }
 // 单条产品数据展示到页面
 function addProduct(obj) {
-	//console.log(obj);
 	var product = '<tr class="data">'+
                     '<td>'+
                         '<input type="checkbox" name="sub" value="" >'+
@@ -495,7 +482,6 @@ function AddProduct(self) {
             })
             if(flag){
                 $.post("/private/finishedout/getFinishedByNum",{"num":barcode},function(list){
-                    console.log(list);
                     // return;
                     if(list.length > 0){
                     	$(list).each(function () {

@@ -250,8 +250,6 @@ var ButtonInit = function () {
 
 // 编辑
 function _edit(id, isOut){
-    //console.log(typeof isOut);
-    //console.log(isOut);
     if (isOut == true) {
         layer.msg('已出库，无法修改！', {time: 2000});
     } else {
@@ -379,7 +377,6 @@ function canOperate() {
     var result = true;  
     $.map($("#tb_departments").bootstrapTable('getSelections'), function(row) {
         if(row.is_out == true) {
-            //console.log("yichuku");
             result = false;
             return false;
         }

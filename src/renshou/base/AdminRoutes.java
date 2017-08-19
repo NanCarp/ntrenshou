@@ -14,7 +14,7 @@ import renshou.leaseprice.out.LeaseOutPriceController;
 import renshou.leasewarehouse.in.LeaseInController;
 import renshou.leasewarehouse.inventory.LeaseInventoryController;
 import renshou.leasewarehouse.out.LeaseOutController;
-
+import renshou.login.HomeController;
 import renshou.login.LoginController;
 import renshou.privatewarehouses.finishedin.FinishedInController;
 import renshou.privatewarehouses.finishedout.FinishedOutController;
@@ -46,6 +46,8 @@ public class AdminRoutes extends Routes{
 	public void config() {
 		// 设置页面base路径
 		setBaseViewPath("/pages");
+		// 其他 url 
+		add("/",HomeController.class,"");
 		// 用户登录控制器
 		add("/pages",LoginController.class,"");
 		//基础信息管理-成品信息管理

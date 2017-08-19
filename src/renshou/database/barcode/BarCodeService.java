@@ -19,12 +19,19 @@ public class BarCodeService {
 	 * @param pageSize
 	 * @return
 	 */
-	public static Page<Record> getProduct(Integer pageNumber,Integer pageSize){
-		String sql = "SELECT semimanufactures_number as product_num,trade_name"
-				+ ",specifications,measurement_unit,remark from semimanufactures UNION"
-				+ " SELECT finished_number as product_num,trade_name,specifications,measurement_unit,remark";
-		String sql1 =" from finished_product";
-		return Db.paginate(pageNumber, pageSize,sql,sql1);
+	public static Page<Record> getProduct(Integer pageNumber,Integer pageSize,String product_num,String trade_name){
+		String sql = "FROM (SELECT semimanufactures_number as product_num,trade_name,specifications,measurement_unit,'半成品' as type,remark" 
+					+" from semimanufactures" 
+					+" UNION" 
+					+" SELECT finished_number as product_num,trade_name,specifications,measurement_unit,'成品' as type,remark"
+					+" from finished_product) s where 1=1";
+		if(product_num!=null&&product_num!=""){
+			sql += " and product_num like '%"+product_num+"%'";
+		}
+		if(trade_name!=null&&trade_name!=""){
+			sql += " and trade_name like '%"+trade_name+"%'";
+		}
+		return Db.paginate(pageNumber, pageSize,"select *",sql);
 	}
 	
 	/**

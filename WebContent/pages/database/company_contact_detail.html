@@ -42,13 +42,13 @@
 	<#if im??>
 	<input name="position" id="position" hidden="" value="${im.position!}">
     <div class="form-group">
-        <label class="col-xs-4 control-label text-right" for="name">姓名：</label>
+        <label class="col-xs-4 control-label text-right" for="name">姓名<span style="color: red">*</span>：</label>
         <div class="col-xs-6">
             <input class="form-control text-left" id="name" type="text" placeholder="姓名" name="name" value="${im.name!}"/>
         </div>
     </div>
     <div class="form-group">
-        <label class="col-xs-4 control-label text-right" for="call_num">电话：</label>
+        <label class="col-xs-4 control-label text-right" for="call_num">电话<span style="color: red">*</span>：</label>
         <div class="col-xs-6">
             <input class="form-control text-left" id="call_num" type="text" placeholder="电话" name="call_num" value="${im.call_num!}"/>
         </div>
@@ -56,7 +56,7 @@
     <div class="form-group">
         <label class="col-xs-4 control-label text-right" for="QQ">QQ：</label>
         <div class="col-xs-6">
-            <input class="form-control text-left" id="QQ" type="text" placeholder="规格" name="QQ" value="${im.QQ!}"/>
+            <input class="form-control text-left" id="QQ" type="text" placeholder="QQ" name="QQ" value="${im.QQ!}"/>
         </div>
     </div>
     <div class="form-group">
@@ -79,13 +79,13 @@
     </div>
     <#else>
     <div class="form-group">
-        <label class="col-xs-4 control-label text-right" for="name">姓名：</label>
+        <label class="col-xs-4 control-label text-right" for="name">姓名<span style="color: red">*</span>：</label>
         <div class="col-xs-6">
             <input class="form-control text-left" id="name" type="text" placeholder="姓名" name="name" />
         </div>
     </div>
     <div class="form-group">
-        <label class="col-xs-4 control-label text-right" for="call_num">电话：</label>
+        <label class="col-xs-4 control-label text-right" for="call_num">电话<span style="color: red">*</span>：</label>
         <div class="col-xs-6">
             <input class="form-control text-left" id="call_num" type="text" placeholder="电话" name="call_num"/>
         </div>

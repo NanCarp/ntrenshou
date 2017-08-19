@@ -202,8 +202,6 @@ $(function(){
 		var data ={"warehouse_id":warehouse_id,"warehouse_id_num":warehouse_id_num}
 		arr[k] = data;
 	})
-	console.log({"list":JSON.stringify(arr),"id":id,"finished_product_id":finished_product_id
-		,"finished_product_id_num":finished_product_id_num});
 	if($(".t2").find(".flag").length==1){
 		layer.msg("请添加库存明细",{time:2000});
 	}else{
@@ -247,10 +245,6 @@ function _edit(_obj){
 	var finished_product_id = $(_obj).parent().parent().find("input").eq(2).val();
 	var warehouse_id = $(_obj).parent().parent().find("input").eq(1).val()
 	var num = $(_obj).parent().parent().find("td").eq(3).html(); 
-	console.log(index);
-	console.log(finished_product_id);	
-	console.log(warehouse_id);	
-	console.log(num);	
     open_window('编辑明细数据','/private/finishedstock/getDetail?finished_product_id='+finished_product_id+'&warehouse_id='+warehouse_id+'&num='+num+'&index='+index,420, 240);
 }
 
@@ -347,6 +341,7 @@ function _batchDelete(){
 			   sort();
 		   })
 	}
+	addcount();
 }
 
 //全选、全不选
@@ -361,10 +356,8 @@ $("input[name='sub']").click(function() {
 //选择产品编码自动带出数据
 function getProMessage(_obj){
 	var code = $(_obj).find("option:selected").eq(0).val();
-	console.log(code);
 	if(code!=null&&code!=""){
 	 $.post("/private/finishedstock/getProMessage",{"code":code},function(data){
-		 console.log(data);
 			$(".t1 tr").find("td").eq(2).html(data.specifications);
 			$(".t1 tr").find("td").eq(3).html(data.measurement_unit+"<input hidden='' value =''><input hidden='' value=''/>");
 			$(".t1 tr").find("input").eq(1).val(data.id);

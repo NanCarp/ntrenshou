@@ -36,6 +36,7 @@ public class FinishedInService {
 		{
 			sql +=" and user_name like '%"+user_name+"%'";
 		}
+		sql +=" order by s.id desc";
 		return Db.paginate(pageNumber, pageSize, "SELECT s.*,u.user_name",sql);
 	}
 	

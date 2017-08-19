@@ -106,7 +106,7 @@ $(function(){
 .on('success.form.bv', function(e) {
 	e.preventDefault();
 	$.post("/leaseprice/leaseOutPrice/save", $('#defaultForm').serialize(), function(result) {
-		console.log(result);
+		//console.log(result);
 		if (result.isSuccess) {
             parent.layer.msg(result.tips, {time: 2000}, function(){
                 layer_close();

@@ -36,10 +36,7 @@ public class AuthorityService {
                 String[] authorityList = new String[]{};
                 String menus = "";
                 String buttons = "";
-                if(roleId == 1){// 超级管理员，获取所有权限
-                    menus = Db.queryStr("SELECT CONCAT('0',',',GROUP_CONCAT(id)) FROM t_menu");
-                    buttons = Db.queryStr("SELECT GROUP_CONCAT(button_id) FROM t_button");
-                }
+                
                 authorityList = authorityIds.split(",");
                 for(int i=0;i<authorityList.length;i++){
                     if(Integer.parseInt(authorityList[i]) < 100){
@@ -54,11 +51,17 @@ public class AuthorityService {
                 if (buttons != null && buttons.length() > 0) {
                     buttons = buttons.substring(0, buttons.length() - 1);
                 }
+                
+                if(roleId == 1){// 超级管理员，获取所有权限
+                    menus = Db.queryStr("SELECT CONCAT('0',',',GROUP_CONCAT(id)) FROM t_menu");
+                    buttons = Db.queryStr("SELECT GROUP_CONCAT(button_id) FROM t_button");
+                }
+                
                 Date now = new Date();
 
                 Record record1 = new Record();
                 record1.set("role_id", roleId);
-                record1.set("menu_ids", menus);
+                record1.set("menu_ids", menus == null ? "" : menus);
                 boolean result1 = false;
                 if (menusId != null) {// 更新 t_role_menu 数据
                     record1.set("id", menusId);
@@ -69,7 +72,7 @@ public class AuthorityService {
 
                 Record record2 = new Record();
                 record2.set("role_id", roleId);
-                record2.set("button_ids", buttons);
+                record2.set("button_ids", buttons == null ? "" : buttons);
                 boolean result2 = false;
                 if (buttonsId != null) {// 更新 t_role_button 数据
                     record2.set("id", buttonsId);

@@ -69,7 +69,7 @@
             </div>
         </div>
 	    <#else>
-	    <div class="col-xs-6">
+	    <!-- <div class="col-xs-6">
             <div class="form-group">
                 <label class="col-xs-4 control-label text-left" for="warehouse_in_id">入库单号：</label>
                 <div class="col-xs-8">
@@ -81,6 +81,22 @@
                         </#list>
                         </#if>
                     </select>
+                </div>
+            </div>
+        </div> -->
+        <div class="col-xs-6">
+            <div class="form-group">
+                <label class="col-xs-4 control-label text-left" for="warehouse_in_no">入库单号：</label>
+                <div class="col-xs-8">
+                    <input class="form-control" name="warehouse_in_no" id="warehouse_in_no" value="" placeholder="请输入后回车">
+                    <!-- <select class="form-control" name="warehouse_in_id" id="warehouse_in_id">
+                        <option value="">其选择入库单号</option>
+                        <#if warehouseInList ??>
+                        <#list warehouseInList as warehouseIn>
+                            <option value="${warehouseIn.id!}">${warehouseIn.warehouse_in_no!}</option>
+                        </#list>
+                        </#if>
+                    </select> -->
                 </div>
             </div>
         </div>
@@ -173,42 +189,38 @@
 <script src="../../../resource/bootstrap-datetimepicker/js/locales/bootstrap-datetimepicker.zh-CN.js"></script>
 <script src="../../../js/common/admin.js"></script>
 <script type="text/javascript">
-//日期控件
-$(".form_datetime").datetimepicker({
-	format: "yyyy-mm-dd",
-	autoclose: true,
-	todayBtn: false,
-	todayHighlight: true,
-	showMeridian: true,
-	pickerPosition: "bottom-right",
-	language: 'zh-CN',//中文，需要引用zh-CN.js包
-	startView: 2,// 日视图
-	minView: 2,
-});
 
 //提交
 $('#v').on('click', function () {
     // 校验
     if ($('#f1').data('bootstrapValidator')) {
-        console.log($('#f1').data('bootstrapValidator'));
         $('#f1').data('bootstrapValidator', null);
     }
     bind();
     $('#f1').data('bootstrapValidator').validate();
-    $('#defaultForm').data('bootstrapValidator').validate();
-    var flag = $('#f1').data('bootstrapValidator').isValid() && $('#defaultForm').data('bootstrapValidator').isValid();
+    //$('#defaultForm').data('bootstrapValidator').validate();
+    var flag = $('#f1').data('bootstrapValidator').isValid(); //&& $('#defaultForm').data('bootstrapValidator').isValid()
     if (flag) {
-        console.log('ok');
+        //console.log('ok');
     } else {
         return;
     }
     
     var id = $('#id').val();
-    var warehouse_in_id = $('#warehouse_in_id').val();
+    var warehouse_in_no = $('#warehouse_in_no').val();
+    if (warehouse_in_no == "") {
+    	parent.layer.msg("入库单号不能为空", {time: 2000});
+    	return;
+    }
     var productList = getProductList(); // 产品列表
-    var postData = {"id": id, "warehouse_in_id": warehouse_in_id,  "productList": productList};
-    console.log(postData);
+    if(productList.length == 0) {
+    	 parent.layer.msg("出库数据不能为空", {time: 2000});
+    	 return;
+    }
     
+    var warehouse_in_id = $('#warehouse_in_id').val();
+    var postData = {"id": id,"warehouse_in_id": warehouse_in_id, "warehouse_in_no": warehouse_in_no,  "productList": JSON.stringify(productList)};
+    // console.log(postData);
     $.post("/leasewarehouse/leaseOut/save", postData, function(result) {
         if (result.isSuccess) {
             parent.layer.msg(result.tips, {time: 2000}, function(){
@@ -238,8 +250,8 @@ function bind(){
                         message: '不能为空!'
                     },
                     regexp: {
-                        regexp: /^[a-zA-Z0-9_\u0391-\uFFE5]+$/,
-                        message: '不能包含特殊字符'
+                        regexp: /^[0-9]+(\.[0-9]{1,})?$/,
+                        message: '请输入正确的数量'
                     },
                     stringLength: {
                         min: 0,
@@ -251,39 +263,32 @@ function bind(){
         }
     });
 }
-//表单校验
-$('#defaultForm').bootstrapValidator({
-    message: 'This value is not valid',
-    feedbackIcons: {
-        valid: 'glyphicon glyphicon-ok',
-        invalid: 'glyphicon glyphicon-remove',
-        validating: 'glyphicon glyphicon-refresh'
-    },
-    fields: {
-        "warehouse_in_id": {
-            validators: {
-                notEmpty: {
-                    message: '不能为空!'
-                }
-            }
-        },
-    }
-});
-/* .on('success.form.bv', function(e) {
-	e.preventDefault();
-	$.post("/leasewarehouse/leaseOut/save", $('#defaultForm').serialize(), function(result) {
-		if (result.isSuccess) {
-            parent.layer.msg(result.tips, {time: 2000}, function(){
-                layer_close();
-                parent.parent.refresh_iframe();
-            });
 
+$('#warehouse_in_no').on('change', function (event) {
+    search();
+})
+function search() {
+    $('#tbody').empty();
+    var warehouse_in_no = $.trim($('#warehouse_in_no').val());
+    if (warehouse_in_no == "") {
+        parent.layer.msg("入库单号不能为空", {time: 2000});
+        return;
+    }
+    var reg = /^[a-zA-Z0-9_ ]{1,30}$/;
+    if(!reg.test($('#warehouse_in_no').val())){
+        parent.layer.msg("不允许有特殊字符，最多20个字符", {time: 2000});
+        return;
+    } 
+    $.post("/leasewarehouse/leaseOut/getInventoryByNo/" + warehouse_in_no, function(result) {
+        if (result.isSuccess) {
+            parent.layer.msg(result.tips, {time: 2000});
+            _addData(result.productList);
         } else {
             parent.layer.msg(result.tips, {time: 2000});
         }
-		
-	});
-}); */
+    });
+}
+
 
 // 取消
 $('#cancel').on("click",function() {
@@ -344,14 +349,7 @@ $("input[name='sub']").click(function() {
     $("#checkAll").prop("checked" , $subs.length == $subs.filter(":checked").length ? true :false);
 });
 
-$('#warehouse_in_id').on('change', function () {
-	var warehouse_in_id = $(this).val();
-	$.post("/leasewarehouse/leaseOut/getInventory/" + warehouse_in_id, function(data) {
-        if (data) {
-            _addData(data);
-        } 
-    });
-})
+
 
 // 展示产品列表
 function _addData(data) {
@@ -359,7 +357,7 @@ function _addData(data) {
     $tbody.empty();
     count = 0;
 	$(data).each(function () {
-        console.log(this);
+        //console.log(this);
         var row = '<tr class="edit" _id="'+ this.product_id +'" unit_price="'+ this.unit_price +'">'+
 	        '<td><input type="checkbox" name="sub"></td>'+
 	        '<td name="count">'+ (count+1) +'</td>'+
@@ -395,7 +393,7 @@ function getProductList() {
         productList.push(product);
     });
     
-    return JSON.stringify(productList);
+    return productList;
 }
 
 </script>
