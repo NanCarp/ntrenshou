@@ -48,6 +48,12 @@
         </div>
     </div>
     <div class="form-group">
+        <label class="col-xs-4 control-label text-right" for="foreign_code">国外编码：</label>
+        <div class="col-xs-6">
+            <input class="form-control text-left" id="foreign_code" type="text" placeholder="国外编码" name="foreign_code" value="${im.foreign_code}" disabled="disabled"/>
+        </div>
+    </div>
+    <div class="form-group">
         <label class="col-xs-4 control-label text-right" for="trade_name">品名：</label>
         <div class="col-xs-6">
             <input class="form-control text-left" id="trade_name" type="text" placeholder="品名" name="trade_name" value="${im.trade_name!}" disabled="disabled"/>
@@ -76,6 +82,12 @@
         <label class="col-xs-4 control-label text-right" for="finished_number">成品编号：</label>
         <div class="col-xs-6">
             <input class="form-control text-left" id="finished_number" type="text" placeholder="成品编号" name="finished_number"/>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-xs-4 control-label text-right" for="foreign_code">国外编码：</label>
+        <div class="col-xs-6">
+            <input class="form-control text-left" id="foreign_code" type="text" placeholder="国外编码" name="foreign_code"/>
         </div>
     </div>
     <div class="form-group">
@@ -147,6 +159,22 @@ $(function(){
                         regexp: /^[a-zA-Z0-9_\u4e00-\u9fa5\\s·]+$/,
                         message: '不能有特殊字符'
                     }
+				}
+			},
+			foreign_code: {			
+				validators: {
+					notEmpty: {
+						message: '不能为空!'
+					},
+	                stringLength: {
+	                    min: 0,
+	                    max: 20,
+	                    message: '最多20个字符'
+	                },
+	                regexp: {
+	                    regexp: /^[a-zA-Z0-9_\u4e00-\u9fa5\\s·]+$/,
+	                    message: '不能有特殊字符'
+	                }
 				}
 			}
 			,trade_name: {

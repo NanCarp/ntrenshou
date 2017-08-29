@@ -231,7 +231,7 @@ function _batchDelete(){
                       parent.refresh_iframe();
                   });
               }else{
-              	layer.msg('删除失败', {time: 2000}, function(){
+              	layer.msg('删除失败，该公司已被引用', {time: 2000}, function(){
                   });
               }
           });

@@ -1,27 +1,18 @@
 package renshou.privatewarehouses.semiin;
 
-import java.sql.SQLException;
+
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+
 
 import com.jfinal.aop.Before;
 import com.jfinal.core.Controller;
-import com.jfinal.plugin.activerecord.Db;
-import com.jfinal.plugin.activerecord.IAtom;
 import com.jfinal.plugin.activerecord.Record;
-import com.jfinal.upload.UploadFile;
-
-import renshou.database.customer.CustomerService;
-import renshou.database.finishedproduct.FinishedProductService;
-import renshou.interceptor.FrontInterceptor;
 import renshou.interceptor.ManageInterceptor;
-import renshou.utils.ExcelKit;
+
 /**
  * @author xuhui
  * @desc 自用仓库管理-半成品入库管理
@@ -43,7 +34,8 @@ public class SemiInController extends Controller {
 	 */
 	public void getJson(){
 		String storage_number = getPara("storage_number");
-		String user_name = getPara("user_name");
+		String storage_time = getPara("storage_time");
+		String batch_num = getPara("batch_num");
     	Integer	pageindex = 0;
     	Integer pagelimit = getParaToInt("limit")==null? 12 :getParaToInt("limit");
     	Integer offset = getParaToInt("offset")==null?0:getParaToInt("offset");
@@ -52,9 +44,9 @@ public class SemiInController extends Controller {
     	}
     	pageindex += 1;
     	Map<String, Object> map = new HashMap<String,Object>(); 	
-    	List<Record> dictionaryList = SemiInService.getSemiIn(pageindex, pagelimit,storage_number,user_name).getList();
+    	List<Record> dictionaryList = SemiInService.getSemiIn(pageindex, pagelimit,storage_number,storage_time,batch_num).getList();
     	map.put("rows", dictionaryList);
-    	map.put("total",SemiInService.getSemiIn(pageindex, pagelimit,storage_number,user_name).getTotalRow());
+    	map.put("total",SemiInService.getSemiIn(pageindex, pagelimit,storage_number,storage_time,batch_num).getTotalRow());
     	renderJson(map);	
 	}
 	
@@ -108,6 +100,7 @@ public class SemiInController extends Controller {
 		String storage_number = "";
 		String list = getPara("list");
 		Integer id = getParaToInt("id");
+		String batch_num = getPara("batch_num");
 		Date date = new Date();
 		SimpleDateFormat sdf =  new SimpleDateFormat("yyyyMMdd");
 		String today = sdf.format(date);
@@ -122,8 +115,7 @@ public class SemiInController extends Controller {
 		}else{
 			storage_number = "YR"+today+"001";
 		}
-		System.out.println(storage_number);
-		boolean flag = SemiInService.saveSemiIn(storage_number, list, id,t_user_id);
+		boolean flag = SemiInService.saveSemiIn(storage_number, list, id,t_user_id,batch_num);
 		System.out.println(flag);
 		renderJson(flag);
 	}

@@ -110,7 +110,10 @@ public class CustomController extends Controller {
 	 */
 	public void delete(){
 		String ids = getPara(0);
-		boolean result = CustomerService.delete(ids);
+		boolean result = CustomerService.JudgeCustomer(ids);
+		if(result){
+			result = CustomerService.delete(ids);
+		}
 		renderJson(result);
 	}
 }

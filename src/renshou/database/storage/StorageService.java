@@ -24,9 +24,9 @@ public class StorageService {
 		String sqlPre ="SELECT *,CONCAT(ywarehouse,p_warehouse_name,warehouse) as warehouse_name";
 		String sql = " from (SELECT w.id,w.warehouse_name as warehouse,COALESCE(w.position,'') position"
 				+ ",COALESCE(e.warehouse_name,'')  as p_warehouse_name,COALESCE(y.warehouse_name,'') as ywarehouse"
-				+ " from warehouse w LEFT JOIN warehouse e ON w.pid = e.id LEFT JOIN warehouse y ON e.pid = y.id ) s where 1=1";
+				+ " from warehouse w LEFT JOIN warehouse e ON w.pid = e.id LEFT JOIN warehouse y ON e.pid = y.id ) s where 1=1 ";
 		if(warehouse_name!=null&&warehouse_name!=""){
-			sql +=" and w.warehouse_name like '%"+warehouse_name+"%'";
+			sql +=" and CONCAT(ywarehouse,p_warehouse_name,warehouse) like '%"+warehouse_name+"%'";
 		}
 		return Db.paginate(pageNumber, pageSize,sqlPre,sql);
 	}
@@ -75,5 +75,32 @@ public class StorageService {
 	 */
 	public static Record getSingleWarehouse(Integer id){
 		return Db.findById("warehouse", id);
+	}
+	
+	/**
+	 * @desc 判断仓库是否产生业务，是否可以删除
+	 * @author xuhui
+	 */
+	public static boolean JudgeWarse(String ids){
+		String[] allid = ids.split(",");
+		boolean result = true;
+		for(String id:allid){
+			String sql ="SELECT * from"
+					+" (SELECT warehouse_id as flag_id from finished_product_stock_detail"
+					+" UNION" 
+					+" SELECT warehouse_id as flag_id from finished_product_storage_detail"
+					+" UNION"
+					+" SELECT warehouse_id as flag_id from semimanufactures_storage_detail"
+					+" UNION"
+					+" SELECT warehouse_id as flag_id from semimanufactures_stock_detail"
+					+" UNION"
+					+" SELECT warehouse_id as flag_id FROM t_lease_warehouse_in) s where flag_id = "+id;
+			System.out.println(Db.find(sql));
+			if(Db.find(sql).size()!=0){
+				result = false;
+				break;
+			}
+		}
+		return result;
 	}
 }

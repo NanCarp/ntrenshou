@@ -24,6 +24,9 @@
 		body { margin:0 15px;}
 		form { margin-top:20px;}
 		label { padding-top:6px;padding-right:0;}
+		tbody .form-group {
+            margin-bottom: 0px;
+        }
 	</style>
 	
     <!-- Custom Fonts -->
@@ -53,7 +56,7 @@
 <form class="form-horizontal" role="form" style="margin-top: 20px" id="defaultForm">
 	<#if imm??>
 	<input id="id" name="id" value="${imm.id!}" hidden="">
-	<div style="display: inline-block;margin-left: 20px;width: 400px">
+	<div style="display: inline-block;margin-left: 20px;width: 270px">
 	    <div class="form-group">
 	        <label class="col-xs-4 control-label text-right" for="storage_number">入库单号：</label>
 	        <div class="col-xs-8">
@@ -61,7 +64,7 @@
 	        </div>
 	    </div>
 	</div>
-	<div style="display: inline-block;margin-left: 40px;width: 400px">
+	<div style="display: inline-block;margin-left: 40px;width: 260px">
 	     <div class="form-group">
 	        <label class="col-xs-4 control-label text-right" for="t_user_id">入库人：</label>
 	        <div class="col-xs-8">
@@ -69,9 +72,17 @@
 	        </div>
 	    </div>
 	</div>
+	<div style="display: inline-block;margin-left: 40px;width: 260px">
+	     <div class="form-group">
+	        <label class="col-xs-4 control-label text-right" for="batch_num">批次号：</label>
+	        <div class="col-xs-8">
+	            <input style="padding-right: 2px" class="form-control text-left" id="batch_num" type="text" placeholder="批次号" name="batch_num" value="${im.batch_num!}"/>
+	        </div>
+	    </div>
+	</div>
 	<#else>
 	<input id="id" name="id" value="" hidden="">
-	<div style="display: inline-block;margin-left: 16px;width: 400px" >
+	<div style="display: inline-block;margin-left: 16px;width: 270px" >
 	    <div class="form-group">
 	        <label class="col-xs-4 control-label text-right" for="storage_number">入库单号：</label>
 	        <div class="col-xs-8">
@@ -79,11 +90,19 @@
 	        </div>
 	    </div>
 	</div>
-	<div style="display: inline-block;margin-left: 40px;width: 400px">
+	<div style="display: inline-block;margin-left: 40px;width: 260px">
 	     <div class="form-group">
 	        <label class="col-xs-4 control-label text-right" for="t_user_id">入库人：</label>
 	        <div class="col-xs-8">
 	            <input class="form-control text-left" id="t_user_id" type="text" placeholder="系统自动录入" name="t_user_id" value="" disabled="disabled"/>
+	        </div>
+	    </div>
+	</div>
+	<div style="display: inline-block;margin-left: 40px;width: 260px">
+	     <div class="form-group">
+	        <label class="col-xs-4 control-label text-right" for="batch_num">批次号：</label>
+	        <div class="col-xs-8">
+	            <input style="padding-right: 2px" class="form-control text-left" id="batch_num" type="text" placeholder="批次号" name="batch_num" value=""/>
 	        </div>
 	    </div>
 	</div>
@@ -192,7 +211,7 @@ document.onkeydown = function(event){
 //提交
 $('#submit').click(function () {
 	// 绑定校验
-	var validator = bindValidator('tbody');
+	var validator = bindValidator('form');
 	console.log(validator);
 	validator.data('bootstrapValidator').validate();
 	if (!validator.data('bootstrapValidator').isValid()) {
@@ -232,7 +251,8 @@ $('#submit').click(function () {
 		return;
 	}
     var id = $("#id").val(); // 入库单 id
-    $.post("/private/semiin/saveSemiIn", {"list":JSON.stringify(list),"id":id}, function(result) {
+    var batch_num = $("#batch_num").val();//批次号
+    $.post("/private/semiin/saveSemiIn", {"list":JSON.stringify(list),"id":id,"batch_num":batch_num}, function(result) {
         if (result) {
             parent.layer.msg("保存成功", {time: 2000}, function(){
                 layer_close();
@@ -246,6 +266,9 @@ $('#submit').click(function () {
 });
 //绑定校验
 function bindValidator(obj){
+	if ($(obj).data('bootstrapValidator')) {
+        $(obj).data('bootstrapValidator', null);
+    }
     // 表单校验
     var validator = $(obj).bootstrapValidator({
         //message: 'This value is not valid',
@@ -270,6 +293,18 @@ function bindValidator(obj){
                     regexp: {
                         regexp: /^[0-9]+(\.[0-9]{1,})?$/,
                         message: '请输入正确的数量'
+                    },
+                    stringLength: {
+                        min: 0,
+                        max: 20,
+                        message: '不能超过 20 个字符',
+                    }
+                }
+            },
+            batch_num: {
+                validators: {
+                    notEmpty:{
+                        message: '不能为空!'
                     },
                     stringLength: {
                         min: 0,
@@ -348,15 +383,14 @@ function _edit(_obj){
 }
 //页面序号排序
 function sort(){
-	$("tbody tr").each(function(k,v){
-		var index = k+1;
-		$(v).find("td").eq(1).html(index);
-	})
-	if($("tbody").find("tr").length==0){
-		$("tbody").append("<tr class='flag'><td colspan='9' style='text-align: center;'>暂无产品数据,请点击新增添加</td></tr>");
-	}else{
-		$("tbody").find(".flag").remove();
-	}
+	$("tbody").find(".flag").remove();
+    $("tbody tr").each(function(k,v){
+        var index = k+1;
+        $(v).find("td").eq(1).html(index);
+    })
+    if($("tbody").find("tr").length==0){
+        $("tbody").append("<tr class='flag'><td colspan='9' style='text-align: center;'>暂无产品数据,请点击新增添加</td></tr>");
+    }
 }
 sort();
 

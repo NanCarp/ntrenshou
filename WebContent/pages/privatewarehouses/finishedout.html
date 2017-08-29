@@ -187,15 +187,18 @@ var TableInit = function () {
             },{
                 field: 'outgoing_number',
                 title: '出库单号'
-            }, {
-                field: 'user_name',
-                title: '出库人'
+            },{
+                field: 'company_name',
+                title: '客户名'
             },{
                 field: 'state',
                 title: '出库状态',
                 formatter:function(value,row,index){
                     return row.state == true ? "已出库": "未确认";
                 }
+            }, {
+                field: 'user_name',
+                title: '出库人'
             },{
             	field:'opt',
             	title:'操作',

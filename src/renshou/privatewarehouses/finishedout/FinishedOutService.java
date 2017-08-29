@@ -67,8 +67,7 @@ public class FinishedOutService {
         String sql = " SELECT a.*,b.finished_number,b.trade_name,b.specifications,b.measurement_unit,b.remark "
                 + " FROM `finished_product_stock` AS a "
                 + " LEFT JOIN finished_product AS b "
-                + " ON a.finished_product_id = b.id ";
-        
+                + " ON a.finished_product_id = b.id ";       
         return Db.find(sql);
     }
 

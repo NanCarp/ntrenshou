@@ -27,14 +27,17 @@ public class SemiInService {
 	 * @param user_name
 	 * @return Page<Record>
 	 */
-	public static Page<Record> getSemiIn(Integer pageNumber,Integer pageSize,String storage_number ,String user_name){
+	public static Page<Record> getSemiIn(Integer pageNumber,Integer pageSize,String storage_number ,String storage_time,String batch_num){
 		String sql = " from semimanufactures_storage s LEFT JOIN t_user u ON s.t_user_id = u.id where 1=1";
 		if(storage_number!=null&&storage_number!=""){
 			sql +=" and storage_number like '%"+storage_number+"%'";
 		}
-		if(user_name!=null&&user_name!="")
+		if(storage_time!=null&&storage_time!="")
 		{
-			sql +=" and user_name like '%"+user_name+"%'";
+			sql +=" and storage_time = '"+storage_time+"'";
+		}
+		if(batch_num!=null&&batch_num!=""){
+			sql +=" and batch_num like '%"+batch_num+"%'";
 		}
 		sql +=" order by id desc";
 		return Db.paginate(pageNumber, pageSize, "SELECT s.*,u.user_name",sql);
@@ -90,7 +93,7 @@ public class SemiInService {
 	 * @author xuhui
 	 * @desc 获取入库单信息并保存
 	 */
-	public static boolean saveSemiIn(String storage_number,String list,Integer id,Integer t_user_id){
+	public static boolean saveSemiIn(String storage_number,String list,Integer id,Integer t_user_id,String batch_num){
 		boolean flag = false;
 		flag = Db.tx(new IAtom() {
 			List<JSONObject> jlist = (List<JSONObject>)JSONObject.parse(list);
@@ -101,6 +104,10 @@ public class SemiInService {
 				// TODO Auto-generated method stub
 				if(rukuid!=null){// id不为空更新已经入库数据
 					//id不为空，删除该入库单下全部数据，重新录入
+					Record rec = new Record();
+					rec.set("id", rukuid);
+					rec.set("batch_num", batch_num);
+					Db.update("semimanufactures_storage", rec);
 					String sql= "delete from semimanufactures_storage_detail where semimanufactures_storage_id ="+rukuid;
 					Db.update(sql);
 					for(JSONObject obj:jlist){
@@ -119,6 +126,7 @@ public class SemiInService {
 					}
 				}else{
 					Record record = new Record();
+					record.set("batch_num", batch_num);
 					record.set("storage_number", storage_number);
 					record.set("t_user_id", t_user_id);
 					r = Db.save("semimanufactures_storage", record);

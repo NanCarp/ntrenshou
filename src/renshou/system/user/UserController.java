@@ -106,9 +106,24 @@ public class UserController extends Controller {
 	 * @desc 删除以及批量删除
 	 */
 	public void delete(){
+	    // 返回信息
+        Map<String, Object> response = new HashMap<>();
+        // 账号
 		String ids = getPara(0);
+		// 查询是否产生业务，产生业务无法删除
+		for (String id : ids.split(",")) {
+		    if (UserService.hasBusiness(id)) {
+		        response.put("isSuccess", false);
+		        response.put("tips", "已有出入库数据产生，不能删除");
+		        renderJson(response);
+		        return;
+		    }
+		}
+		
 		boolean result = UserService.delete(ids);
-		renderJson(result);
+		response.put("isSuccess", result);
+        response.put("tips", result ? "删除成功" : "删除失败");
+        renderJson(response);
 	}
 	
 	/**

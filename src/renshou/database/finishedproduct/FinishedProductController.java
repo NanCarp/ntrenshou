@@ -106,6 +106,7 @@ public class FinishedProductController extends Controller {
 				flag = true;
 				result = true;
 			}else{
+				record.set("foreign_code", getPara("foreign_code"));
 				record.set("finished_number", finished_number);
 				record.set("trade_name",getPara("trade_name"));
 				result = Db.save("finished_product", record);

@@ -125,4 +125,26 @@ public class CustomerService {
 		});
 		return flag;
 	}
+	
+	/**
+	 * @desc 判断公司是否可以删除
+	 * @author xuhui
+	 */
+	public static boolean JudgeCustomer(String ids){
+		String[] allid = ids.split(",");	
+		boolean result = true;
+		for(String id:allid){
+		String sql ="SELECT * from"
+					+" (SELECT company from finished_product_outgoing"
+					+" UNION"
+					+" SELECT company_id as company from semimanufactures_outgoing"
+					+" UNION"
+					+" SELECT customer as company from t_lease_warehouse_in) s where company = "+id;
+			if(Db.find(sql).size()!=0){
+				result = false;
+				break;
+			}
+		}
+		return result;
+	}
 }

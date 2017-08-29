@@ -94,4 +94,16 @@ public class RoleService {
         public static boolean isDuplicate(String role) {
             return Db.find("SELECT * FROM t_role WHERE role_type = ? ", role).size() > 0;
         }
+
+
+        /** 
+        * @Title: hasBusiness 
+        * @Description: 查看是否有相关账号
+        * @param id
+        * @return boolean
+        * @author liyu
+        */
+        public static boolean hasBusiness(String id) {
+            return Db.find("SELECT * FROM `t_user` WHERE role_id = ?", id).size() > 0;
+        }
 }

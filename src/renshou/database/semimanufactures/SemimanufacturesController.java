@@ -107,6 +107,7 @@ public class SemimanufacturesController extends Controller {
 				flag = true;
 				result = true;
 			}else{
+				record.set("foreign_code", getPara("foreign_code"));
 				record.set("semimanufactures_number", semimanufactures_number);
 				record.set("trade_name",getPara("trade_name"));
 				result = Db.save("semimanufactures", record);

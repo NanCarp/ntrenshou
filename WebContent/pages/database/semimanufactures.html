@@ -44,12 +44,12 @@
 			<div class="panel-heading">					
 				<div class="container container-fluid" >				
 					<div class="row">                        	    		                                            		
-						<div class="col-sm-1 col-xs-1 head_2" style="min-width: 130px">
+						<div class="col-sm-2 col-xs-3 head_2" style="min-width: 130px">
 							<input type="search" class="form-control" placeholder="品名" name="trade_name" id="trade_name">
 						</div>
 						<div class="col-sm-1 col-xs-12 head_1">
 							<button class="btn btn-primary" onclick="doQuery()">查询</button>
-						</div>                    			
+						</div>                     			
 						<div class="col-sm-2 col-xs-6 head_1">
 		                    <button class="btn btn-success" onclick="_add()">新增</button>
 		                </div>	          
@@ -162,6 +162,9 @@ var TableInit = function () {
                 field: 'semimanufactures_number',
                 title: '半成品编号'
             },{
+                field: 'foreign_code',
+                title: '国外编码'
+            },{
                 field: 'trade_name',
                 title: '品名'
             }, {
@@ -208,12 +211,12 @@ var ButtonInit = function () {
 
 //新增
 function _add(){
-	open_window('新增半成品','/database/semimanufactures/getsemimanufactures', 400, 380);
+	open_window('新增半成品','/database/semimanufactures/getsemimanufactures', 420, 430);
 }
 
 //编辑
 function _edit(id){
-	open_window('编辑基础数据','/database/semimanufactures/getsemimanufactures/' + id, 400, 380);
+	open_window('编辑基础数据','/database/semimanufactures/getsemimanufactures/' + id, 420, 430);
 }
 
 //批量删除

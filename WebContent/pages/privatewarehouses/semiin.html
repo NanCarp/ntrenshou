@@ -27,8 +27,8 @@
     <link href="../../../css/common/common.css" rel="stylesheet">
     <link href="../../../css/admin.css" rel="stylesheet">
 	<link href="../../vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css"> 
-		<link href="../../../resource/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css" rel="stylesheet" />
-	
+	<link href="../../../resource/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css" rel="stylesheet" />
+	<link href="../../../resource/bootstrap-datetimepicker/css/bootstrap-datetimepicker.css" rel="stylesheet">
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 9]>
@@ -46,9 +46,12 @@
 					<div class="row">                        	    		                                            		
 						<div class="col-sm-2 col-xs-3 head_2">
                             <input type="search" class="form-control" placeholder="入库单号" name="storage_number" id="storage_number" value="">
+                        </div> 
+                        <div class="col-sm-2 col-xs-3 head_2">
+                            <input type="search" class="form-control" placeholder="批次号" name="batch_num" id="batch_num" value="">
                         </div>
                         <div class="col-sm-2 col-xs-3 head_2">
-                            <input type="search" class="form-control" placeholder="入库人" name="user_name" id="user_name" value="">
+                            <input type="search" class="form-control form_datetime" placeholder="入库时间" name="storage_time" id="storage_time" value="">
                         </div>
 						<div class="col-sm-1 col-xs-12 head_1">
 							<button class="btn btn-primary" onclick="doQuery()">查询</button>
@@ -101,8 +104,21 @@
 <script src="../../../js/common/admin.js"></script>
 
 <script>
+$(".form_datetime").datetimepicker({
+	format: "yyyy-mm-dd",
+	autoclose: true,
+	todayBtn: false,
+	todayHighlight: true,
+	showMeridian: true,
+	pickerPosition: "bottom-right",
+	language: 'zh-CN',//中文，需要引用zh-CN.js包
+	startView: 2,// // 日视图
+	minView: 2,
+});
+
 var storage_number="";
-var user_name = "";
+var storage_time = "";
+var batch_num = "";
 
 $('button').keydown(function(){
 	return false;
@@ -121,17 +137,24 @@ function doQuery(){
 	layui.use('layer',function(){
 		var layer = layui.layer;
 		storage_number = $.trim($('#storage_number').val());
-		user_name = $.trim($('#user_name').val());
+		storage_time = $.trim($('#storage_time').val());
+		batch_num = $.trim($('#batch_num').val());
 		if($.trim($('#storage_number').val())!=''){
 			var reg = /^[a-zA-Z0-9_\-\u0391-\uFFE5 ]{1,30}$/;
 			if(!reg.test($('#storage_number').val())){
 				layer.tips('不允许有特殊字符，最多20个字符', '#storage_number', {tips: [1, '#34495E']});return;
 			}					
 		}
-		if($.trim($('#user_name').val())!=''){
+		if($.trim($('#batch_num').val())!=''){
 			var reg = /^[a-zA-Z0-9_\-\u0391-\uFFE5 ]{1,30}$/;
-			if(!reg.test($('#user_name').val())){
-				layer.tips('不允许有特殊字符，最多20个字符', '#user_name', {tips: [1, '#34495E']});return;
+			if(!reg.test($('#batch_num').val())){
+				layer.tips('不允许有特殊字符，最多20个字符', '#batch_num', {tips: [1, '#34495E']});return;
+			}					
+		}
+		if($.trim($('#storage_time').val())!=''){
+			var reg = /^[a-zA-Z0-9_\-\u0391-\uFFE5 ]{1,30}$/;
+			if(!reg.test($('#storage_time').val())){
+				layer.tips('不允许有特殊字符，最多20个字符', '#storage_time', {tips: [1, '#34495E']});return;
 			}					
 		}
 		$('#tb_departments').bootstrapTable('refresh');    //刷新表格
@@ -185,7 +208,10 @@ var TableInit = function () {
             },{
                 field: 'storage_number',
                 title: '入库单号'
-            }, {
+            },{
+                field: 'batch_num',
+                title: '批次号'
+            },{
                 field: 'user_name',
                 title: '入库人'
             },{
@@ -212,7 +238,8 @@ var TableInit = function () {
             maxrows: params.limit,
             search: params.search,
             storage_number: storage_number,
-            user_name: user_name,
+            storage_time: storage_time,
+            batch_num:batch_num,
         };
         return temp;
     };

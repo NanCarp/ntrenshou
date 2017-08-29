@@ -11,6 +11,7 @@ import com.jfinal.plugin.activerecord.Db;
 import com.jfinal.plugin.activerecord.Record;
 
 import renshou.interceptor.ManageInterceptor;
+import renshou.system.user.UserService;
 /**
  * @ClassName: RoleController
  * @Description: 系统管理_角色管理
@@ -89,9 +90,23 @@ public class RoleController extends Controller {
 	 */
 	public void delete(){
 		String ids = getPara(0);
+		
+		// 返回信息
+        Map<String, Object> response = new HashMap<>();
+        // 查询是否产生业务，产生业务无法删除
+        for (String id : ids.split(",")) {
+            if (RoleService.hasBusiness(id)) {
+                response.put("isSuccess", false);
+                response.put("tips", "已有相关账号产生，不能删除");
+                renderJson(response);
+                return;
+            }
+        }
 		boolean result = RoleService.delete(ids);
-		System.out.println(result);
-		renderJson(result);
+		
+		response.put("isSuccess", result);
+        response.put("tips", result ? "删除成功" : "删除失败");
+        renderJson(response);
 	}
 
     // 根据公司 id 获取角色列表

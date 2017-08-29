@@ -54,7 +54,10 @@ public class StorageController extends Controller {
 	 */
 	public void delete(){
 		String ids = getPara(0);
-		boolean result = StorageService.delete(ids);
+		boolean result = StorageService.JudgeWarse(ids);
+		if(result){
+			result = StorageService.delete(ids);
+		}
 		renderJson(result);
 	}
 	

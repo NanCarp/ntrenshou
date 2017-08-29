@@ -110,7 +110,7 @@ $('tbody').bootstrapValidator({
                     message: '不能为空!'
                 },
                 regexp: {
-                    regexp: /^[0-9]+(\.[0-9]{1,})?$/,
+                    regexp: /^[0-9]+(\.[0-9]{1,2})?$/,
                     message: '请输入正确的金额'
                 },
                 stringLength: {
@@ -178,7 +178,7 @@ $('input').on('change', function () {
     //console.log($tr);
     var quantity = $tr.find('td.quantity').html();
     //console.log(quantity);
-    var price_per_day = unit_value * quantity;
+    var price_per_day = unit_value*100000 * quantity / 100000;
     $tr.find('td.price_per_day').html(price_per_day);
 });
 </script>

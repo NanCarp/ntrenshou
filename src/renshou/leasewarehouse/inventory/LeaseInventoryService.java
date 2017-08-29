@@ -28,7 +28,7 @@ public class LeaseInventoryService {
     public static Page<Record> getDataPages(Integer pageindex, Integer pagelimit, String warehouse_in_no,
             String company_name) {
         String select = " SELECT c.company_name,d.warehouse_name,d.position, "
-                + " b.warehouse_id,b.warehouse_in_no,b.location,a.* ";
+                + " b.warehouse_id,b.warehouse_in_no,b.location,b.warehouse_in_date,a.* ";
                 
         String sql = " FROM t_lease_warehouse_inventory AS a "
                 + " LEFT JOIN `t_lease_warehouse_in` AS b "

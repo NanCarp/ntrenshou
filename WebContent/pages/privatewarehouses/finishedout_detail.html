@@ -300,6 +300,9 @@ function getRecordList() {
 }
 //绑定校验
 function bindValidator(obj){
+	if ($(obj).data('bootstrapValidator')) {
+        $(obj).data('bootstrapValidator', null);
+    }
     // 表单校验
     var validator = $(obj).bootstrapValidator({
         //message: 'This value is not valid',

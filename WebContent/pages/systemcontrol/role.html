@@ -188,14 +188,15 @@
                btn: ['确认','取消'] //按钮
 		   },function(){
 			   $.post("/system/role/delete/"+ids,function(result){
-				   if(result){
-					   layer.msg('删除成功',{time:2000},function(){
-						   parent.refresh_iframe();
-					   });
-				   }else{
-					   layer.msg('删除失败',{time:2000},function(){
-					   });
-				   }
+				   if (result.isSuccess) {
+                       parent.layer.msg(result.tips, {time: 2000}, function(){
+                           layer_close();
+                           parent.parent.refresh_iframe();
+                       });
+
+                   } else {
+                       parent.layer.msg(result.tips, {time: 2000});
+                   }
 				  
 			   })
 		   },function(){

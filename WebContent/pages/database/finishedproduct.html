@@ -162,6 +162,9 @@ var TableInit = function () {
                 field: 'finished_number',
                 title: '成品编号'
             },{
+                field: 'foreign_code',
+                title: '国外编码'
+            },{
                 field: 'trade_name',
                 title: '品名'
             }, {
@@ -208,12 +211,12 @@ var ButtonInit = function () {
 
 //新增
 function _add(){
-	open_window('新增成品','/database/finishedproduct/getfinishedproduct', 400, 380);
+	open_window('新增成品','/database/finishedproduct/getfinishedproduct', 420, 430);
 }
 
 //编辑
 function _edit(id){
-	open_window('编辑基础数据','/database/finishedproduct/getfinishedproduct/' + id, 400, 380);
+	open_window('编辑基础数据','/database/finishedproduct/getfinishedproduct/' + id, 420, 430);
 }
 
 //批量删除

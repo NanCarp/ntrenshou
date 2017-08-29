@@ -117,6 +117,19 @@ public class UserService {
         record.set("state", !record.getBoolean("state"));
         return Db.update("t_user", record);
     }
+    
+    /** 
+    * @Title: hasBusiness 
+    * @Description: 是否产生后续业务
+    * @param id
+    * @return boolean
+    * @author liyu
+    */
+    public static boolean hasBusiness(String id) {
+        return Db.find("SELECT id FROM `semimanufactures_storage` WHERE t_user_id = ? "
+                + " UNION "
+                + " SELECT id FROM finished_product_storage WHERE t_user_id = ? ", id, id).size() > 0;
+    }
 
     
 }
